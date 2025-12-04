@@ -4,15 +4,17 @@ import { useSearchParams } from 'next/navigation'
 import { useMemo, Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { 
-  generateMockHeatmap, 
-  generateMockCompetitors, 
-  calculateVisibilityScore,
-  mockChecklist,
-  type HeatmapCell 
-} from '@/lib/mockData'
+import { mockChecklist, type HeatmapCell } from '@/lib/mockData'
 import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
 import { searchNearbyPlaces, type PlaceResult } from '@/lib/placesApi'
+import { 
+  scanGrid, 
+  calculateRealVisibilityScore, 
+  getGridStats, 
+  resultsToHeatmap,
+  type RankingResult,
+  type ScanProgress
+} from '@/lib/gridScanner'
 
 // Dynamic import to avoid SSR issues with Google Maps
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
@@ -63,13 +65,15 @@ function ResultsContent() {
   // State for real competitors
   const [realCompetitors, setRealCompetitors] = useState<PlaceResult[]>([])
   const [isLoadingCompetitors, setIsLoadingCompetitors] = useState(false)
-  const [useRealData, setUseRealData] = useState(false)
   const [businessLocation, setBusinessLocation] = useState<{ lat: number; lng: number } | null>(null)
   
-  // Generate mock data (memoized to avoid regeneration on re-renders)
-  const heatmapData = useMemo(() => generateMockHeatmap(), [])
-  const mockCompetitors = useMemo(() => generateMockCompetitors(), [])
-  const visibilityScore = useMemo(() => calculateVisibilityScore(heatmapData), [heatmapData])
+  // State for grid scanning
+  const [isScanning, setIsScanning] = useState(false)
+  const [scanProgress, setScanProgress] = useState<ScanProgress>({ current: 0, total: 49, percentage: 0 })
+  const [scanResults, setScanResults] = useState<RankingResult[]>([])
+  const [realHeatmap, setRealHeatmap] = useState<any>(null)
+  const [realScore, setRealScore] = useState<number | null>(null)
+  const [gridStats, setGridStats] = useState<any>(null)
   
   // Fetch real competitors from Places API
   useEffect(() => {
@@ -102,7 +106,6 @@ function ResultsContent() {
             
             console.log('Found competitors:', places.length)
             setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
-            setUseRealData(true)
           }
           
           setIsLoadingCompetitors(false)
@@ -119,14 +122,52 @@ function ResultsContent() {
   }, [businessName, city, keyword])
   
   // Choose which competitors to display
-  const competitors = useRealData && realCompetitors.length > 0 
-    ? realCompetitors.slice(0, 3).map((place, index) => ({
-        name: place.name,
-        rating: place.rating,
-        reviews: place.userRatingsTotal,
-        rank: index + 1
-      }))
-    : mockCompetitors
+  const competitors = realCompetitors.slice(0, 3).map((place, index) => ({
+    name: place.name,
+    rating: place.rating,
+    reviews: place.userRatingsTotal,
+    rank: index + 1
+  }))
+  
+  // Function to start real grid scanning
+  const startGridScan = async () => {
+    if (!businessLocation) return
+    
+    setIsScanning(true)
+    setScanProgress({ current: 0, total: 49, percentage: 0 })
+    
+    try {
+      const results = await scanGrid(
+        businessLocation.lat,
+        businessLocation.lng,
+        businessName,
+        keyword,
+        (progress) => {
+          setScanProgress(progress)
+        }
+      )
+      
+      setScanResults(results)
+      
+      // Calculate real score
+      const score = calculateRealVisibilityScore(results)
+      setRealScore(score)
+      
+      // Convert to heatmap
+      const heatmap = resultsToHeatmap(results)
+      setRealHeatmap(heatmap)
+      
+      // Get stats
+      const stats = getGridStats(results)
+      setGridStats(stats)
+      
+      console.log('Scan completed:', { score, stats, results })
+    } catch (error) {
+      console.error('Error during grid scan:', error)
+    } finally {
+      setIsScanning(false)
+    }
+  }
   
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -161,7 +202,7 @@ function ResultsContent() {
               <h2 className="text-2xl font-semibold text-gray-900">
                 Business Location & Competitors
               </h2>
-              {useRealData && realCompetitors.length > 0 && (
+              {realCompetitors.length > 0 && (
                 <p className="text-sm text-gray-600 mt-1">
                   Showing {realCompetitors.length} nearby competitors
                 </p>
@@ -171,7 +212,7 @@ function ResultsContent() {
           <MapComponent 
             businessName={businessName} 
             city={city}
-            markers={useRealData && businessLocation ? [
+            markers={businessLocation ? [
               // Your business (red pin)
               {
                 position: businessLocation,
@@ -191,42 +232,113 @@ function ResultsContent() {
         {/* Visibility Score */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
           <div className="text-center">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-              Visibility Score
-            </h2>
-            <div className="relative inline-block">
-              <svg className="transform -rotate-90 w-40 h-40">
-                <circle
-                  cx="80"
-                  cy="80"
-                  r="70"
-                  stroke="#e5e7eb"
-                  strokeWidth="12"
-                  fill="none"
-                />
-                <circle
-                  cx="80"
-                  cy="80"
-                  r="70"
-                  stroke="#007AFF"
-                  strokeWidth="12"
-                  fill="none"
-                  strokeDasharray={`${(visibilityScore / 100) * 440} 440`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div>
-                  <div className="text-5xl font-bold text-gray-900">{visibilityScore}</div>
-                  <div className="text-gray-500 text-sm">/100</div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-700">
+                Visibility Score
+              </h2>
+              {realScore !== null && (
+                <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
+                  Real Grid Scan Data
+                </span>
+              )}
+            </div>
+            {realScore !== null ? (
+              <>
+                <div className="relative inline-block">
+                  <svg className="transform -rotate-90 w-40 h-40">
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="70"
+                      stroke="#e5e7eb"
+                      strokeWidth="12"
+                      fill="none"
+                    />
+                    <circle
+                      cx="80"
+                      cy="80"
+                      r="70"
+                      stroke="#007AFF"
+                      strokeWidth="12"
+                      fill="none"
+                      strokeDasharray={`${(realScore / 100) * 440} 440`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div>
+                      <div className="text-5xl font-bold text-gray-900">{realScore}</div>
+                      <div className="text-gray-500 text-sm">/100</div>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-4 text-gray-600">
+                  {realScore >= 80 && "Excellent! Your business has strong map visibility."}
+                  {realScore >= 60 && realScore < 80 && "Good visibility, but there's room for improvement."}
+                  {realScore < 60 && "There's significant opportunity to boost your visibility."}
+                </p>
+              </>
+            ) : (
+              <div className="py-8">
+                <p className="text-gray-600 mb-4">Run a grid scan to see your visibility score</p>
+              </div>
+            )}
+            
+            {/* Grid Stats */}
+            {gridStats && (
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="text-gray-600">Visibility Rate</div>
+                  <div className="text-2xl font-bold text-primary">{gridStats.visibilityRate}%</div>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="text-gray-600">Avg Rank</div>
+                  <div className="text-2xl font-bold text-primary">{gridStats.averageRank}</div>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="text-gray-600">Best Rank</div>
+                  <div className="text-2xl font-bold text-green-600">{gridStats.bestRank || 'N/A'}</div>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="text-gray-600">Worst Rank</div>
+                  <div className="text-2xl font-bold text-red-600">{gridStats.worstRank || 'N/A'}</div>
                 </div>
               </div>
-            </div>
-            <p className="mt-4 text-gray-600">
-              {visibilityScore >= 80 && "Excellent! Your business has strong map visibility."}
-              {visibilityScore >= 60 && visibilityScore < 80 && "Good visibility, but there's room for improvement."}
-              {visibilityScore < 60 && "There's significant opportunity to boost your visibility."}
-            </p>
+            )}
+            
+            {/* Scan Button */}
+            {businessLocation && !isScanning && realScore === null && (
+              <button
+                onClick={startGridScan}
+                className="bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Run Real Grid Scan (49 Points)
+              </button>
+            )}
+            
+            {/* Scanning Progress */}
+            {isScanning && (
+              <div className="mt-6">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Scanning point {scanProgress.current} of {scanProgress.total}...
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className="bg-gradient-to-r from-primary to-secondary h-full transition-all duration-300"
+                    style={{ width: `${scanProgress.percentage}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  This may take 30-60 seconds. Please wait...
+                </p>
+              </div>
+            )}
           </div>
         </div>
         
@@ -246,7 +358,7 @@ function ResultsContent() {
             Your ranking across 49 points around your business location
           </p>
           
-          <Heatmap data={heatmapData} />
+
           
           <div className="flex justify-center gap-8 mt-8 text-sm">
             <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
@@ -287,7 +399,7 @@ function ResultsContent() {
                 <h2 className="text-2xl font-semibold text-gray-900">
                   Top 3 Competitors
                 </h2>
-                {useRealData && (
+                {realCompetitors.length > 0 && (
                   <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
@@ -336,8 +448,21 @@ function ResultsContent() {
               </tbody>
             </table>
           </div>
+          
+          {isLoadingCompetitors && competitors.length === 0 && (
+            <div className="text-center py-8">
+              <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-gray-600">Loading competitors from Google Places...</p>
+            </div>
+          )}
+          
+          {!isLoadingCompetitors && competitors.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <p>No competitors found nearby</p>
+            </div>
+          )}
         </div>
-        
+
         {/* Action Checklist */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
           <div className="flex items-center gap-3 mb-2">

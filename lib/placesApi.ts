@@ -45,6 +45,22 @@ export async function searchNearbyPlaces(
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         const places: PlaceResult[] = results
           .filter(place => place.name && place.rating && place.user_ratings_total)
+          .filter(place => {
+            // Filter out the business itself based on location proximity
+            if (!place.geometry?.location) return true
+            
+            const placeLat = place.geometry.location.lat()
+            const placeLng = place.geometry.location.lng()
+            const distance = calculateDistance(
+              params.location.lat,
+              params.location.lng,
+              placeLat,
+              placeLng
+            )
+            
+            // Remove if within 50 meters (likely same business)
+            return distance >= 0.05
+          })
           .map(place => ({
             name: place.name || '',
             rating: place.rating || 0,
