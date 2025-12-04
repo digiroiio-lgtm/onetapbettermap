@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useMemo } from 'react'
+import { useMemo, Suspense } from 'react'
 import Link from 'next/link'
 import { 
   generateMockHeatmap, 
@@ -34,7 +34,7 @@ function Heatmap({ data }: { data: HeatmapCell[][] }) {
   )
 }
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams()
   
   const businessName = searchParams.get('businessName') || 'Your Business'
@@ -226,5 +226,20 @@ export default function ResultsPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading results...</p>
+        </div>
+      </div>
+    }>
+      <ResultsContent />
+    </Suspense>
   )
 }

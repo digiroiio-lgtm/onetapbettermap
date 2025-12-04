@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function ScanningPage() {
+function ScanningContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -69,5 +69,20 @@ export default function ScanningPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function ScanningPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Preparing scan...</p>
+        </div>
+      </div>
+    }>
+      <ScanningContent />
+    </Suspense>
   )
 }
