@@ -1,26 +1,20 @@
 {
   "name": "onetapbettermap",
   "version": "1.0.0",
-  "description": "OneTap Better Map Application - Google Maps Visibility Analyzer",
+  "description": "OneTap Better Map Application",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
-  "keywords": ["seo", "google-maps", "local-seo", "geogrid"],
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "next": "^14.0.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@supabase/supabase-js": "^2.39.0",
-    "@supabase/auth-helpers-nextjs": "^0.8.7",
-    "axios": "^1.6.2",
-    "date-fns": "^3.0.6",
-    "jspdf": "^2.5.1",
-    "zustand": "^4.4.7"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
