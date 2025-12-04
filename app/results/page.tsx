@@ -75,6 +75,7 @@ function ResultsContent() {
   const [realHeatmap, setRealHeatmap] = useState<any>(null)
   const [realScore, setRealScore] = useState<number | null>(null)
   const [gridStats, setGridStats] = useState<any>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   
   // Fetch real competitors from Places API
   useEffect(() => {
@@ -90,12 +91,15 @@ function ResultsContent() {
         const address = `${businessName}, ${city}`
         
         geocoder.geocode({ address }, async (results, status) => {
+          console.log('Geocoding result:', status, 'address:', address, 'results:', results?.length)
+          
           if (status === 'OK' && results && results[0]) {
             const location = {
               lat: results[0].geometry.location.lat(),
               lng: results[0].geometry.location.lng()
             }
             
+            console.log('Business location found:', location)
             setBusinessLocation(location)
             
             // Map keyword to Places API type and keyword
@@ -112,14 +116,22 @@ function ResultsContent() {
             
             console.log('Found competitors:', places.length, places.slice(0, 3).map(p => p.name))
             setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
+            
+            if (places.length === 0) {
+              setErrorMessage('No competitors found nearby. Try a different keyword or location.')
+            }
           } else {
-            console.error('Geocoding failed:', status, 'for address:', address)
+            const errorMsg = `Could not find location: ${address}. Status: ${status}`
+            console.error(errorMsg)
+            setErrorMessage(errorMsg)
           }
           
           setIsLoadingCompetitors(false)
         })
       } catch (error) {
+        const errorMsg = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
         console.error('Error fetching competitors:', error)
+        setErrorMessage(errorMsg)
         setIsLoadingCompetitors(false)
       }
     }
@@ -180,6 +192,21 @@ function ResultsContent() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
+        {/* Debug Panel - Only in development */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-sm">
+            <div className="font-bold text-yellow-800 mb-2">🔧 Debug Info:</div>
+            <div className="space-y-1 text-yellow-700">
+              <div>Business: {businessName}</div>
+              <div>City: {city}</div>
+              <div>Keyword: {keyword}</div>
+              <div>Location: {businessLocation ? `${businessLocation.lat}, ${businessLocation.lng}` : 'Not found'}</div>
+              <div>Competitors: {realCompetitors.length}</div>
+              {errorMessage && <div className="text-red-600 font-semibold">Error: {errorMessage}</div>}
+            </div>
+          </div>
+        )}
+        
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
@@ -465,8 +492,22 @@ function ResultsContent() {
           )}
           
           {!isLoadingCompetitors && competitors.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <p>No competitors found nearby</p>
+            <div className="text-center py-8">
+              <div className="text-gray-500 mb-2">
+                <svg className="w-12 h-12 mx-auto mb-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                <p className="font-medium">No competitors found nearby</p>
+                {errorMessage && (
+                  <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
+                )}
+              </div>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Retry
+              </button>
             </div>
           )}
         </div>
