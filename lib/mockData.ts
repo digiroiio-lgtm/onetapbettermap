@@ -96,6 +96,42 @@ export function calculateVisibilityScore(heatmap: HeatmapCell[][]): number {
   return Math.round(totalScore / cellCount)
 }
 
+export function generateDynamicChecklist(keyword: string) {
+  // Extract business type from keyword
+  const businessType = keyword
+    .toLowerCase()
+    .replace(/near me|in|at|around/gi, '')
+    .trim()
+  
+  // Default to generic category if keyword is too short
+  const category = businessType.length > 3 
+    ? businessType.charAt(0).toUpperCase() + businessType.slice(1)
+    : 'your category'
+  
+  return [
+    {
+      id: 1,
+      text: "Upload 12 new photos",
+      impact: "High"
+    },
+    {
+      id: 2,
+      text: `Add relevant categories and services`,
+      impact: "Medium"
+    },
+    {
+      id: 3,
+      text: "Request 7 new Google reviews",
+      impact: "High"
+    },
+    {
+      id: 4,
+      text: "Update business hours for holidays",
+      impact: "Low"
+    }
+  ]
+}
+
 export const mockChecklist = [
   {
     id: 1,
@@ -104,7 +140,7 @@ export const mockChecklist = [
   },
   {
     id: 2,
-    text: "Add category: 'Cosmetic Dentist'",
+    text: "Add relevant categories and services",
     impact: "Medium"
   },
   {

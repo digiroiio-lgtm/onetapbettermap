@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { mockChecklist, type HeatmapCell } from '@/lib/mockData'
 import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
 import { searchNearbyPlaces, type PlaceResult } from '@/lib/placesApi'
+import { mapKeywordToPlaceType } from '@/lib/keywordMapper'
 import { 
   scanGrid, 
   calculateRealVisibilityScore, 
@@ -97,15 +98,22 @@ function ResultsContent() {
             
             setBusinessLocation(location)
             
-            // Search nearby places with the keyword
+            // Map keyword to Places API type and keyword
+            const mappedSearch = mapKeywordToPlaceType(keyword)
+            console.log('Mapped keyword:', keyword, '→', mappedSearch)
+            
+            // Search nearby places with the mapped keyword/type
             const places = await searchNearbyPlaces({
               location,
               radius: 5000, // 5km radius
-              keyword: keyword.replace(' near me', ''),
+              keyword: mappedSearch.keyword,
+              type: mappedSearch.type,
             })
             
-            console.log('Found competitors:', places.length)
+            console.log('Found competitors:', places.length, places.slice(0, 3).map(p => p.name))
             setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
+          } else {
+            console.error('Geocoding failed:', status, 'for address:', address)
           }
           
           setIsLoadingCompetitors(false)
