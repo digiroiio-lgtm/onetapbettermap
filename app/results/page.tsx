@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useMemo, Suspense } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { 
   generateMockHeatmap, 
   generateMockCompetitors, 
@@ -10,6 +11,19 @@ import {
   mockChecklist,
   type HeatmapCell 
 } from '@/lib/mockData'
+
+// Dynamic import to avoid SSR issues with Google Maps
+const MapComponent = dynamic(() => import('@/components/MapComponent'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+        <p className="text-gray-600">Loading map...</p>
+      </div>
+    </div>
+  )
+})
 
 function Heatmap({ data }: { data: HeatmapCell[][] }) {
   return (
@@ -67,6 +81,24 @@ function ResultsContent() {
           <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
         </div>
         
+        {/* Live Map Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center shadow-lg">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Business Location
+            </h2>
+          </div>
+          <MapComponent 
+            businessName={businessName} 
+            city={city}
+          />
+        </div>
+
         {/* Visibility Score */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
           <div className="text-center">
