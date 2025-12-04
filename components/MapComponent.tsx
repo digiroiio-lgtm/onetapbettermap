@@ -80,14 +80,19 @@ export default function MapComponent({
         })
 
         // If no markers provided, try to geocode the business
-        if (markers.length === 0) {
+        if (markers.length === 0 && businessName && city) {
           const geocoder = new google.maps.Geocoder()
           const address = `${businessName}, ${city}`
           
+          console.log('Geocoding address:', address)
+          
           geocoder.geocode({ address }, (results, status) => {
+            console.log('Geocoding status:', status, 'Results:', results)
+            
             if (status === 'OK' && results && results[0]) {
               const location = results[0].geometry.location
               map.setCenter(location)
+              map.setZoom(15) // Closer zoom for business location
               
               const marker = new google.maps.Marker({
                 position: location,
@@ -95,8 +100,21 @@ export default function MapComponent({
                 title: businessName,
                 animation: google.maps.Animation.BOUNCE,
                 icon: {
-                  url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                  url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                  scaledSize: new google.maps.Size(50, 50)
                 }
+              })
+
+              // Info window with business details
+              const infoWindow = new google.maps.InfoWindow({
+                content: `<div style="padding: 10px;">
+                  <h3 style="margin: 0 0 5px 0; color: #1a73e8;">${businessName}</h3>
+                  <p style="margin: 0; color: #666;">${results[0].formatted_address}</p>
+                </div>`
+              })
+
+              marker.addListener('click', () => {
+                infoWindow.open(map, marker)
               })
 
               markersRef.current.push(marker)
@@ -105,6 +123,17 @@ export default function MapComponent({
               setTimeout(() => {
                 marker.setAnimation(null)
               }, 3000)
+            } else {
+              console.error('Geocoding failed:', status)
+              // Fallback: try just the city
+              if (city) {
+                geocoder.geocode({ address: city }, (cityResults, cityStatus) => {
+                  if (cityStatus === 'OK' && cityResults && cityResults[0]) {
+                    map.setCenter(cityResults[0].geometry.location)
+                    map.setZoom(12)
+                  }
+                })
+              }
             }
           })
         }

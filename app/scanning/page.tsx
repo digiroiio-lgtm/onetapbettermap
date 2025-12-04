@@ -11,6 +11,9 @@ function ScanningContent() {
   const city = searchParams.get('city')
   const keyword = searchParams.get('keyword')
 
+  // Debug log
+  console.log('Scanning page params:', { businessName, city, keyword })
+
   useEffect(() => {
     // Simulate scanning process with 2.5 seconds delay
     const timer = setTimeout(() => {

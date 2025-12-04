@@ -55,6 +55,9 @@ function ResultsContent() {
   const city = searchParams.get('city') || 'Your City'
   const keyword = searchParams.get('keyword') || 'dentist near me'
   
+  // Debug log
+  console.log('Results page params:', { businessName, city, keyword })
+  
   // Generate mock data (memoized to avoid regeneration on re-renders)
   const heatmapData = useMemo(() => generateMockHeatmap(), [])
   const competitors = useMemo(() => generateMockCompetitors(), [])
