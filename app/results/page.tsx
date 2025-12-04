@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useMemo, Suspense } from 'react'
+import { useMemo, Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { 
@@ -11,6 +11,8 @@ import {
   mockChecklist,
   type HeatmapCell 
 } from '@/lib/mockData'
+import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
+import { searchNearbyPlaces, type PlaceResult } from '@/lib/placesApi'
 
 // Dynamic import to avoid SSR issues with Google Maps
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
@@ -58,10 +60,73 @@ function ResultsContent() {
   // Debug log
   console.log('Results page params:', { businessName, city, keyword })
   
+  // State for real competitors
+  const [realCompetitors, setRealCompetitors] = useState<PlaceResult[]>([])
+  const [isLoadingCompetitors, setIsLoadingCompetitors] = useState(false)
+  const [useRealData, setUseRealData] = useState(false)
+  const [businessLocation, setBusinessLocation] = useState<{ lat: number; lng: number } | null>(null)
+  
   // Generate mock data (memoized to avoid regeneration on re-renders)
   const heatmapData = useMemo(() => generateMockHeatmap(), [])
-  const competitors = useMemo(() => generateMockCompetitors(), [])
+  const mockCompetitors = useMemo(() => generateMockCompetitors(), [])
   const visibilityScore = useMemo(() => calculateVisibilityScore(heatmapData), [heatmapData])
+  
+  // Fetch real competitors from Places API
+  useEffect(() => {
+    async function fetchCompetitors() {
+      try {
+        setIsLoadingCompetitors(true)
+        
+        // Load Google Maps script
+        await loadGoogleMapsScript()
+        
+        // Geocode the business location
+        const geocoder = new google.maps.Geocoder()
+        const address = `${businessName}, ${city}`
+        
+        geocoder.geocode({ address }, async (results, status) => {
+          if (status === 'OK' && results && results[0]) {
+            const location = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng()
+            }
+            
+            setBusinessLocation(location)
+            
+            // Search nearby places with the keyword
+            const places = await searchNearbyPlaces({
+              location,
+              radius: 5000, // 5km radius
+              keyword: keyword.replace(' near me', ''),
+            })
+            
+            console.log('Found competitors:', places.length)
+            setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
+            setUseRealData(true)
+          }
+          
+          setIsLoadingCompetitors(false)
+        })
+      } catch (error) {
+        console.error('Error fetching competitors:', error)
+        setIsLoadingCompetitors(false)
+      }
+    }
+    
+    if (businessName && city && keyword) {
+      fetchCompetitors()
+    }
+  }, [businessName, city, keyword])
+  
+  // Choose which competitors to display
+  const competitors = useRealData && realCompetitors.length > 0 
+    ? realCompetitors.slice(0, 3).map((place, index) => ({
+        name: place.name,
+        rating: place.rating,
+        reviews: place.userRatingsTotal,
+        rank: index + 1
+      }))
+    : mockCompetitors
   
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -92,13 +157,34 @@ function ResultsContent() {
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
               </svg>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Business Location
-            </h2>
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Business Location & Competitors
+              </h2>
+              {useRealData && realCompetitors.length > 0 && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Showing {realCompetitors.length} nearby competitors
+                </p>
+              )}
+            </div>
           </div>
           <MapComponent 
             businessName={businessName} 
             city={city}
+            markers={useRealData && businessLocation ? [
+              // Your business (red pin)
+              {
+                position: businessLocation,
+                title: businessName,
+                color: 'red' as const
+              },
+              // Competitors (blue pins)
+              ...realCompetitors.slice(0, 10).map(competitor => ({
+                position: competitor.geometry.location,
+                title: `${competitor.name} (${competitor.rating}★)`,
+                color: 'blue' as const
+              }))
+            ] : undefined}
           />
         </div>
 
@@ -190,15 +276,33 @@ function ResultsContent() {
         
         {/* Competitors */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900">
+                  Top 3 Competitors
+                </h2>
+                {useRealData && (
+                  <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                    Live data from Google Places
+                  </p>
+                )}
+              </div>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Top 3 Competitors
-            </h2>
+            {isLoadingCompetitors && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                Loading...
+              </div>
+            )}
           </div>
           
           <div className="overflow-x-auto">
