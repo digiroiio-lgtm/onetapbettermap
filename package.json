@@ -1,0 +1,19 @@
+{
+  "name": "onetapbettermap",
+  "version": "1.0.0",
+  "description": "OneTap Better Map Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
