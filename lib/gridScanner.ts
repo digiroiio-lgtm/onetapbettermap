@@ -232,9 +232,9 @@ export function resultsToHeatmap(results: RankingResult[]): Array<Array<{ rank: 
       const result = results.find(r => r.point.row === row && r.point.col === col)
       
       let color: 'green' | 'yellow' | 'red' | 'gray' = 'gray'
-      const rank = result?.rank
+      const rank = result?.rank ?? null
       
-      if (rank === null) {
+      if (rank === null || rank === undefined) {
         color = 'gray'
       } else if (rank <= 3) {
         color = 'green'
