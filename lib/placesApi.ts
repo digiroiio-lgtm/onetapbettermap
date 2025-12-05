@@ -18,7 +18,7 @@ export interface PlaceResult {
 export interface NearbySearchParams {
   location: { lat: number; lng: number }
   radius: number
-  keyword?: string
+  keyword: string
   type?: string
 }
 
@@ -37,20 +37,11 @@ export async function searchNearbyPlaces(
     const request: google.maps.places.PlaceSearchRequest = {
       location: new google.maps.LatLng(params.location.lat, params.location.lng),
       radius: params.radius,
+      keyword: params.keyword,
+      type: params.type,
     }
-    
-    // Add keyword if provided, otherwise try type
-    if (params.keyword) {
-      request.keyword = params.keyword
-    }
-    if (params.type) {
-      request.type = params.type
-    }
-
-    console.log('Places API request:', request)
 
     service.nearbySearch(request, (results, status) => {
-      console.log('Places API response:', status, 'results:', results?.length)
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         const places: PlaceResult[] = results
           .filter(place => place.name && place.rating && place.user_ratings_total)

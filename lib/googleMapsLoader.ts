@@ -12,15 +12,22 @@ export function loadGoogleMapsScript(): Promise<void> {
   }
 
   googleMapsLoadPromise = new Promise((resolve, reject) => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    // Access environment variable in browser
+    const apiKey = typeof window !== 'undefined' 
+      ? (window as any).ENV?.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+      : process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+    console.log('Loading Google Maps with API key:', apiKey ? 'Key found' : 'Key NOT found')
 
     if (!apiKey) {
+      console.error('Google Maps API key not found in environment variables')
       reject(new Error('Google Maps API key not found'))
       return
     }
 
     // Check if already loaded
     if (window.google?.maps) {
+      console.log('Google Maps already loaded')
       googleMapsLoaded = true
       resolve()
       return

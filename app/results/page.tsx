@@ -4,10 +4,15 @@ import { useSearchParams } from 'next/navigation'
 import { useMemo, Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { mockChecklist, type HeatmapCell } from '@/lib/mockData'
+import { 
+  generateMockHeatmap, 
+  generateMockCompetitors, 
+  calculateVisibilityScore,
+  mockChecklist,
+  type HeatmapCell 
+} from '@/lib/mockData'
 import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
 import { searchNearbyPlaces, type PlaceResult } from '@/lib/placesApi'
-import { mapKeywordToPlaceType } from '@/lib/keywordMapper'
 import { 
   scanGrid, 
   calculateRealVisibilityScore, 
@@ -66,6 +71,7 @@ function ResultsContent() {
   // State for real competitors
   const [realCompetitors, setRealCompetitors] = useState<PlaceResult[]>([])
   const [isLoadingCompetitors, setIsLoadingCompetitors] = useState(false)
+  const [useRealData, setUseRealData] = useState(false)
   const [businessLocation, setBusinessLocation] = useState<{ lat: number; lng: number } | null>(null)
   
   // State for grid scanning
@@ -75,7 +81,15 @@ function ResultsContent() {
   const [realHeatmap, setRealHeatmap] = useState<any>(null)
   const [realScore, setRealScore] = useState<number | null>(null)
   const [gridStats, setGridStats] = useState<any>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  
+  // Generate mock data (memoized to avoid regeneration on re-renders)
+  const heatmapData = useMemo(() => generateMockHeatmap(), [])
+  const mockCompetitors = useMemo(() => generateMockCompetitors(), [])
+  const visibilityScore = useMemo(() => calculateVisibilityScore(heatmapData), [heatmapData])
+  
+  // Use real or mock data
+  const displayScore = realScore !== null ? realScore : visibilityScore
+  const displayHeatmap = realHeatmap !== null ? realHeatmap : heatmapData
   
   // Fetch real competitors from Places API
   useEffect(() => {
@@ -88,10 +102,18 @@ function ResultsContent() {
         
         // Geocode the business location
         const geocoder = new google.maps.Geocoder()
-        const address = `${businessName}, ${city}`
+        const address = `${businessName}, ${city}, Turkey`
         
-        geocoder.geocode({ address }, async (results, status) => {
-          console.log('Geocoding result:', status, 'address:', address, 'results:', results?.length)
+        console.log('Geocoding address:', address)
+        
+        geocoder.geocode({ 
+          address,
+          region: 'TR', // Prefer Turkey results
+          componentRestrictions: {
+            country: 'TR'
+          }
+        }, async (results, status) => {
+          console.log('Geocode status:', status, 'results:', results?.length)
           
           if (status === 'OK' && results && results[0]) {
             const location = {
@@ -99,39 +121,25 @@ function ResultsContent() {
               lng: results[0].geometry.location.lng()
             }
             
-            console.log('Business location found:', location)
+            console.log('Location found:', location, 'address:', results[0].formatted_address)
             setBusinessLocation(location)
             
-            // Map keyword to Places API type and keyword
-            const mappedSearch = mapKeywordToPlaceType(keyword)
-            console.log('Mapped keyword:', keyword, '→', mappedSearch)
-            
-            // Search nearby places with the mapped keyword/type
+            // Search nearby places with the keyword
             const places = await searchNearbyPlaces({
               location,
               radius: 5000, // 5km radius
-              keyword: mappedSearch.keyword,
-              type: mappedSearch.type,
+              keyword: keyword.replace(' near me', ''),
             })
             
-            console.log('Found competitors:', places.length, places.slice(0, 3).map(p => p.name))
+            console.log('Found competitors:', places.length)
             setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
-            
-            if (places.length === 0) {
-              setErrorMessage('No competitors found nearby. Try a different keyword or location.')
-            }
-          } else {
-            const errorMsg = `Could not find location: ${address}. Status: ${status}`
-            console.error(errorMsg)
-            setErrorMessage(errorMsg)
+            setUseRealData(true)
           }
           
           setIsLoadingCompetitors(false)
         })
       } catch (error) {
-        const errorMsg = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
         console.error('Error fetching competitors:', error)
-        setErrorMessage(errorMsg)
         setIsLoadingCompetitors(false)
       }
     }
@@ -141,13 +149,23 @@ function ResultsContent() {
     }
   }, [businessName, city, keyword])
   
-  // Choose which competitors to display
-  const competitors = realCompetitors.slice(0, 3).map((place, index) => ({
-    name: place.name,
-    rating: place.rating,
-    reviews: place.userRatingsTotal,
-    rank: index + 1
-  }))
+  // Choose which competitors to display - ALWAYS use real data if available
+  const competitors = realCompetitors.length > 0 
+    ? realCompetitors.slice(0, 3).map((place, index) => ({
+        name: place.name,
+        rating: place.rating,
+        reviews: place.userRatingsTotal,
+        rank: index + 1
+      }))
+    : mockCompetitors
+  
+  // Debug log
+  console.log('Displaying competitors:', {
+    useRealData,
+    realCompetitorsCount: realCompetitors.length,
+    displayingReal: realCompetitors.length > 0,
+    competitors: competitors.map(c => c.name)
+  })
   
   // Function to start real grid scanning
   const startGridScan = async () => {
@@ -192,21 +210,6 @@ function ResultsContent() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Debug Panel - Only in development */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-sm">
-            <div className="font-bold text-yellow-800 mb-2">🔧 Debug Info:</div>
-            <div className="space-y-1 text-yellow-700">
-              <div>Business: {businessName}</div>
-              <div>City: {city}</div>
-              <div>Keyword: {keyword}</div>
-              <div>Location: {businessLocation ? `${businessLocation.lat}, ${businessLocation.lng}` : 'Not found'}</div>
-              <div>Competitors: {realCompetitors.length}</div>
-              {errorMessage && <div className="text-red-600 font-semibold">Error: {errorMessage}</div>}
-            </div>
-          </div>
-        )}
-        
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
@@ -237,7 +240,7 @@ function ResultsContent() {
               <h2 className="text-2xl font-semibold text-gray-900">
                 Business Location & Competitors
               </h2>
-              {realCompetitors.length > 0 && (
+              {useRealData && realCompetitors.length > 0 && (
                 <p className="text-sm text-gray-600 mt-1">
                   Showing {realCompetitors.length} nearby competitors
                 </p>
@@ -247,7 +250,9 @@ function ResultsContent() {
           <MapComponent 
             businessName={businessName} 
             city={city}
-            markers={businessLocation ? [
+            center={businessLocation || undefined}
+            zoom={businessLocation ? 14 : 13}
+            markers={useRealData && businessLocation ? [
               // Your business (red pin)
               {
                 position: businessLocation,
@@ -273,51 +278,43 @@ function ResultsContent() {
               </h2>
               {realScore !== null && (
                 <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
-                  Real Grid Scan Data
+                  Real Data
                 </span>
               )}
             </div>
-            {realScore !== null ? (
-              <>
-                <div className="relative inline-block">
-                  <svg className="transform -rotate-90 w-40 h-40">
-                    <circle
-                      cx="80"
-                      cy="80"
-                      r="70"
-                      stroke="#e5e7eb"
-                      strokeWidth="12"
-                      fill="none"
-                    />
-                    <circle
-                      cx="80"
-                      cy="80"
-                      r="70"
-                      stroke="#007AFF"
-                      strokeWidth="12"
-                      fill="none"
-                      strokeDasharray={`${(realScore / 100) * 440} 440`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div>
-                      <div className="text-5xl font-bold text-gray-900">{realScore}</div>
-                      <div className="text-gray-500 text-sm">/100</div>
-                    </div>
-                  </div>
+            <div className="relative inline-block">
+              <svg className="transform -rotate-90 w-40 h-40">
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#e5e7eb"
+                  strokeWidth="12"
+                  fill="none"
+                />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#007AFF"
+                  strokeWidth="12"
+                  fill="none"
+                  strokeDasharray={`${(displayScore / 100) * 440} 440`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div>
+                  <div className="text-5xl font-bold text-gray-900">{displayScore}</div>
+                  <div className="text-gray-500 text-sm">/100</div>
                 </div>
-                <p className="mt-4 text-gray-600">
-                  {realScore >= 80 && "Excellent! Your business has strong map visibility."}
-                  {realScore >= 60 && realScore < 80 && "Good visibility, but there's room for improvement."}
-                  {realScore < 60 && "There's significant opportunity to boost your visibility."}
-                </p>
-              </>
-            ) : (
-              <div className="py-8">
-                <p className="text-gray-600 mb-4">Run a grid scan to see your visibility score</p>
               </div>
-            )}
+            </div>
+            <p className="mt-4 text-gray-600">
+              {displayScore >= 80 && "Excellent! Your business has strong map visibility."}
+              {displayScore >= 60 && displayScore < 80 && "Good visibility, but there's room for improvement."}
+              {displayScore < 60 && "There's significant opportunity to boost your visibility."}
+            </p>
             
             {/* Grid Stats */}
             {gridStats && (
@@ -345,12 +342,12 @@ function ResultsContent() {
             {businessLocation && !isScanning && realScore === null && (
               <button
                 onClick={startGridScan}
-                className="bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+                className="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                Run Real Grid Scan (49 Points)
+                Start Real-Time Analysis
               </button>
             )}
             
@@ -393,7 +390,7 @@ function ResultsContent() {
             Your ranking across 49 points around your business location
           </p>
           
-
+          <Heatmap data={heatmapData} />
           
           <div className="flex justify-center gap-8 mt-8 text-sm">
             <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
@@ -483,35 +480,8 @@ function ResultsContent() {
               </tbody>
             </table>
           </div>
-          
-          {isLoadingCompetitors && competitors.length === 0 && (
-            <div className="text-center py-8">
-              <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
-              <p className="text-gray-600">Loading competitors from Google Places...</p>
-            </div>
-          )}
-          
-          {!isLoadingCompetitors && competitors.length === 0 && (
-            <div className="text-center py-8">
-              <div className="text-gray-500 mb-2">
-                <svg className="w-12 h-12 mx-auto mb-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg>
-                <p className="font-medium">No competitors found nearby</p>
-                {errorMessage && (
-                  <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
-                )}
-              </div>
-              <button 
-                onClick={() => window.location.reload()} 
-                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Retry
-              </button>
-            </div>
-          )}
         </div>
-
+        
         {/* Action Checklist */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
           <div className="flex items-center gap-3 mb-2">

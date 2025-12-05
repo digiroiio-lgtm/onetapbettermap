@@ -80,56 +80,23 @@ export function calculateVisibilityScore(heatmap: HeatmapCell[][]): number {
   for (const row of heatmap) {
     for (const cell of row) {
       // Score based on rank: better rank = higher score
+      // Using same algorithm as real grid scanner
       if (cell.rank <= 3) {
         totalScore += 100
       } else if (cell.rank <= 7) {
-        totalScore += 70
-      } else if (cell.rank <= 10) {
+        totalScore += 75
+      } else if (cell.rank <= 12) {
         totalScore += 50
+      } else if (cell.rank <= 16) {
+        totalScore += 25
       } else {
-        totalScore += 20
+        totalScore += 10
       }
       cellCount++
     }
   }
   
   return Math.round(totalScore / cellCount)
-}
-
-export function generateDynamicChecklist(keyword: string) {
-  // Extract business type from keyword
-  const businessType = keyword
-    .toLowerCase()
-    .replace(/near me|in|at|around/gi, '')
-    .trim()
-  
-  // Default to generic category if keyword is too short
-  const category = businessType.length > 3 
-    ? businessType.charAt(0).toUpperCase() + businessType.slice(1)
-    : 'your category'
-  
-  return [
-    {
-      id: 1,
-      text: "Upload 12 new photos",
-      impact: "High"
-    },
-    {
-      id: 2,
-      text: `Add relevant categories and services`,
-      impact: "Medium"
-    },
-    {
-      id: 3,
-      text: "Request 7 new Google reviews",
-      impact: "High"
-    },
-    {
-      id: 4,
-      text: "Update business hours for holidays",
-      impact: "Low"
-    }
-  ]
 }
 
 export const mockChecklist = [
@@ -140,7 +107,7 @@ export const mockChecklist = [
   },
   {
     id: 2,
-    text: "Add relevant categories and services",
+    text: "Add category: 'Cosmetic Dentist'",
     impact: "Medium"
   },
   {

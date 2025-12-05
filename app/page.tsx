@@ -39,8 +39,11 @@ export default function Home() {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
             One Tap, Better Map.
           </h1>
-          <p className="text-xl sm:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto">
             Boost your Google Maps visibility with a single tap – no SEO complexity.
+          </p>
+          <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto italic">
+            Think of it as a simple Google Maps SEO checker that runs in one tap.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button

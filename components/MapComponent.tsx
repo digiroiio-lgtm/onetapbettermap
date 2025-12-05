@@ -82,15 +82,22 @@ export default function MapComponent({
         // If no markers provided, try to geocode the business
         if (markers.length === 0 && businessName && city) {
           const geocoder = new google.maps.Geocoder()
-          const address = `${businessName}, ${city}`
+          const address = `${businessName}, ${city}, Turkey`
           
-          console.log('Geocoding address:', address)
+          console.log('MapComponent geocoding address:', address)
           
-          geocoder.geocode({ address }, (results, status) => {
-            console.log('Geocoding status:', status, 'Results:', results)
+          geocoder.geocode({ 
+            address,
+            region: 'TR',
+            componentRestrictions: {
+              country: 'TR'
+            }
+          }, (results, status) => {
+            console.log('MapComponent geocoding status:', status, 'Results:', results?.length)
             
             if (status === 'OK' && results && results[0]) {
               const location = results[0].geometry.location
+              console.log('MapComponent setting center to:', location.lat(), location.lng())
               map.setCenter(location)
               map.setZoom(15) // Closer zoom for business location
               
@@ -154,7 +161,62 @@ export default function MapComponent({
       markersRef.current.forEach(marker => marker.setMap(null))
       markersRef.current = []
     }
-  }, [businessName, city, center.lat, center.lng, zoom, markers])
+  }, [businessName, city, zoom]) // Remove center and markers from dependencies
+
+  // Separate effect to update center when it changes
+  useEffect(() => {
+    if (mapInstanceRef.current && center) {
+      console.log('Updating map center to:', center)
+      mapInstanceRef.current.setCenter(center)
+      if (zoom) {
+        mapInstanceRef.current.setZoom(zoom)
+      }
+    }
+  }, [center.lat, center.lng, zoom])
+
+  // Separate effect to update markers when they change
+  useEffect(() => {
+    if (mapInstanceRef.current && markers.length > 0) {
+      console.log('Updating markers:', markers.length)
+      
+      // Clear existing markers
+      markersRef.current.forEach(marker => marker.setMap(null))
+      markersRef.current = []
+
+      // Add new markers
+      markers.forEach(markerData => {
+        const marker = new google.maps.Marker({
+          position: markerData.position,
+          map: mapInstanceRef.current!,
+          title: markerData.title,
+          animation: google.maps.Animation.DROP,
+          icon: markerData.color ? {
+            url: `http://maps.google.com/mapfiles/ms/icons/${markerData.color}-dot.png`
+          } : undefined
+        })
+
+        markersRef.current.push(marker)
+
+        // Add click listener for info window
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div style="padding: 10px;">
+            <h3 style="margin: 0 0 5px 0; color: #1a73e8;">${markerData.title}</h3>
+          </div>`
+        })
+
+        marker.addListener('click', () => {
+          infoWindow.open(mapInstanceRef.current!, marker)
+        })
+      })
+
+      // Fit bounds to show all markers
+      if (markers.length > 1) {
+        const bounds = new google.maps.LatLngBounds()
+        markers.forEach(m => bounds.extend(m.position))
+        mapInstanceRef.current!.fitBounds(bounds)
+      }
+    }
+  }, [markers])
 
   if (error) {
     return (

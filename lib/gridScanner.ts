@@ -146,32 +146,52 @@ export async function scanGrid(
 
 /**
  * Calculate visibility score based on grid scan results
+ * 
+ * Algorithm:
+ * - Visibility Rate (40%): Percentage of grid points where business appears in top 20
+ * - Average Rank Score (60%): Quality of rankings where business appears
+ *   - Rank 1-3: 100 points (excellent visibility)
+ *   - Rank 4-7: 75 points (good visibility)
+ *   - Rank 8-12: 50 points (moderate visibility)
+ *   - Rank 13-16: 25 points (low visibility)
+ *   - Rank 17-20: 10 points (very low visibility)
+ * 
+ * Final Score = (Visibility Rate × 0.4) + (Avg Rank Score × 0.6)
  */
 export function calculateRealVisibilityScore(results: RankingResult[]): number {
-  let totalScore = 0
-  let validPoints = 0
+  const totalPoints = results.length
+  const foundPoints = results.filter(r => r.found).length
   
+  // Visibility Rate: percentage of points where business appears (0-100)
+  const visibilityRate = (foundPoints / totalPoints) * 100
+  
+  // Calculate average rank score for found points
+  let rankScoreSum = 0
   for (const result of results) {
     if (result.rank !== null) {
-      validPoints++
-      
-      // Score based on rank (better rank = higher score)
+      // Convert rank to score (1-20 scale)
+      let rankScore: number
       if (result.rank <= 3) {
-        totalScore += 100
+        rankScore = 100
       } else if (result.rank <= 7) {
-        totalScore += 70
-      } else if (result.rank <= 10) {
-        totalScore += 50
-      } else if (result.rank <= 15) {
-        totalScore += 30
+        rankScore = 75
+      } else if (result.rank <= 12) {
+        rankScore = 50
+      } else if (result.rank <= 16) {
+        rankScore = 25
       } else {
-        totalScore += 10
+        rankScore = 10
       }
+      rankScoreSum += rankScore
     }
   }
   
-  // Average score across all valid points
-  return validPoints > 0 ? Math.round(totalScore / validPoints) : 0
+  const avgRankScore = foundPoints > 0 ? rankScoreSum / foundPoints : 0
+  
+  // Weighted final score: 40% visibility rate + 60% rank quality
+  const finalScore = (visibilityRate * 0.4) + (avgRankScore * 0.6)
+  
+  return Math.round(finalScore)
 }
 
 /**
