@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,8 +17,33 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://onetapbettermap.com/#website",
+    "url": "https://onetapbettermap.com/",
+    "name": "One Tap, Better Map",
+    "description": "One Tap, Better Map is a simple Google Maps SEO checker and optimization tool that shows where you rank on the map and what to fix.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "One Tap, Better Map",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://onetapbettermap.com/logo.png"
+      }
+    }
+  }
+
   return (
     <html lang="en">
+      <head>
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className={inter.className}>
         <Navigation />
         {children}
