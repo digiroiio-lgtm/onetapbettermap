@@ -52,10 +52,8 @@ export async function searchNearbyPlaces(
             const placeLat = place.geometry.location.lat()
             const placeLng = place.geometry.location.lng()
             const distance = calculateDistance(
-              params.location.lat,
-              params.location.lng,
-              placeLat,
-              placeLng
+              params.location,
+              { lat: placeLat, lng: placeLng }
             )
             
             // Remove if within 50 meters (likely same business)
