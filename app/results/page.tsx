@@ -233,14 +233,18 @@ function ResultsContent() {
   }, [realCompetitors, realScore])
   
   // Choose which competitors to display - ALWAYS use real data if available
-  const competitors = realCompetitors.length > 0 
+  // Only show mock competitors in demo mode
+  const isDemo = businessName === 'Demo Business';
+  const competitors = realCompetitors.length > 0
     ? realCompetitors.slice(0, 3).map((place, index) => ({
         name: place.name,
         rating: place.rating,
         reviews: place.userRatingsTotal,
         rank: index + 1
       }))
-    : mockCompetitors
+    : isDemo
+      ? mockCompetitors
+      : [];
   
   // Debug log
   console.log('Displaying competitors:', {
@@ -327,7 +331,23 @@ function ResultsContent() {
           </p>
           <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
         </div>
-        
+
+        {/* Real-Time Analysis Button - only show if not demo */}
+        {businessName !== 'Demo Business' && (
+          <div className="flex flex-col items-center mb-8">
+            <button
+              onClick={startGridScan}
+              disabled={isScanning}
+              className="bg-primary hover:bg-blue-600 text-white font-bold px-8 py-4 rounded-full text-lg shadow-lg transition-all duration-200 mb-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isScanning ? 'Scanning...' : 'Start Real-Time Analysis'}
+            </button>
+            <span className="text-sm text-gray-600 max-w-xl text-center">
+              Run a live scan to see your real-time visibility and competitors based on your business and keyword.
+            </span>
+          </div>
+        )}
+
         {/* Live Map Section */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
           <div className="flex items-center gap-3 mb-6">

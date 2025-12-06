@@ -54,27 +54,29 @@ export async function searchNearbyPlaces(
         console.log('✅ Places API returned', results.length, 'results')
         console.log('First 3 results:', results.slice(0, 3).map(p => ({ name: p.name, rating: p.rating })))
         
-        const filteredByData = results.filter(place => place.name && place.rating && place.user_ratings_total)
-        console.log('After data filter:', filteredByData.length, 'places')
-        
+        const businessPlaceId = results.find(place => {
+          const placeLat = place.geometry?.location?.lat?.() || 0;
+          const placeLng = place.geometry?.location?.lng?.() || 0;
+          const distance = calculateDistance(params.location, { lat: placeLat, lng: placeLng });
+          return distance < 0.05;
+        })?.place_id;
+
+        const filteredByData = results.filter(place => place.name && place.rating && place.user_ratings_total);
+        console.log('After data filter:', filteredByData.length, 'places');
+
         const places: PlaceResult[] = filteredByData
           .filter(place => {
-            // Filter out the business itself based on location proximity
-            if (!place.geometry?.location) return true
-            
-            const placeLat = place.geometry.location.lat()
-            const placeLng = place.geometry.location.lng()
-            const distance = calculateDistance(
-              params.location,
-              { lat: placeLat, lng: placeLng }
-            )
-            
-            // Remove if within 50 meters (likely same business)
-            const keep = distance >= 0.05
+            // Filter out the business itself by placeId or name match, and by location proximity
+            if (!place.geometry?.location) return true;
+            const placeLat = place.geometry.location.lat();
+            const placeLng = place.geometry.location.lng();
+            const distance = calculateDistance(params.location, { lat: placeLat, lng: placeLng });
+            const isSameBusiness = (businessPlaceId && place.place_id === businessPlaceId) || (place.name && place.name.trim().toLowerCase() === params.keyword.trim().toLowerCase());
+            const keep = distance >= 0.05 && !isSameBusiness;
             if (!keep) {
-              console.log('🚫 Filtered out (too close):', place.name, 'distance:', distance.toFixed(3), 'km')
+              console.log('🚫 Filtered out (self or too close):', place.name, 'distance:', distance.toFixed(3), 'km');
             }
-            return keep
+            return keep;
           })
           .map(place => ({
             name: place.name || '',
@@ -93,13 +95,13 @@ export async function searchNearbyPlaces(
           .sort((a, b) => {
             // Sort by rating first, then by review count
             if (b.rating !== a.rating) {
-              return b.rating - a.rating
+              return b.rating - a.rating;
             }
-            return b.userRatingsTotal - a.userRatingsTotal
-          })
+            return b.userRatingsTotal - a.userRatingsTotal;
+          });
 
-        console.log('✅ Returning', places.length, 'final places:', places.slice(0, 3).map(p => p.name))
-        resolve(places)
+        console.log('✅ Returning', places.length, 'final places:', places.slice(0, 3).map(p => p.name));
+        resolve(places);
       } else {
         console.error('❌ Places API error:', status)
         console.error('Status details:', {

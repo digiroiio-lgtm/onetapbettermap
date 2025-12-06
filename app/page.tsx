@@ -1,9 +1,85 @@
-'use client'
+      {/* MapsRankCheck Testimonials Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-50">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">Trusted by 2,000+ Local Businesses</h2>
+          <p className="text-lg text-gray-700 mb-10">See how <span className="font-semibold text-primary">MapsRankCheck</span> is helping businesses grow their online presence and dominate local search.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Review 1 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-4">
+                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
+                </div>
+                <p className="text-gray-800 mb-6">“MapsRankCheck makes it so easy to track my business rankings and spot new opportunities. The heatmap is a game changer for local SEO!”</p>
+              </div>
+              <div className="flex items-center gap-3 mt-4">
+                <span className="w-10 h-10 rounded-full bg-blue-300 border-4 border-white inline-block"></span>
+                <div>
+                  <span className="font-bold text-gray-900">Ayşe Yıldız</span><br />
+                  <span className="text-sm text-gray-500">Cafe Owner, Istanbul</span>
+                </div>
+              </div>
+            </div>
+            {/* Review 2 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-4">
+                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
+                </div>
+                <p className="text-gray-800 mb-6">“The competitor insights and actionable tips from MapsRankCheck helped us climb to the top 3 in Google Maps. Highly recommended!”</p>
+              </div>
+              <div className="flex items-center gap-3 mt-4">
+                <span className="w-10 h-10 rounded-full bg-blue-400 border-4 border-white inline-block"></span>
+                <div>
+                  <span className="font-bold text-gray-900">John Carter</span><br />
+                  <span className="text-sm text-gray-500">Dentist, London</span>
+                </div>
+              </div>
+            </div>
+            {/* Review 3 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-4">
+                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
+                </div>
+                <p className="text-gray-800 mb-6">“I love how MapsRankCheck visualizes my local SEO progress. The dashboard is intuitive and the support team is fantastic!”</p>
+              </div>
+              <div className="flex items-center gap-3 mt-4">
+                <span className="w-10 h-10 rounded-full bg-blue-500 border-4 border-white inline-block"></span>
+                <div>
+                  <span className="font-bold text-gray-900">Elif Demir</span><br />
+                  <span className="text-sm text-gray-500">Bakery Manager, Berlin</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+            <div className="text-center">
+              <span className="text-3xl font-bold text-primary">142%</span>
+              <div className="text-gray-600 mt-2 text-sm">Average ranking improvement</div>
+            </div>
+            <div className="text-center">
+              <span className="text-3xl font-bold text-primary">2,000+</span>
+              <div className="text-gray-600 mt-2 text-sm">Satisfied customers</div>
+            </div>
+            <div className="text-center">
+              <span className="text-3xl font-bold text-primary">1.8M</span>
+              <div className="text-gray-600 mt-2 text-sm">Citations built</div>
+            </div>
+            <div className="text-center">
+              <span className="text-3xl font-bold text-primary">97%</span>
+              <div className="text-gray-600 mt-2 text-sm">Customer satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </section>
+"use client";
 
-import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
+import Link from 'next/link';
+import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
 // Dynamic import to avoid SSR issues
 const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete'), {
@@ -24,6 +100,7 @@ const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete')
 })
 
 export default function Home() {
+  const t = useTranslation().scan;
   const router = useRouter();
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [city, setCity] = useState('');
@@ -203,7 +280,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+                {/* City field removed as requested */}
               <div>
                 <label htmlFor="keyword" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                   <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
@@ -218,7 +295,7 @@ export default function Home() {
                     name="keyword"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
-                    required
+                      // required
                     className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     placeholder="e.g., dentist near me"
                   />
@@ -226,6 +303,7 @@ export default function Home() {
                     🔍
                   </div>
                 </div>
+                  <span className="text-xs text-gray-500 mt-1 block">{t.keywordPlaceholder} ({t.keyword} {t.optional ? t.optional : 'optional'})</span>
               </div>
               
               <button
@@ -334,6 +412,39 @@ export default function Home() {
           <p className="text-blue-100 text-sm mt-6">
             No credit card required • 3 scans/month free • Upgrade anytime to Pro
           </p>
+        </div>
+      </section>
+
+      {/* Viral on X.com & As Seen On Section */}
+      <section className="py-10 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="mb-6 flex flex-col items-center gap-2">
+            <span className="inline-flex items-center gap-2 text-primary font-semibold text-lg">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 2l2.09 6.26L20 9.27l-5 4.87L16.18 21 12 17.27 7.82 21 9 14.14l-5-4.87 5.91-.91z" />
+              </svg>
+              Viral on X.com
+            </span>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              {/* User avatars - placeholder circles */}
+              <span className="w-10 h-10 rounded-full bg-blue-300 border-4 border-white inline-block"></span>
+              <span className="w-10 h-10 rounded-full bg-blue-400 border-4 border-white inline-block"></span>
+              <span className="w-10 h-10 rounded-full bg-blue-500 border-4 border-white inline-block"></span>
+              <span className="w-10 h-10 rounded-full bg-blue-600 border-4 border-white inline-block"></span>
+              <span className="w-10 h-10 rounded-full bg-blue-700 border-4 border-white inline-block"></span>
+              <span className="ml-3 text-yellow-400 text-xl">★★★★★</span>
+              <span className="ml-2 text-gray-700 font-semibold">500+ paying agencies</span>
+            </div>
+          </div>
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">As Seen On:</h3>
+            <div className="flex flex-wrap justify-center items-center gap-8 text-3xl text-gray-700">
+              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">yahoo!</text></svg>finance</span>
+              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">TikTok</text></svg></span>
+              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">MarketWatch</text></svg></span>
+              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#222"/><polygon points="12,10 24,16 12,22" fill="#fff"/></svg>YouTube</span>
+            </div>
+          </div>
         </div>
       </section>
     </main>
