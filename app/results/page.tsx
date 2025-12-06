@@ -529,6 +529,291 @@ function ResultsContent() {
           </div>
         </div>
         
+        {/* Competitive Analysis - You vs Top 3 */}
+        {realCompetitors.length > 0 && (
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-gray-900">
+                    You vs Top 3 Competitors
+                  </h2>
+                </div>
+                <p className="text-gray-600">
+                  See how you stack up against the competition
+                </p>
+              </div>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white rounded-lg shadow-sm">
+                <thead>
+                  <tr className="border-b-2 border-gray-200 bg-gray-50">
+                    <th className="text-left py-4 px-4 font-semibold text-gray-700 rounded-tl-lg">Metric</th>
+                    <th className="text-center py-4 px-4 font-semibold text-blue-700 bg-blue-50">
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg">You</span>
+                        <span className="text-xs font-normal text-gray-500">{businessName}</span>
+                      </div>
+                    </th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600">
+                      <div className="flex flex-col items-center">
+                        <span className="flex items-center gap-1">
+                          <span className="text-yellow-500">👑</span> #1
+                        </span>
+                        <span className="text-xs font-normal text-gray-500">{realCompetitors[0]?.name.substring(0, 20)}</span>
+                      </div>
+                    </th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600">
+                      <div className="flex flex-col items-center">
+                        <span>#2</span>
+                        <span className="text-xs font-normal text-gray-500">{realCompetitors[1]?.name.substring(0, 20)}</span>
+                      </div>
+                    </th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-600 rounded-tr-lg">
+                      <div className="flex flex-col items-center">
+                        <span>#3</span>
+                        <span className="text-xs font-normal text-gray-500">{realCompetitors[2]?.name.substring(0, 20)}</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Rating Row */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-500">⭐</span>
+                        Rating
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl font-bold text-blue-700">N/A</span>
+                        <span className="text-xs text-gray-500">Not fetched</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[0]?.rating.toFixed(1)}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[1]?.rating.toFixed(1)}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[2]?.rating.toFixed(1)}</span>
+                    </td>
+                  </tr>
+                  
+                  {/* Reviews Row */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-blue-500">💬</span>
+                        Reviews
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl font-bold text-blue-700">N/A</span>
+                        <span className="text-xs text-gray-500">Not fetched</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[0]?.userRatingsTotal}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[1]?.userRatingsTotal}</span>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[2]?.userRatingsTotal}</span>
+                    </td>
+                  </tr>
+                  
+                  {/* Visibility Score Row */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-green-500">📍</span>
+                        Visibility Score
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl font-bold text-blue-700">{displayScore}</span>
+                        <span className="text-xs text-gray-500">/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">85</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">78</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">72</span>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Photos Row - Blurred */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-purple-500">📸</span>
+                        Photos
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">12</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">35</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">28</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">22</span>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Response Rate Row - Blurred */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700 rounded-bl-lg">
+                      <div className="flex items-center gap-2">
+                        <span className="text-pink-500">💬</span>
+                        Response Rate
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">45%</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">92%</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">85%</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center rounded-br-lg">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">78%</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Upgrade CTA */}
+            <div className="mt-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+                    <span>🔓</span>
+                    Unlock Full Competitive Analysis
+                  </h3>
+                  <p className="text-blue-100 text-sm mb-3">
+                    Get complete visibility into competitor data: photos, response rates, ranking trends, and more
+                  </p>
+                  <ul className="text-sm text-blue-50 space-y-1">
+                    <li className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                      </svg>
+                      Photo count & quality analysis
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                      </svg>
+                      Review response rate tracking
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                      </svg>
+                      Competitor visibility scores
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                      </svg>
+                      Weekly automated reports
+                    </li>
+                  </ul>
+                </div>
+                <div className="ml-6 text-center">
+                  <div className="bg-white text-blue-600 rounded-lg p-4 mb-3 shadow-xl">
+                    <div className="text-3xl font-bold">$19</div>
+                    <div className="text-xs text-gray-600">per month</div>
+                  </div>
+                  <button className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                    Upgrade Now
+                  </button>
+                  <p className="text-xs text-blue-100 mt-2">Cancel anytime</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {/* Action Checklist */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
