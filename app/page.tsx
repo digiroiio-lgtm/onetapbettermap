@@ -59,6 +59,24 @@ export default function Home() {
               See Demo
             </button>
           </div>
+          
+          {/* Auth CTA */}
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <p className="text-gray-600">Already have an account?</p>
+            <Link
+              href="/login"
+              className="text-primary hover:text-blue-600 font-semibold underline"
+            >
+              Login
+            </Link>
+            <span className="text-gray-400">|</span>
+            <Link
+              href="/signup"
+              className="text-primary hover:text-blue-600 font-semibold underline"
+            >
+              Sign Up Free
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -224,6 +242,35 @@ export default function Home() {
               View Sample Report
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Sign Up */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary to-indigo-700">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Ready to Boost Your Visibility?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join hundreds of businesses tracking their Google Maps performance. Start with 3 free scans per month.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/signup"
+              className="bg-white hover:bg-gray-50 text-primary font-bold px-10 py-4 rounded-full text-lg transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105"
+            >
+              🚀 Sign Up Free
+            </Link>
+            <Link
+              href="/login"
+              className="bg-transparent hover:bg-white/10 text-white font-semibold px-10 py-4 rounded-full text-lg transition-all duration-200 border-2 border-white"
+            >
+              Login to Dashboard
+            </Link>
+          </div>
+          <p className="text-blue-100 text-sm mt-6">
+            No credit card required • 3 scans/month free • Upgrade anytime to Pro
+          </p>
         </div>
       </section>
     </main>

@@ -1334,6 +1334,33 @@ function ResultsContent() {
           </div>
         </div>
 
+        {/* Member CTA Section */}
+        <div className="mt-12 bg-gradient-to-br from-primary to-indigo-700 rounded-2xl p-8 text-center text-white shadow-2xl">
+          <h3 className="text-2xl font-bold mb-3">
+            Want to Track Your Progress Over Time?
+          </h3>
+          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+            Create a free account to save your scans, track improvements, and get personalized recommendations.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/signup"
+              className="bg-white hover:bg-gray-50 text-primary font-bold px-8 py-3 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              🚀 Sign Up Free
+            </Link>
+            <Link
+              href="/login"
+              className="bg-transparent hover:bg-white/10 text-white font-semibold px-8 py-3 rounded-full transition-all duration-200 border-2 border-white"
+            >
+              Already a member? Login
+            </Link>
+          </div>
+          <p className="text-blue-100 text-sm mt-4">
+            3 free scans per month • No credit card required • Upgrade anytime
+          </p>
+        </div>
+
         {/* Back to Home */}
         <div className="text-center mt-8">
           <Link
