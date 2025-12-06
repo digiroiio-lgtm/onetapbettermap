@@ -856,38 +856,8 @@ function ResultsContent() {
             ))}
           </div>
         </div>
-        
-        {/* CTA */}
-        <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl p-8 text-center text-white relative overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <div className="absolute top-4 left-4 w-16 h-16 bg-white rounded-full"></div>
-            <div className="absolute bottom-4 right-4 w-20 h-20 bg-white rounded-full"></div>
-            <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-white rounded-full"></div>
-          </div>
-          <div className="relative z-10">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-              </svg>
-            </div>
-            <h2 className="text-3xl font-bold mb-3">
-              Want the Full Report?
-            </h2>
-            <p className="text-lg mb-6 opacity-90">
-              Get detailed insights, competitor analysis, and personalized recommendations
-            </p>
-            <button
-              disabled
-              className="bg-white text-primary font-semibold px-8 py-4 rounded-full text-lg opacity-50 cursor-not-allowed inline-flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-              Get Full Report (Coming Soon)
-            </button>
-          </div>
-        </div>        {/* Back to Home */}
+
+        {/* Back to Home */}
         <div className="text-center mt-8">
           <Link
             href="/"
