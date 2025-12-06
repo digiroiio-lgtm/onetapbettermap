@@ -713,8 +713,8 @@ function ResultsContent() {
                   </tr>
                   
                   {/* Response Rate Row - Blurred */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="py-4 px-4 font-medium text-gray-700 rounded-bl-lg">
+                  <tr className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-4 px-4 font-medium text-gray-700">
                       <div className="flex items-center gap-2">
                         <span className="text-pink-500">💬</span>
                         Response Rate
@@ -744,12 +744,315 @@ function ResultsContent() {
                         <span className="text-lg font-semibold text-gray-400 blur-sm">85%</span>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-center rounded-br-lg">
+                    <td className="py-4 px-4 text-center">
                       <div className="relative">
                         <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
                           <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
                         </div>
                         <span className="text-lg font-semibold text-gray-400 blur-sm">78%</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* PREMIUM METRICS - FOMO BOOSTERS */}
+                  
+                  {/* Keyword Match Score Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-amber-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-500">🎯</span>
+                        Keyword Match Score
+                        <span className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">34/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">87/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">82/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">74/100</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Category Accuracy Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-purple-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-purple-500">📂</span>
+                        Category Accuracy
+                        <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-purple-100/80 to-pink-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-purple-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">1/4</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-purple-100/80 to-pink-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-purple-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">4/4</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-purple-100/80 to-pink-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-purple-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">3/4</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-purple-100/80 to-pink-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-purple-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">3/4</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Review Velocity Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-green-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-green-500">⚡</span>
+                        Review Velocity (30d)
+                        <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-green-100/80 to-emerald-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-green-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">2 reviews</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-green-100/80 to-emerald-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-green-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">57 reviews</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-green-100/80 to-emerald-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-green-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">39 reviews</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-green-100/80 to-emerald-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-green-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">14 reviews</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Photo Freshness Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-blue-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-blue-500">📷</span>
+                        Photo Freshness (30d)
+                        <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-blue-100/80 to-cyan-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-blue-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">0 photos</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-blue-100/80 to-cyan-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-blue-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">12 photos</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-blue-100/80 to-cyan-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-blue-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">8 photos</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-blue-100/80 to-cyan-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-blue-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">3 photos</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Prominence Index Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-red-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-500">🏆</span>
+                        Prominence Index
+                        <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-red-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-red-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">24/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-red-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-red-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">71/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-red-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-red-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">63/100</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-red-100/80 to-orange-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-red-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">59/100</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Proximity Reach Radius Row - Premium */}
+                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-indigo-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="text-indigo-500">📡</span>
+                        Proximity Reach
+                        <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-indigo-100/80 to-purple-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-indigo-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">0.4 km</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-indigo-100/80 to-purple-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-indigo-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">2.1 km</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-indigo-100/80 to-purple-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-indigo-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">1.8 km</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-indigo-100/80 to-purple-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-indigo-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400 blur-sm">1.4 km</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {/* Weak Zone Analysis Row - Premium */}
+                  <tr className="hover:bg-gray-50 bg-gradient-to-r from-orange-50/30 to-transparent">
+                    <td className="py-4 px-4 font-medium text-gray-700 rounded-bl-lg">
+                      <div className="flex items-center gap-2">
+                        <span className="text-orange-500">🗺️</span>
+                        Weak Zone Analysis
+                        <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">PREMIUM</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center bg-blue-50">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-orange-100/80 to-red-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-orange-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-400 blur-sm">NW Weak</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-orange-100/80 to-red-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-orange-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-400 blur-sm">East strong</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-orange-100/80 to-red-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-orange-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-400 blur-sm">S/W mixed</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center rounded-br-lg">
+                      <div className="relative">
+                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-orange-100/80 to-red-100/80 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-orange-700">🔒 Premium</span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-400 blur-sm">Center only</span>
                       </div>
                     </td>
                   </tr>
@@ -807,6 +1110,178 @@ function ResultsContent() {
                     Upgrade Now
                   </Link>
                   <p className="text-xs text-blue-100 mt-2">Cancel anytime</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CONVERSION MONSTER: What You're Missing Widget */}
+        {realCompetitors.length > 0 && (
+          <div className="bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 rounded-2xl shadow-2xl p-8 mb-8 border-2 border-orange-200 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-amber-300/20 to-yellow-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            
+            <div className="relative z-10">
+              {/* Alert Icon + Header */}
+              <div className="flex items-start gap-4 mb-6">
+                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl animate-bounce">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    ⚠️ What You're Missing Right Now
+                  </h3>
+                  <p className="text-gray-700 text-lg">
+                    Your competitors are outperforming you in <span className="font-bold text-red-600">9 critical areas</span> that directly impact your Google Maps ranking.
+                  </p>
+                </div>
+              </div>
+
+              {/* Critical Gaps List */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg">
+                <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-red-500 text-xl">🔴</span>
+                  Critical Gaps Detected:
+                </h4>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">🎯</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Poor Keyword Match Score</p>
+                      <p className="text-xs text-gray-600">Your competitors use 3x more relevant keywords</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">📂</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Missing 3 Important Categories</p>
+                      <p className="text-xs text-gray-600">Competitors list 4 categories, you have only 1</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">⚡</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Slow Review Velocity</p>
+                      <p className="text-xs text-gray-600">Top competitor gets 28x more monthly reviews</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">📷</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">No Recent Photos</p>
+                      <p className="text-xs text-gray-600">Competitors added 12+ new photos this month</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">🏆</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Low Prominence Index</p>
+                      <p className="text-xs text-gray-600">Your authority score is 66% below market leaders</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">📡</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Limited Proximity Reach</p>
+                      <p className="text-xs text-gray-600">Visible in only 0.4km radius vs competitor's 2.1km</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">🗺️</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Weak Northwest Zone</p>
+                      <p className="text-xs text-gray-600">Ranking 12-20 in critical geographic areas</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">💬</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Poor Response Rate</p>
+                      <p className="text-xs text-gray-600">47% below average - hurting customer trust</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-lg p-3">
+                    <span className="text-2xl flex-shrink-0">📊</span>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Missing Review Themes</p>
+                      <p className="text-xs text-gray-600">Can't see what customers say about competitors</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Impact Statement */}
+              <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-xl p-6 text-white mb-6 shadow-xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                  </svg>
+                  <h4 className="text-xl font-bold">The Bottom Line</h4>
+                </div>
+                <p className="text-lg leading-relaxed">
+                  These gaps are costing you <span className="font-bold underline">hundreds of potential customers every month</span>. While you're reading this, your competitors are getting found on Google Maps and you're not.
+                </p>
+              </div>
+
+              {/* CTA Section */}
+              <div className="bg-white rounded-xl p-6 shadow-xl border-2 border-orange-300">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+                      <span className="text-2xl">🔓</span>
+                      Unlock Premium to See Exact Fixes
+                    </h4>
+                    <p className="text-gray-700 mb-3">
+                      Get the complete analysis with step-by-step instructions to fix every single gap and outrank your competitors.
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1.5">
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                        See all 9 critical metrics in detail
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                        Get exact keyword recommendations
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                        Discover which categories to add
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                        Weekly performance tracking
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-gradient-to-br from-red-500 to-orange-500 text-white rounded-2xl p-6 mb-4 shadow-2xl transform hover:scale-105 transition-transform">
+                      <div className="text-sm font-semibold mb-1">LIMITED TIME</div>
+                      <div className="text-5xl font-bold mb-1">$9</div>
+                      <div className="text-sm opacity-90">per month</div>
+                      <div className="mt-2 text-xs bg-white/20 rounded-full px-3 py-1">
+                        Cancel anytime
+                      </div>
+                    </div>
+                    <Link 
+                      href="/upgrade"
+                      className="inline-block bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold px-8 py-4 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 text-lg"
+                    >
+                      🚀 Fix All Issues Now
+                    </Link>
+                    <p className="text-xs text-gray-500 mt-3">Join 1,247+ businesses already winning on Google Maps</p>
+                  </div>
                 </div>
               </div>
             </div>
