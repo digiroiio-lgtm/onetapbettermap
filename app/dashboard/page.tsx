@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { locales, type LocaleCode, setLocale } from '@/lib/i18n';
 
 interface User {
   id: string;
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
+  const [currentLocale, setCurrentLocale] = useState<LocaleCode>('en');
 
   // Mock scan history
   const [scanHistory] = useState<ScanHistory[]>([
@@ -113,6 +115,10 @@ export default function DashboardPage() {
     const premiumStatus = localStorage.getItem('premiumUser') === 'true';
     setIsPremium(premiumStatus);
 
+    // Get saved locale
+    const savedLocale = (localStorage.getItem('locale') as LocaleCode) || 'en';
+    setCurrentLocale(savedLocale);
+
     setIsLoading(false);
   }, [router]);
 
@@ -120,6 +126,11 @@ export default function DashboardPage() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('currentUser');
     router.push('/');
+  };
+
+  const handleLocaleChange = (newLocale: LocaleCode) => {
+    setCurrentLocale(newLocale);
+    setLocale(newLocale);
   };
 
   if (isLoading || !user) {
@@ -807,13 +818,22 @@ export default function DashboardPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
-                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option selected>English (EN)</option>
-                        <option>Türkçe (TR)</option>
-                        <option>Deutsch (DE)</option>
-                        <option>Français (FR)</option>
-                        <option>Español (ES)</option>
+                      <select 
+                        value={currentLocale}
+                        onChange={(e) => handleLocaleChange(e.target.value as LocaleCode)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      >
+                        {locales.map((locale) => (
+                          <option key={locale.code} value={locale.code}>
+                            {locale.flag} {locale.name} ({locale.code.toUpperCase()})
+                          </option>
+                        ))}
                       </select>
+                      <p className="text-xs text-gray-500 mt-2">
+                        ✅ Active: {locales.find(l => l.code === currentLocale)?.name}
+                        <br />
+                        Page will reload when you change language
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
