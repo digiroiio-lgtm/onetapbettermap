@@ -25,12 +25,16 @@ export interface NearbySearchParams {
 export async function searchNearbyPlaces(
   params: NearbySearchParams
 ): Promise<PlaceResult[]> {
+  console.log('🔍 searchNearbyPlaces called with params:', params)
+  
   return new Promise((resolve, reject) => {
     if (!window.google?.maps?.places) {
+      console.error('❌ Google Places library not loaded')
       reject(new Error('Google Places library not loaded'))
       return
     }
 
+    console.log('✅ Google Places library is loaded')
     const map = new google.maps.Map(document.createElement('div'))
     const service = new google.maps.places.PlacesService(map)
 
@@ -41,10 +45,19 @@ export async function searchNearbyPlaces(
       type: params.type,
     }
 
+    console.log('📍 Sending nearbySearch request:', request)
+
     service.nearbySearch(request, (results, status) => {
+      console.log('📥 nearbySearch response:', { status, resultsCount: results?.length })
+      
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-        const places: PlaceResult[] = results
-          .filter(place => place.name && place.rating && place.user_ratings_total)
+        console.log('✅ Places API returned', results.length, 'results')
+        console.log('First 3 results:', results.slice(0, 3).map(p => ({ name: p.name, rating: p.rating })))
+        
+        const filteredByData = results.filter(place => place.name && place.rating && place.user_ratings_total)
+        console.log('After data filter:', filteredByData.length, 'places')
+        
+        const places: PlaceResult[] = filteredByData
           .filter(place => {
             // Filter out the business itself based on location proximity
             if (!place.geometry?.location) return true
@@ -57,7 +70,11 @@ export async function searchNearbyPlaces(
             )
             
             // Remove if within 50 meters (likely same business)
-            return distance >= 0.05
+            const keep = distance >= 0.05
+            if (!keep) {
+              console.log('🚫 Filtered out (too close):', place.name, 'distance:', distance.toFixed(3), 'km')
+            }
+            return keep
           })
           .map(place => ({
             name: place.name || '',
@@ -81,8 +98,17 @@ export async function searchNearbyPlaces(
             return b.userRatingsTotal - a.userRatingsTotal
           })
 
+        console.log('✅ Returning', places.length, 'final places:', places.slice(0, 3).map(p => p.name))
         resolve(places)
       } else {
+        console.error('❌ Places API error:', status)
+        console.error('Status details:', {
+          OK: status === google.maps.places.PlacesServiceStatus.OK,
+          ZERO_RESULTS: status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS,
+          OVER_QUERY_LIMIT: status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT,
+          REQUEST_DENIED: status === google.maps.places.PlacesServiceStatus.REQUEST_DENIED,
+          INVALID_REQUEST: status === google.maps.places.PlacesServiceStatus.INVALID_REQUEST,
+        })
         reject(new Error(`Places search failed: ${status}`))
       }
     })

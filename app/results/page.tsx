@@ -94,17 +94,27 @@ function ResultsContent() {
   // Fetch real competitors from Places API
   useEffect(() => {
     async function fetchCompetitors() {
+      console.log('🚀 Starting fetchCompetitors...')
+      console.log('Params:', { businessName, city, keyword })
+      
       try {
         setIsLoadingCompetitors(true)
         
         // Load Google Maps script
+        console.log('📦 Loading Google Maps script...')
         await loadGoogleMapsScript()
+        console.log('✅ Google Maps script loaded')
+        
+        // Check if Google Maps is available
+        if (!window.google?.maps) {
+          throw new Error('Google Maps not loaded after script load')
+        }
         
         // Geocode the business location
         const geocoder = new google.maps.Geocoder()
         const address = `${businessName}, ${city}, Turkey`
         
-        console.log('Geocoding address:', address)
+        console.log('📍 Geocoding address:', address)
         
         geocoder.geocode({ 
           address,
@@ -113,7 +123,7 @@ function ResultsContent() {
             country: 'TR'
           }
         }, async (results, status) => {
-          console.log('Geocode status:', status, 'results:', results?.length)
+          console.log('📍 Geocode status:', status, 'results:', results?.length)
           
           if (status === 'OK' && results && results[0]) {
             const location = {
@@ -121,31 +131,39 @@ function ResultsContent() {
               lng: results[0].geometry.location.lng()
             }
             
-            console.log('Location found:', location, 'address:', results[0].formatted_address)
+            console.log('✅ Location found:', location, 'address:', results[0].formatted_address)
             setBusinessLocation(location)
             
             // Search nearby places with the keyword
+            console.log('🔍 Searching nearby places...')
             const places = await searchNearbyPlaces({
               location,
               radius: 5000, // 5km radius
               keyword: keyword.replace(' near me', ''),
             })
             
-            console.log('Found competitors:', places.length)
+            console.log('✅ Found competitors:', places.length, 'places')
+            console.log('Top 3:', places.slice(0, 3).map(p => ({ name: p.name, rating: p.rating })))
+            
             setRealCompetitors(places.slice(0, 10)) // Top 10 competitors
             setUseRealData(true)
+          } else {
+            console.error('❌ Geocoding failed:', status)
           }
           
           setIsLoadingCompetitors(false)
         })
       } catch (error) {
-        console.error('Error fetching competitors:', error)
+        console.error('❌ Error fetching competitors:', error)
         setIsLoadingCompetitors(false)
       }
     }
     
     if (businessName && city && keyword) {
+      console.log('🎯 useEffect triggered - will fetch competitors')
       fetchCompetitors()
+    } else {
+      console.warn('⚠️ Missing params:', { businessName, city, keyword })
     }
   }, [businessName, city, keyword])
   
