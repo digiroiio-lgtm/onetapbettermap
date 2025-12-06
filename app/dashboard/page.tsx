@@ -34,6 +34,8 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isLoading, setIsLoading] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
 
   // Mock scan history
   const [scanHistory] = useState<ScanHistory[]>([
@@ -60,8 +62,38 @@ export default function DashboardPage() {
       keyword: 'dentist near me',
       score: 57,
       date: '2024-12-03 09:45'
+    },
+    {
+      id: 'SCN004',
+      businessName: 'Tokyo Sushi Bar',
+      city: 'Tokyo',
+      keyword: 'sushi restaurant',
+      score: 95,
+      date: '2024-12-01 16:30'
+    },
+    {
+      id: 'SCN005',
+      businessName: 'Berlin Coffee Shop',
+      city: 'Berlin',
+      keyword: 'coffee shop',
+      score: 78,
+      date: '2024-11-28 11:20'
     }
   ]);
+
+  // Filter and sort scans
+  const filteredScans = scanHistory
+    .filter(scan => 
+      scan.businessName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      scan.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      scan.keyword.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'date') {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+      return b.score - a.score;
+    });
 
   useEffect(() => {
     // Check if logged in
@@ -240,6 +272,53 @@ export default function DashboardPage() {
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
+              {/* This Week Stats */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">This Week</h3>
+                    <p className="text-sm text-gray-600">Your performance summary</p>
+                  </div>
+                  <span className="text-3xl">📈</span>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-white rounded-lg p-4">
+                    <p className="text-2xl font-bold text-primary">3</p>
+                    <p className="text-xs text-gray-600 mt-1">Scans Run</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-4">
+                    <p className="text-2xl font-bold text-green-600">79</p>
+                    <p className="text-xs text-gray-600 mt-1">Avg Score</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-4">
+                    <p className="text-2xl font-bold text-emerald-600">+12%</p>
+                    <p className="text-xs text-gray-600 mt-1">Improvement</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Score Trend Chart */}
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Score Trend (Last 30 Days)</h3>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+                  <div className="flex items-end justify-between h-48 gap-2">
+                    {[65, 68, 57, 72, 78, 87, 92].map((score, idx) => (
+                      <div key={idx} className="flex-1 flex flex-col items-center">
+                        <div 
+                          className="w-full bg-gradient-to-t from-primary to-blue-400 rounded-t-lg transition-all hover:from-blue-600 hover:to-blue-500"
+                          style={{ height: `${score}%` }}
+                        />
+                        <p className="text-xs text-gray-600 mt-2">{score}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-4 text-xs text-gray-500">
+                    <span>5 days ago</span>
+                    <span>Today</span>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -301,7 +380,7 @@ export default function DashboardPage() {
               <div>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Scans</h3>
                 <div className="space-y-3">
-                  {scanHistory.slice(0, 3).map((scan) => (
+                  {filteredScans.slice(0, 3).map((scan) => (
                     <div key={scan.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                       <div>
                         <p className="font-medium text-gray-900">{scan.businessName}</p>
@@ -321,29 +400,96 @@ export default function DashboardPage() {
           {/* Scans Tab */}
           {activeTab === 'scans' && (
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Scan History</h3>
-              <div className="space-y-4">
-                {scanHistory.map((scan) => (
-                  <div key={scan.id} className="border border-gray-200 rounded-xl p-4 hover:border-primary transition-all">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{scan.businessName}</h4>
-                        <p className="text-sm text-gray-600">{scan.city} • {scan.keyword}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-primary">{scan.score}%</div>
-                        <p className="text-xs text-gray-500">{scan.date}</p>
-                      </div>
-                    </div>
-                    <Link
-                      href={`/results?businessName=${scan.businessName}&city=${scan.city}&keyword=${scan.keyword}`}
-                      className="text-sm text-primary font-medium hover:text-blue-600"
-                    >
-                      View Full Report →
-                    </Link>
-                  </div>
-                ))}
+              {/* Search and Filter Bar */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="flex-1 relative">
+                  <input
+                    type="search"
+                    placeholder="Search scans by business, city, or keyword..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <div className="flex gap-2">
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  >
+                    <option value="date">Sort by Date</option>
+                    <option value="score">Sort by Score</option>
+                  </select>
+                  <button 
+                    onClick={() => {
+                      const csv = [
+                        ['Business Name', 'City', 'Keyword', 'Score', 'Date'],
+                        ...scanHistory.map(s => [s.businessName, s.city, s.keyword, s.score.toString(), s.date])
+                      ].map(row => row.join(',')).join('\n');
+                      const blob = new Blob([csv], { type: 'text/csv' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = 'scan-history.csv';
+                      a.click();
+                    }}
+                    className="px-4 py-2 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition-colors whitespace-nowrap"
+                  >
+                    📥 Export CSV
+                  </button>
+                </div>
               </div>
+
+              {/* Results Count */}
+              <p className="text-sm text-gray-600 mb-4">
+                Showing {filteredScans.length} of {scanHistory.length} scans
+              </p>
+
+              {/* Scan History */}
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Scan History</h3>
+              {filteredScans.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-3xl">🔍</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">No scans found</h4>
+                  <p className="text-gray-600 mb-6">
+                    {searchQuery ? 'Try adjusting your search' : 'Run your first scan to see results here'}
+                  </p>
+                  <Link
+                    href="/"
+                    className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                  >
+                    Run New Scan
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredScans.map((scan) => (
+                    <div key={scan.id} className="border border-gray-200 rounded-xl p-4 hover:border-primary transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{scan.businessName}</h4>
+                          <p className="text-sm text-gray-600">{scan.city} • {scan.keyword}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-primary">{scan.score}%</div>
+                          <p className="text-xs text-gray-500">{scan.date}</p>
+                        </div>
+                      </div>
+                      <Link
+                        href={`/results?businessName=${scan.businessName}&city=${scan.city}&keyword=${scan.keyword}`}
+                        className="text-sm text-primary font-medium hover:text-blue-600"
+                      >
+                        View Full Report →
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
