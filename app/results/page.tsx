@@ -804,9 +804,12 @@ function ResultsContent() {
                     <div className="text-3xl font-bold">$19</div>
                     <div className="text-xs text-gray-600">per month</div>
                   </div>
-                  <button className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
+                  <Link 
+                    href="/upgrade"
+                    className="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform"
+                  >
                     Upgrade Now
-                  </button>
+                  </Link>
                   <p className="text-xs text-blue-100 mt-2">Cancel anytime</p>
                 </div>
               </div>
