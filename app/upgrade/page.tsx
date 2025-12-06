@@ -50,6 +50,9 @@ export default function UpgradePage() {
     // Mock payment processing
     await new Promise(resolve => setTimeout(resolve, 2000))
 
+    // Set premium status in localStorage
+    localStorage.setItem('premiumUser', 'true')
+    
     setIsProcessing(false)
     setPaymentSuccess(true)
 
@@ -77,7 +80,7 @@ export default function UpgradePage() {
             </p>
             <div className="bg-green-50 rounded-lg p-4 mb-6">
               <p className="text-sm text-green-800 font-medium mb-1">
-                Pro Plan - $19/month
+                Pro Plan - $9/month
               </p>
               <p className="text-xs text-green-600">
                 You now have access to all premium features

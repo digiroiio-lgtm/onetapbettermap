@@ -62,6 +62,30 @@ function Heatmap({ data }: { data: HeatmapCell[][] }) {
   )
 }
 
+// Premium Cell Component - shows locked or unlocked based on premium status
+function PremiumCell({ 
+  value, 
+  isPremium, 
+  gradient = 'bg-gray-100/50'
+}: { 
+  value: string | number
+  isPremium: boolean
+  gradient?: string
+}) {
+  if (isPremium) {
+    return <span className="text-lg font-semibold text-gray-900">{value}</span>
+  }
+  
+  return (
+    <div className="relative">
+      <div className={`absolute inset-0 backdrop-blur-sm ${gradient} rounded flex items-center justify-center`}>
+        <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
+      </div>
+      <span className="text-lg font-semibold text-gray-400 blur-sm">{value}</span>
+    </div>
+  )
+}
+
 function ResultsContent() {
   const searchParams = useSearchParams()
   
@@ -69,8 +93,24 @@ function ResultsContent() {
   const city = searchParams.get('city') || 'Your City'
   const keyword = searchParams.get('keyword') || 'dentist near me'
   
+  // Check if user upgraded
+  const [isPremium, setIsPremium] = useState(false)
+  
+  useEffect(() => {
+    // Check localStorage for premium status
+    const premiumStatus = localStorage.getItem('premiumUser') === 'true'
+    setIsPremium(premiumStatus)
+    
+    // Also check URL parameter
+    const upgraded = searchParams.get('upgraded') === 'true'
+    if (upgraded && !premiumStatus) {
+      localStorage.setItem('premiumUser', 'true')
+      setIsPremium(true)
+    }
+  }, [searchParams])
+  
   // Debug log
-  console.log('Results page params:', { businessName, city, keyword })
+  console.log('Results page params:', { businessName, city, keyword, isPremium })
   
   // State for real competitors
   const [realCompetitors, setRealCompetitors] = useState<PlaceResult[]>([])
@@ -253,6 +293,23 @@ function ResultsContent() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
+        {/* Premium Success Banner - Show only once after upgrade */}
+        {isPremium && searchParams.get('upgraded') === 'true' && (
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-2xl p-6 mb-8 text-white animate-bounce">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-1">🎉 Premium Activated!</h3>
+                <p className="text-green-100">All premium features are now unlocked. Scroll down to see your complete analysis!</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
@@ -645,28 +702,13 @@ function ResultsContent() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">85</span>
-                      </div>
+                      <PremiumCell value="85" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">78</span>
-                      </div>
+                      <PremiumCell value="78" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">72</span>
-                      </div>
+                      <PremiumCell value="72" isPremium={isPremium} />
                     </td>
                   </tr>
                   
@@ -679,36 +721,16 @@ function ResultsContent() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center bg-blue-50">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">12</span>
-                      </div>
+                      <PremiumCell value="12" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">35</span>
-                      </div>
+                      <PremiumCell value="35" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">28</span>
-                      </div>
+                      <PremiumCell value="28" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">22</span>
-                      </div>
+                      <PremiumCell value="22" isPremium={isPremium} />
                     </td>
                   </tr>
                   
@@ -721,36 +743,16 @@ function ResultsContent() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center bg-blue-50">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">45%</span>
-                      </div>
+                      <PremiumCell value="45%" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">92%</span>
-                      </div>
+                      <PremiumCell value="92%" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">85%</span>
-                      </div>
+                      <PremiumCell value="85%" isPremium={isPremium} />
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gray-100/50 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-gray-600">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">78%</span>
-                      </div>
+                      <PremiumCell value="78%" isPremium={isPremium} />
                     </td>
                   </tr>
 
@@ -1116,8 +1118,8 @@ function ResultsContent() {
           </div>
         )}
 
-        {/* CONVERSION MONSTER: What You're Missing Widget */}
-        {realCompetitors.length > 0 && (
+        {/* CONVERSION MONSTER: What You're Missing Widget - Only show if NOT premium */}
+        {realCompetitors.length > 0 && !isPremium && (
           <div className="bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 rounded-2xl shadow-2xl p-8 mb-8 border-2 border-orange-200 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse"></div>
