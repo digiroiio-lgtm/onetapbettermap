@@ -448,54 +448,316 @@ export default function DashboardPage() {
           {/* Settings Tab */}
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Profile Information</h3>
+              {/* Profile & Business Section */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">👤</span>
+                  <h3 className="text-lg font-bold text-gray-900">Profile & Business</h3>
+                </div>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                    <input
-                      type="text"
-                      value={user.name}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      disabled
-                    />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                      <input
+                        type="text"
+                        defaultValue={user.name}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                      <input
+                        type="email"
+                        defaultValue={user.email}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-100"
+                        disabled
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input
-                      type="email"
-                      value={user.email}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      disabled
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
                       <input
                         type="text"
-                        value={user.businessName}
+                        defaultValue={user.businessName}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        disabled
+                        placeholder="Your business name"
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Business Category</label>
+                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option>Restaurant</option>
+                        <option>Dental Clinic</option>
+                        <option>Retail Store</option>
+                        <option>Beauty Salon</option>
+                        <option>Fitness Center</option>
+                        <option>Hotel</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
                       <input
                         type="text"
-                        value={user.city}
+                        defaultValue={user.city}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        disabled
+                        placeholder="City"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                      <input
+                        type="text"
+                        defaultValue={user.country}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="Country"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                      <input
+                        type="url"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="https://yourbusiness.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                      <input
+                        type="tel"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button className="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Section */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">🔐</span>
+                  <h3 className="text-lg font-bold text-gray-900">Security</h3>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Change Password</label>
+                    <div className="space-y-3">
+                      <input
+                        type="password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="Current password"
+                      />
+                      <input
+                        type="password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="New password"
+                      />
+                      <input
+                        type="password"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="Confirm new password"
+                      />
+                    </div>
+                    <button className="mt-3 px-6 py-2 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition-colors">
+                      Update Password
+                    </button>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Two-Factor Authentication</h4>
+                        <p className="text-sm text-gray-600 mt-1">Add an extra layer of security to your account</p>
+                      </div>
+                      <button className="px-4 py-2 bg-blue-100 text-primary rounded-lg font-semibold hover:bg-blue-200 transition-colors">
+                        Enable
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
 
+              {/* Notifications Section */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">📧</span>
+                  <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Weekly Scan Summary</h4>
+                      <p className="text-sm text-gray-600">Get a weekly email with your visibility stats</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Ranking Changes Alerts</h4>
+                      <p className="text-sm text-gray-600">Get notified when your visibility score changes</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Competitor Updates</h4>
+                      <p className="text-sm text-gray-600">Monitor when competitors make changes</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Product Updates & Tips</h4>
+                      <p className="text-sm text-gray-600">Learn about new features and best practices</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div className="pt-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Notification Frequency</label>
+                    <select className="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                      <option>Daily</option>
+                      <option selected>Weekly</option>
+                      <option>Monthly</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preferences Section */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">🎨</span>
+                  <h3 className="text-lg font-bold text-gray-900">Display Preferences</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option selected>English (EN)</option>
+                        <option>Türkçe (TR)</option>
+                        <option>Deutsch (DE)</option>
+                        <option>Français (FR)</option>
+                        <option>Español (ES)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option>UTC</option>
+                        <option selected>GMT (London)</option>
+                        <option>EST (New York)</option>
+                        <option>PST (Los Angeles)</option>
+                        <option>CET (Berlin)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
+                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option>MM/DD/YYYY</option>
+                        <option selected>DD/MM/YYYY</option>
+                        <option>YYYY-MM-DD</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option selected>Light</option>
+                        <option>Dark</option>
+                        <option>Auto</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data & Privacy Section */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">📊</span>
+                  <h3 className="text-lg font-bold text-gray-900">Data & Privacy</h3>
+                </div>
+                <div className="space-y-3">
+                  <button className="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Export My Data</h4>
+                        <p className="text-sm text-gray-600">Download all your scan history and reports</p>
+                      </div>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                  </button>
+
+                  <button className="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:border-primary hover:bg-blue-50 transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Privacy Settings</h4>
+                        <p className="text-sm text-gray-600">Manage how your data is used</p>
+                      </div>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl">⚠️</span>
+                  <h3 className="text-lg font-bold text-red-900">Danger Zone</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Delete Account</h4>
+                      <p className="text-sm text-gray-600">Permanently delete your account and all data</p>
+                    </div>
+                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                      Delete Account
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sign Out */}
               <div className="pt-6 border-t border-gray-200">
                 <button
                   onClick={handleLogout}
-                  className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                  className="px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition-colors"
                 >
                   Sign Out
                 </button>
