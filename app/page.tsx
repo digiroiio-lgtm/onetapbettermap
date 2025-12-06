@@ -1,8 +1,34 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+// Dynamic import to avoid SSR issues
+const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete'), {
+  ssr: false,
+  loading: () => (
+    <div className="relative">
+      <input
+        type="text"
+        className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 outline-none"
+        placeholder="Loading..."
+        disabled
+      />
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+        🏢
+      </div>
+    </div>
+  )
+})
 
 export default function Home() {
+  const router = useRouter();
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
+  const [city, setCity] = useState('');
+  const [keyword, setKeyword] = useState('');
+
   const scrollToScan = () => {
     const scanSection = document.getElementById('scan-section')
     scanSection?.scrollIntoView({ behavior: 'smooth' })
@@ -12,6 +38,33 @@ export default function Home() {
     const demoSection = document.getElementById('demo-section')
     demoSection?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const handlePlaceSelect = (place: google.maps.places.PlaceResult) => {
+    setSelectedPlace(place);
+    
+    // Extract city from address components
+    const cityComponent = place.address_components?.find(
+      component => component.types.includes('locality') || component.types.includes('administrative_area_level_1')
+    );
+    if (cityComponent) {
+      setCity(cityComponent.long_name);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedPlace) {
+      alert('Please select a business from the suggestions');
+      return;
+    }
+
+    const businessName = selectedPlace.name || '';
+    const finalCity = city || 'Unknown';
+    const finalKeyword = keyword || 'business near me';
+
+    router.push(`/scanning?businessName=${encodeURIComponent(businessName)}&city=${encodeURIComponent(finalCity)}&keyword=${encodeURIComponent(finalKeyword)}`);
+  };
 
   return (
     <main className="min-h-screen">
@@ -103,7 +156,7 @@ export default function Home() {
               Enter your business details to see how you rank on Google Maps
             </p>
             
-            <form action="/scanning" method="GET" className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                   <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
@@ -111,19 +164,20 @@ export default function Home() {
                   </svg>
                   Business Name
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="businessName"
-                    name="businessName"
-                    required
-                    className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                    placeholder="e.g., Smith Dental Care"
-                  />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    🏢
-                  </div>
-                </div>
+                <PlaceAutocomplete
+                  onPlaceSelect={handlePlaceSelect}
+                  placeholder="Start typing your business name..."
+                  className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  types={['establishment']}
+                />
+                {selectedPlace && (
+                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Selected: {selectedPlace.name}
+                  </p>
+                )}
               </div>
               
               <div>
@@ -138,6 +192,8 @@ export default function Home() {
                     type="text"
                     id="city"
                     name="city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
                     required
                     className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     placeholder="e.g., San Francisco"
@@ -160,7 +216,8 @@ export default function Home() {
                     type="text"
                     id="keyword"
                     name="keyword"
-                    defaultValue="dentist near me"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
                     required
                     className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     placeholder="e.g., dentist near me"
@@ -180,6 +237,12 @@ export default function Home() {
                 </svg>
                 Run My Free Scan
               </button>
+              
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p className="text-sm text-gray-600 text-center">
+                  💡 <strong>Tip:</strong> Start typing your business name and select from Google's suggestions for accurate results
+                </p>
+              </div>
             </form>
             </div>
           </div>
