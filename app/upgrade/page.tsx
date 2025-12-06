@@ -123,14 +123,14 @@ export default function UpgradePage() {
                   <p className="text-blue-100 text-sm">Everything you need to dominate local search</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-5xl font-bold">$19</div>
+                  <div className="text-5xl font-bold">$9</div>
                   <div className="text-blue-100 text-sm">per month</div>
                 </div>
               </div>
               
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6">
                 <div className="text-sm text-blue-100 mb-1">Billed monthly</div>
-                <div className="text-2xl font-bold">$19.00 USD</div>
+                <div className="text-2xl font-bold">$9.00 USD</div>
                 <div className="text-xs text-blue-100 mt-1">Cancel anytime, no commitments</div>
               </div>
 
@@ -350,7 +350,7 @@ export default function UpgradePage() {
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
-                    Subscribe for $19/month
+                    Subscribe for $9/month
                   </span>
                 )}
               </button>

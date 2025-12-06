@@ -119,16 +119,12 @@ function ResultsContent() {
         
         // Geocode the business location
         const geocoder = new google.maps.Geocoder()
-        const address = `${businessName}, ${city}, Turkey`
+        const address = `${businessName}, ${city}`
         
         console.log('📍 Geocoding address:', address)
         
         geocoder.geocode({ 
-          address,
-          region: 'TR', // Prefer Turkey results
-          componentRestrictions: {
-            country: 'TR'
-          }
+          address
         }, async (results, status) => {
           console.log('📍 Geocode status:', status, 'results:', results?.length)
           
@@ -801,7 +797,7 @@ function ResultsContent() {
                 </div>
                 <div className="ml-6 text-center">
                   <div className="bg-white text-blue-600 rounded-lg p-4 mb-3 shadow-xl">
-                    <div className="text-3xl font-bold">$19</div>
+                    <div className="text-3xl font-bold">$9</div>
                     <div className="text-xs text-gray-600">per month</div>
                   </div>
                   <Link 

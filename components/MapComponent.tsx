@@ -82,16 +82,12 @@ export default function MapComponent({
         // If no markers provided, try to geocode the business
         if (markers.length === 0 && businessName && city) {
           const geocoder = new google.maps.Geocoder()
-          const address = `${businessName}, ${city}, Turkey`
+          const address = `${businessName}, ${city}`
           
           console.log('MapComponent geocoding address:', address)
           
           geocoder.geocode({ 
-            address,
-            region: 'TR',
-            componentRestrictions: {
-              country: 'TR'
-            }
+            address
           }, (results, status) => {
             console.log('MapComponent geocoding status:', status, 'Results:', results?.length)
             
