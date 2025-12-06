@@ -8,7 +8,6 @@ import {
   generateMockHeatmap, 
   generateMockCompetitors, 
   calculateVisibilityScore,
-  mockChecklist,
   type HeatmapCell 
 } from '@/lib/mockData'
 import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
@@ -21,6 +20,11 @@ import {
   type RankingResult,
   type ScanProgress
 } from '@/lib/gridScanner'
+import { 
+  generateRecommendations, 
+  getDefaultRecommendations,
+  type Recommendation 
+} from '@/lib/recommendationEngine'
 
 // Dynamic import to avoid SSR issues with Google Maps
 const MapComponent = dynamic(() => import('@/components/MapComponent'), {
@@ -81,6 +85,9 @@ function ResultsContent() {
   const [realHeatmap, setRealHeatmap] = useState<any>(null)
   const [realScore, setRealScore] = useState<number | null>(null)
   const [gridStats, setGridStats] = useState<any>(null)
+  
+  // State for recommendations
+  const [recommendations, setRecommendations] = useState<Recommendation[]>(getDefaultRecommendations())
   
   // Generate mock data (memoized to avoid regeneration on re-renders)
   const heatmapData = useMemo(() => generateMockHeatmap(), [])
@@ -166,6 +173,28 @@ function ResultsContent() {
       console.warn('⚠️ Missing params:', { businessName, city, keyword })
     }
   }, [businessName, city, keyword])
+  
+  // Generate recommendations when competitor data changes
+  useEffect(() => {
+    if (realCompetitors.length > 0) {
+      console.log('🎯 Generating recommendations based on competitor data...')
+      
+      // For now, we don't have business rating/reviews from the form
+      // In a real app, these would come from the business's actual Google Place data
+      const businessRating = null // Could fetch from Places API with business name
+      const businessReviews = null // Could fetch from Places API with business name
+      
+      const newRecommendations = generateRecommendations(
+        businessRating,
+        businessReviews,
+        realCompetitors,
+        realScore
+      )
+      
+      setRecommendations(newRecommendations)
+      console.log('✅ Updated recommendations:', newRecommendations.length, 'items')
+    }
+  }, [realCompetitors, realScore])
   
   // Choose which competitors to display - ALWAYS use real data if available
   const competitors = realCompetitors.length > 0 
@@ -513,17 +542,23 @@ function ResultsContent() {
             </h2>
           </div>
           <p className="text-gray-600 mb-6">
-            Complete these tasks to improve your Google Maps ranking
+            {realCompetitors.length > 0 
+              ? `Based on analysis of ${realCompetitors.length} competitors in your area`
+              : 'Complete these tasks to improve your Google Maps ranking'
+            }
           </p>
           
           <div className="space-y-3">
-            {mockChecklist.map((item) => (
+            {recommendations.map((item) => (
               <div key={item.id} className="flex items-start gap-3 p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="mt-1">
                   <div className="w-5 h-5 border-2 border-gray-300 rounded"></div>
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-900 font-medium">{item.text}</p>
+                  {item.reason && (
+                    <p className="text-sm text-gray-500 mt-1">{item.reason}</p>
+                  )}
                 </div>
                 <span className={`
                   px-3 py-1 rounded-full text-xs font-semibold
