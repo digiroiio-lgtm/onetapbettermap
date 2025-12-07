@@ -368,30 +368,6 @@ function ResultsContent() {
             </div>
           </div>
         )}
-        {/* Skor Hesaplama Açıklaması */}
-        <div className="mb-8 bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-xl text-sm text-gray-800">
-          <p className="font-semibold text-gray-900">
-            Skor Hesaplama Mantığı
-          </p>
-          <ul className="list-disc ml-5 mt-3 space-y-1">
-            <li>
-              <span className="font-semibold">Görünürlük Oranı (30%)</span>: Harita üzerindeki 49 noktanın yüzde kaçı ilk 20'de.
-            </li>
-            <li>
-              <span className="font-semibold">Ortalama Sıra Skoru (40%)</span>: Bulunan noktalardaki sıralama kalitesi.
-              <span className="block text-xs text-gray-600">
-                1-3: 100 puan, 4-7: 75 puan, 8-12: 50 puan, 13-16: 25 puan, 17-20: 10 puan
-              </span>
-            </li>
-            <li>
-              <span className="font-semibold">Premium Metrikler (30%)</span>: Anahtar kelime uyumu, kategori doğruluğu, yorum hızı, fotoğraf güncelliği, öne çıkma, yakınlık erişimi, zayıf bölgeler, kritik eksikler, sosyal sinyal, bilgi tamlığı, güncel çalışma saatleri.
-            </li>
-          </ul>
-          <p className="mt-2 text-xs text-gray-600">
-            Nihai skor: (Görünürlük × 0.3) + (Ortalama Sıra × 0.4) + (Premium Metrikler × 0.3)
-          </p>
-        </div>
-
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
