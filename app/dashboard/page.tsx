@@ -75,7 +75,6 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
   const [currentLocale, setCurrentLocale] = useState<LocaleCode>('en');
-  // Skor trend tabı ve dummy veri
   const [trendTab, setTrendTab] = useState(0); // 0: 3 ay, 1: 6 ay, 2: 12 ay
   const trendData: number[][] = [
     // 3 ay (12 hafta)
@@ -413,31 +412,6 @@ export default function DashboardPage() {
                     <p className="text-2xl font-bold text-emerald-600">+12%</p>
                     <p className="text-xs text-gray-600 mt-1">Improvement</p>
                   </div>
-                </div>
-              </div>
-
-  // Skor trend tabı ve dummy veri
-  const [trendTab, setTrendTab] = useState(0); // 0: 3 ay, 1: 6 ay, 2: 12 ay
-  const trendData: number[][] = [
-    // 3 ay (12 hafta)
-    [65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95],
-    // 6 ay (24 hafta)
-    [60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95],
-    // 12 ay (48 hafta)
-    [55, 58, 60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73]
-  ];
-              {/* Skor Hesaplama Açıklaması */}
-              <div className="mb-6">
-                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl text-sm text-gray-800">
-                  <b>Skor Hesaplama Mantığı:</b><br/>
-                  <ul className="list-disc ml-4 mt-2 space-y-1">
-                    <li><b>Görünürlük Oranı</b> (%30): Harita üzerindeki noktaların yüzde kaçı ilk 20'de yer alıyor.</li>
-                    <li><b>Ortalama Sıra Skoru</b> (%40): Bulunan noktalardaki sıralama kalitesi.<br/>
-                      <span className="text-xs">1-3: 100 puan, 4-7: 75 puan, 8-12: 50 puan, 13-16: 25 puan, 17-20: 10 puan</span>
-                    </li>
-                    <li><b>Premium Metrikler</b> (%30): Anahtar kelime uyumu, kategori doğruluğu, yorum hızı, fotoğraf güncelliği, öne çıkma, yakınlık erişimi, zayıf bölgeler, kritik eksikler, sosyal sinyal, bilgi tamlığı, güncel çalışma saatleri.</li>
-                  </ul>
-                  <div className="mt-2 text-xs text-gray-600">Nihai skor: (Görünürlük × 0.3) + (Ortalama Sıra × 0.4) + (Premium Metrikler × 0.3)</div>
                 </div>
               </div>
               {/* Score Trend Chart - 3/6/12 Ay */}
