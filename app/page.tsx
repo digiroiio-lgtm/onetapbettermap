@@ -73,6 +73,23 @@ export default function Home() {
     }
   };
 
+  const handleCitySelect = (place: google.maps.places.PlaceResult) => {
+    const cityComponent = place.address_components?.find(
+      component =>
+        component.types.includes('locality') ||
+        component.types.includes('administrative_area_level_1') ||
+        component.types.includes('administrative_area_level_2')
+    )
+
+    if (cityComponent) {
+      setCity(cityComponent.long_name)
+    } else if (place.name) {
+      setCity(place.name)
+    } else if (place.formatted_address) {
+      setCity(place.formatted_address)
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (limitReached) return;
@@ -227,21 +244,16 @@ export default function Home() {
                   </svg>
                   City
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                    placeholder="e.g., San Francisco"
-                  />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    📍
-                  </div>
-                </div>
+                <PlaceAutocomplete
+                  onPlaceSelect={handleCitySelect}
+                  onInputChange={setCity}
+                  value={city}
+                  placeholder="e.g., San Francisco"
+                  className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  types={['(cities)']}
+                  startIcon="📍"
+                  required
+                />
               </div>
                 {/* City field removed as requested */}
               <div>

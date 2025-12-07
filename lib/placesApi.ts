@@ -20,6 +20,9 @@ export interface NearbySearchParams {
   radius: number
   keyword: string
   type?: string
+  businessName?: string
+  businessPlaceId?: string
+  city?: string
 }
 
 export async function searchNearbyPlaces(
@@ -38,11 +41,12 @@ export async function searchNearbyPlaces(
     const map = new google.maps.Map(document.createElement('div'))
     const service = new google.maps.places.PlacesService(map)
 
+    const refinedKeyword = [params.keyword, params.city].filter(Boolean).join(' ').trim()
     const request: google.maps.places.PlaceSearchRequest = {
       location: new google.maps.LatLng(params.location.lat, params.location.lng),
       radius: params.radius,
-      keyword: params.keyword,
-      type: params.type,
+      keyword: refinedKeyword || params.keyword,
+      type: params.type || 'establishment',
     }
 
     console.log('📍 Sending nearbySearch request:', request)
@@ -54,29 +58,36 @@ export async function searchNearbyPlaces(
         console.log('✅ Places API returned', results.length, 'results')
         console.log('First 3 results:', results.slice(0, 3).map(p => ({ name: p.name, rating: p.rating })))
         
-        const businessPlaceId = results.find(place => {
-          const placeLat = place.geometry?.location?.lat?.() || 0;
-          const placeLng = place.geometry?.location?.lng?.() || 0;
-          const distance = calculateDistance(params.location, { lat: placeLat, lng: placeLng });
-          return distance < 0.05;
-        })?.place_id;
-
-        const filteredByData = results.filter(place => place.name && place.rating && place.user_ratings_total);
+        const filteredByData = results.filter(place => 
+          !!place.name && typeof place.rating === 'number' && typeof place.user_ratings_total === 'number' && !!place.geometry?.location
+        );
         console.log('After data filter:', filteredByData.length, 'places');
 
+        const normalizedBusinessName = params.businessName?.trim().toLowerCase()
+        
         const places: PlaceResult[] = filteredByData
           .filter(place => {
-            // Filter out the business itself by placeId or name match, and by location proximity
-            if (!place.geometry?.location) return true;
-            const placeLat = place.geometry.location.lat();
-            const placeLng = place.geometry.location.lng();
-            const distance = calculateDistance(params.location, { lat: placeLat, lng: placeLng });
-            const isSameBusiness = (businessPlaceId && place.place_id === businessPlaceId) || (place.name && place.name.trim().toLowerCase() === params.keyword.trim().toLowerCase());
-            const keep = distance >= 0.05 && !isSameBusiness;
-            if (!keep) {
-              console.log('🚫 Filtered out (self or too close):', place.name, 'distance:', distance.toFixed(3), 'km');
+            if (!place.geometry?.location) return false
+            
+            const placeLat = place.geometry.location.lat()
+            const placeLng = place.geometry.location.lng()
+            const distance = calculateDistance(params.location, { lat: placeLat, lng: placeLng })
+            const normalizedPlaceName = place.name?.trim().toLowerCase()
+            const isSameById = params.businessPlaceId && place.place_id === params.businessPlaceId
+            const isSameByName = normalizedBusinessName && normalizedPlaceName === normalizedBusinessName
+            const isSelf = Boolean(isSameById || isSameByName)
+            
+            if (isSelf) {
+              console.log('🚫 Filtered self/business match:', {
+                name: place.name,
+                placeId: place.place_id,
+                distance: distance.toFixed(3),
+                isSameById,
+                isSameByName,
+              })
             }
-            return keep;
+            
+            return !isSelf
           })
           .map(place => ({
             name: place.name || '',

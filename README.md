@@ -41,9 +41,18 @@ Create a `.env.local` file:
 
 ```env
 # Google Places API
-AIzaSyADJ6VWnBqeqmYi35kb-A8xa_PCoedz7b4=your_google_maps_api_key
-# Optional fallback if your hosting provider strips NEXT_PUBLIC_ vars
-GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key # optional fallback
+
+# NextAuth / OAuth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=replace_with_strong_secret
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+# Apple OAuth (optional)
+APPLE_CLIENT_ID=your.apple.bundle.id
+APPLE_CLIENT_SECRET=generated_apple_client_secret
+NEXT_PUBLIC_ENABLE_APPLE_LOGIN=false
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -69,7 +78,15 @@ CRON_SECRET=your_random_secret_string
 3. Create API Key
 4. Add to `.env.local` (either `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` or `GOOGLE_MAPS_API_KEY`)
 
-### 6. Run Development Server
+### 6. Configure OAuth Providers
+
+1. Create a Google Cloud project and OAuth credentials
+2. Add `https://your-domain.com/api/auth/callback/google` as an authorized callback URL
+3. Populate `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+4. Generate a `NEXTAUTH_SECRET` (e.g., `openssl rand -base64 32`)
+5. (Optional) Configure Apple, set `NEXT_PUBLIC_ENABLE_APPLE_LOGIN=true`, and add its callback `https://your-domain.com/api/auth/callback/apple`
+
+### 7. Run Development Server
 
 ```bash
 npm run dev

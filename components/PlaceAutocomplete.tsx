@@ -1,14 +1,17 @@
-'use client';
+'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
 
 interface PlaceAutocompleteProps {
-  onPlaceSelect: (place: google.maps.places.PlaceResult) => void;
-  placeholder?: string;
-  className?: string;
-  types?: string[];
-  value?: string;
-  onInputChange?: (value: string) => void;
+  onPlaceSelect: (place: google.maps.places.PlaceResult) => void
+  placeholder?: string
+  className?: string
+  types?: string[]
+  value?: string
+  onInputChange?: (value: string) => void
+  startIcon?: ReactNode
+  required?: boolean
 }
 
 export default function PlaceAutocomplete({
@@ -17,62 +20,65 @@ export default function PlaceAutocomplete({
   className = '',
   types = ['establishment'],
   value,
-  onInputChange
+  onInputChange,
+  startIcon = '🏢',
+  required = false,
 }: PlaceAutocompleteProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check if Google Maps is already loaded
-    if (window.google?.maps?.places) {
-      setIsLoaded(true);
-      return;
+    let isMounted = true
+
+    async function initScript() {
+      if (window.google?.maps?.places) {
+        setIsLoaded(true)
+        return
+      }
+
+      try {
+        await loadGoogleMapsScript()
+        if (isMounted) {
+          setIsLoaded(true)
+        }
+      } catch (err) {
+        console.error('Failed to load Google Places script', err)
+        if (isMounted) {
+          setError('Google Autocomplete failed to load')
+        }
+      }
     }
 
-    // Load Google Maps script if not loaded
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      setIsLoaded(true);
-    };
-    document.head.appendChild(script);
+    initScript()
 
     return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, []);
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
-    if (!isLoaded || !inputRef.current) return;
+    if (!isLoaded || !inputRef.current || !window.google?.maps?.places) return
 
     const autocompleteInstance = new google.maps.places.Autocomplete(inputRef.current, {
       types,
-      fields: ['name', 'formatted_address', 'place_id', 'geometry', 'address_components', 'business_status']
-    });
+      fields: ['name', 'formatted_address', 'place_id', 'geometry', 'address_components', 'business_status'],
+    })
 
     autocompleteInstance.addListener('place_changed', () => {
-      const place = autocompleteInstance.getPlace();
-      if (place && place.geometry) {
+      const place = autocompleteInstance.getPlace()
+      if (place) {
         if (place.name) {
-          onInputChange?.(place.name);
+          onInputChange?.(place.name)
         }
-        onPlaceSelect(place);
+        onPlaceSelect(place)
       }
-    });
-
-    setAutocomplete(autocompleteInstance);
+    })
 
     return () => {
-      if (autocompleteInstance) {
-        google.maps.event.clearInstanceListeners(autocompleteInstance);
-      }
-    };
-  }, [isLoaded, onPlaceSelect, types]);
+      google.maps.event.clearInstanceListeners(autocompleteInstance)
+    }
+  }, [isLoaded, onPlaceSelect, onInputChange, types])
 
   return (
     <div className="relative">
@@ -83,15 +89,24 @@ export default function PlaceAutocomplete({
         onChange={(e) => onInputChange?.(e.target.value)}
         placeholder={placeholder}
         className={className}
+        required={required}
+        aria-invalid={!!error}
       />
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-        🏢
-      </div>
-      {!isLoaded && (
+      {startIcon && (
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+          {startIcon}
+        </div>
+      )}
+      {!isLoaded && !error && (
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      {error && (
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-red-500" title={error}>
+          !
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,39 +1,36 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-// In-memory user store for demo (replace with DB in production)
-const users: any[] = [];
+import type { NextApiRequest, NextApiResponse } from 'next'
+import {
+  createDemoUser,
+  findUserByEmail,
+  generateToken,
+  normalizeEmail,
+  updateUser,
+} from '@/lib/userStore'
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password } = req.body
   if (!name || !email || !password) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Missing required fields' })
   }
 
-  // Check if user exists
-  if (users.find(u => u.email === email)) {
-    return res.status(409).json({ error: 'User already exists' });
+  const normalizedEmail = normalizeEmail(email)
+  if (findUserByEmail(normalizedEmail)) {
+    return res.status(409).json({ error: 'User already exists' })
   }
 
-  // Simulate email verification token
-  const verificationToken = Math.random().toString(36).substring(2, 15);
+  const user = createDemoUser({ name, email: normalizedEmail, password })
+  const verificationToken = generateToken()
+  updateUser(user, { verificationToken, verified: false })
 
-  // Store user (unverified)
-  users.push({
-    id: 'USR' + Date.now(),
-    name,
-    email,
-    password, // In production, hash this!
-    verified: false,
-    verificationToken,
-    createdAt: new Date().toISOString(),
-  });
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  console.log(`Verify email for ${email}: ${baseUrl}/verify?token=${verificationToken}`)
 
-  // Simulate sending email (log to console)
-  console.log(`Verify email for ${email}: http://localhost:3000/verify?token=${verificationToken}`);
-
-  return res.status(201).json({ message: 'Signup successful, please verify your email.' });
+  return res.status(201).json({
+    message: 'Signup successful, please verify your email.',
+    ...(process.env.NODE_ENV !== 'production' ? { verificationToken } : {}),
+  })
 }

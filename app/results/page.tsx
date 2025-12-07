@@ -178,6 +178,11 @@ function ResultsContent() {
   // Use real or mock data
   const displayScore = realScore !== null ? realScore : visibilityScore
   const displayHeatmap = realHeatmap !== null ? realHeatmap : heatmapData
+  const normalizedBusinessName = businessName?.trim().toLowerCase()
+  const filteredRealCompetitors = useMemo(
+    () => realCompetitors.filter(place => place.name?.trim().toLowerCase() !== normalizedBusinessName),
+    [realCompetitors, normalizedBusinessName]
+  )
   
   // Fetch real competitors from Places API
   useEffect(() => {
@@ -218,12 +223,19 @@ function ResultsContent() {
             console.log('✅ Location found:', location, 'address:', results[0].formatted_address)
             setBusinessLocation(location)
             
+            const businessPlaceId = results[0].place_id
+            const sanitizedKeyword = keyword.replace(/near me/gi, '').trim()
+
             // Search nearby places with the keyword
             console.log('🔍 Searching nearby places...')
             const places = await searchNearbyPlaces({
               location,
               radius: 5000, // 5km radius
-              keyword: keyword.replace(' near me', ''),
+              keyword: sanitizedKeyword,
+              businessName,
+              businessPlaceId: businessPlaceId || undefined,
+              city,
+              type: 'establishment',
             })
             
             console.log('✅ Found competitors:', places.length, 'places')
@@ -253,7 +265,7 @@ function ResultsContent() {
   
   // Generate recommendations when competitor data changes
   useEffect(() => {
-    if (realCompetitors.length > 0) {
+    if (filteredRealCompetitors.length > 0) {
       console.log('🎯 Generating recommendations based on competitor data...')
       
       // For now, we don't have business rating/reviews from the form
@@ -264,20 +276,20 @@ function ResultsContent() {
       const newRecommendations = generateRecommendations(
         businessRating,
         businessReviews,
-        realCompetitors,
+        filteredRealCompetitors,
         realScore
       )
       
       setRecommendations(newRecommendations)
       console.log('✅ Updated recommendations:', newRecommendations.length, 'items')
     }
-  }, [realCompetitors, realScore])
+  }, [filteredRealCompetitors, realScore])
   
   // Choose which competitors to display - ALWAYS use real data if available
   // Only show mock competitors in demo mode
   const isDemo = businessName === 'Demo Business';
-  const competitors = realCompetitors.length > 0
-    ? realCompetitors.slice(0, 3).map((place, index) => ({
+  const competitors = filteredRealCompetitors.length > 0
+    ? filteredRealCompetitors.slice(0, 3).map((place, index) => ({
         name: place.name,
         rating: place.rating,
         reviews: place.userRatingsTotal,
@@ -291,7 +303,8 @@ function ResultsContent() {
   console.log('Displaying competitors:', {
     useRealData,
     realCompetitorsCount: realCompetitors.length,
-    displayingReal: realCompetitors.length > 0,
+    filteredRealCompetitorsCount: filteredRealCompetitors.length,
+    displayingReal: filteredRealCompetitors.length > 0,
     competitors: competitors.map(c => c.name)
   })
   
@@ -408,9 +421,9 @@ function ResultsContent() {
               <h2 className="text-2xl font-semibold text-gray-900">
                 Business Location & Competitors
               </h2>
-              {useRealData && realCompetitors.length > 0 && (
+              {useRealData && filteredRealCompetitors.length > 0 && (
                 <p className="text-sm text-gray-600 mt-1">
-                  Showing {realCompetitors.length} nearby competitors
+                  Showing {filteredRealCompetitors.length} nearby competitors
                 </p>
               )}
             </div>
@@ -428,7 +441,7 @@ function ResultsContent() {
                 color: 'red' as const
               },
               // Competitors (blue pins)
-              ...realCompetitors.slice(0, 10).map(competitor => ({
+              ...filteredRealCompetitors.slice(0, 10).map(competitor => ({
                 position: competitor.geometry.location,
                 title: `${competitor.name} (${competitor.rating}★)`,
                 color: 'blue' as const
@@ -436,6 +449,34 @@ function ResultsContent() {
             ] : undefined}
           />
         </div>
+
+        {/* Demo Callout */}
+        {isDemo && (
+          <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">
+                Demo Mode
+              </p>
+              <h3 className="text-2xl font-bold text-gray-900 mt-1 mb-2">
+                Bu sadece örnek bir rapor.
+              </h3>
+              <p className="text-gray-700">
+                Kendi işletmeniz için gerçek zamanlı analizi başlatın ve 49 noktada gerçek sıralamalarınızı görün.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <Link
+                href="/#scan-section"
+                className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-white font-semibold shadow-lg hover:bg-blue-600 transition"
+              >
+                Analyze My Business Now
+              </Link>
+              <p className="text-sm text-gray-600 sm:max-w-[200px]">
+                İşletme adınızı ve hedef anahtar kelimenizi girin, gerçek zamanlı tarama hemen başlasın.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Visibility Score */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
@@ -507,15 +548,17 @@ function ResultsContent() {
             )}
             
             {/* Scan Button */}
-            {businessLocation && !isScanning && realScore === null && (
+            {!isDemo && businessLocation && !isScanning && (
               <button
                 onClick={startGridScan}
-                className="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+                className={`mt-6 inline-flex items-center gap-2 rounded-lg font-semibold transition-all duration-200 ${realScore === null
+                  ? 'bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl'
+                  : 'px-5 py-3 text-sm bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                Start Real-Time Analysis
+                {realScore === null ? 'Start Real-Time Analysis' : 'Re-run Analysis'}
               </button>
             )}
             
@@ -599,7 +642,7 @@ function ResultsContent() {
                 <h2 className="text-2xl font-semibold text-gray-900">
                   Top 3 Competitors
                 </h2>
-                {realCompetitors.length > 0 && (
+                {filteredRealCompetitors.length > 0 && (
                   <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
@@ -618,40 +661,50 @@ function ResultsContent() {
           </div>
           
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Rank</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Business Name</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Rating</th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Reviews</th>
-                </tr>
-              </thead>
-              <tbody>
-                {competitors.map((competitor) => (
-                  <tr key={competitor.rank} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-4 px-4">
-                      <span className="inline-flex items-center justify-center w-8 h-8 bg-primary/10 text-primary font-bold rounded-full">
-                        {competitor.rank}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 font-medium text-gray-900">{competitor.name}</td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-500">★</span>
-                        <span className="font-medium">{competitor.rating}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">{competitor.reviews} reviews</td>
+            {competitors.length > 0 ? (
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Rank</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Business Name</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Rating</th>
+                    <th className="text-left py-3 px-4 font-semibold text-gray-700">Reviews</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {competitors.map((competitor) => (
+                    <tr key={competitor.rank} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="py-4 px-4">
+                        <span className="inline-flex items-center justify-center w-8 h-8 bg-primary/10 text-primary font-bold rounded-full">
+                          {competitor.rank}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 font-medium text-gray-900">{competitor.name}</td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-1">
+                          <span className="text-yellow-500">★</span>
+                          <span className="font-medium">{competitor.rating}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-gray-600">{competitor.reviews} reviews</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="py-10 text-center text-gray-500">
+                {isLoadingCompetitors
+                  ? 'Searching Google Maps for competitors...'
+                  : isDemo
+                    ? 'Demo mode: load the demo report to see sample competitors.'
+                    : 'No competitors found for this keyword and location.'}
+              </div>
+            )}
           </div>
         </div>
         
         {/* Competitive Analysis - You vs Top 3 */}
-        {realCompetitors.length > 0 && (
+        {filteredRealCompetitors.length > 0 && (
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-xl p-8 mb-8 border border-blue-100">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -688,7 +741,7 @@ function ResultsContent() {
                           <span className="text-yellow-500">👑</span> #1
                         </span>
                         <span className="text-xs font-normal text-gray-500">
-                          {realCompetitors[0]?.name?.substring(0, 20) ?? 'N/A'}
+                          {filteredRealCompetitors[0]?.name?.substring(0, 20) ?? 'N/A'}
                         </span>
                       </div>
                     </th>
@@ -696,7 +749,7 @@ function ResultsContent() {
                       <div className="flex flex-col items-center">
                         <span>#2</span>
                         <span className="text-xs font-normal text-gray-500">
-                          {realCompetitors[1]?.name?.substring(0, 20) ?? 'N/A'}
+                          {filteredRealCompetitors[1]?.name?.substring(0, 20) ?? 'N/A'}
                         </span>
                       </div>
                     </th>
@@ -704,7 +757,7 @@ function ResultsContent() {
                       <div className="flex flex-col items-center">
                         <span>#3</span>
                         <span className="text-xs font-normal text-gray-500">
-                          {realCompetitors[2]?.name?.substring(0, 20) ?? 'N/A'}
+                          {filteredRealCompetitors[2]?.name?.substring(0, 20) ?? 'N/A'}
                         </span>
                       </div>
                     </th>
@@ -727,17 +780,17 @@ function ResultsContent() {
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[0]?.rating?.toFixed(1) ?? 'N/A'}
+                        {filteredRealCompetitors[0]?.rating?.toFixed(1) ?? 'N/A'}
                       </span>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[1]?.rating?.toFixed(1) ?? 'N/A'}
+                        {filteredRealCompetitors[1]?.rating?.toFixed(1) ?? 'N/A'}
                       </span>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[2]?.rating?.toFixed(1) ?? 'N/A'}
+                        {filteredRealCompetitors[2]?.rating?.toFixed(1) ?? 'N/A'}
                       </span>
                     </td>
                   </tr>
@@ -758,17 +811,17 @@ function ResultsContent() {
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[0]?.userRatingsTotal ?? 'N/A'}
+                        {filteredRealCompetitors[0]?.userRatingsTotal ?? 'N/A'}
                       </span>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[1]?.userRatingsTotal ?? 'N/A'}
+                        {filteredRealCompetitors[1]?.userRatingsTotal ?? 'N/A'}
                       </span>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <span className="text-lg font-semibold text-gray-900">
-                        {realCompetitors[2]?.userRatingsTotal ?? 'N/A'}
+                        {filteredRealCompetitors[2]?.userRatingsTotal ?? 'N/A'}
                       </span>
                     </td>
                   </tr>
@@ -1219,7 +1272,7 @@ function ResultsContent() {
         )}
 
         {/* CONVERSION MONSTER: What You're Missing Widget - Only show if NOT premium */}
-        {realCompetitors.length > 0 && !isPremium && (
+        {filteredRealCompetitors.length > 0 && !isPremium && (
           <div className="bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 rounded-2xl shadow-2xl p-8 mb-8 border-2 border-orange-200 relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse"></div>
@@ -1403,8 +1456,8 @@ function ResultsContent() {
             </h2>
           </div>
           <p className="text-gray-600 mb-6">
-            {realCompetitors.length > 0 
-              ? `Based on analysis of ${realCompetitors.length} competitors in your area`
+            {filteredRealCompetitors.length > 0 
+              ? `Based on analysis of ${filteredRealCompetitors.length} competitors in your area`
               : 'Complete these tasks to improve your Google Maps ranking'
             }
           </p>
