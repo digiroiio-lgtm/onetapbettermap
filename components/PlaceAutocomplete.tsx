@@ -7,13 +7,17 @@ interface PlaceAutocompleteProps {
   placeholder?: string;
   className?: string;
   types?: string[];
+  value?: string;
+  onInputChange?: (value: string) => void;
 }
 
 export default function PlaceAutocomplete({
   onPlaceSelect,
   placeholder = 'Search for your business...',
   className = '',
-  types = ['establishment']
+  types = ['establishment'],
+  value,
+  onInputChange
 }: PlaceAutocompleteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
@@ -54,6 +58,9 @@ export default function PlaceAutocomplete({
     autocompleteInstance.addListener('place_changed', () => {
       const place = autocompleteInstance.getPlace();
       if (place && place.geometry) {
+        if (place.name) {
+          onInputChange?.(place.name);
+        }
         onPlaceSelect(place);
       }
     });
@@ -72,6 +79,8 @@ export default function PlaceAutocomplete({
       <input
         ref={inputRef}
         type="text"
+        value={value}
+        onChange={(e) => onInputChange?.(e.target.value)}
         placeholder={placeholder}
         className={className}
       />

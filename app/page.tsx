@@ -29,6 +29,7 @@ export default function Home() {
   const t = useTranslation().scan;
   const router = useRouter();
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
+  const [businessNameInput, setBusinessNameInput] = useState('');
   const [city, setCity] = useState('');
   const [keyword, setKeyword] = useState('');
   const [freeScansLeft, setFreeScansLeft] = useState(3);
@@ -60,6 +61,9 @@ export default function Home() {
 
   const handlePlaceSelect = (place: google.maps.places.PlaceResult) => {
     setSelectedPlace(place);
+    if (place.name) {
+      setBusinessNameInput(place.name);
+    }
     // Extract city from address components
     const cityComponent = place.address_components?.find(
       component => component.types.includes('locality') || component.types.includes('administrative_area_level_1')
@@ -72,11 +76,11 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (limitReached) return;
-    if (!selectedPlace) {
-      alert('Please select a business from the suggestions');
+    if (!selectedPlace && !businessNameInput.trim()) {
+      alert('Please enter your business name');
       return;
     }
-    const businessName = selectedPlace.name || '';
+    const businessName = selectedPlace?.name || businessNameInput.trim();
     const finalCity = city || 'Unknown';
     const finalKeyword = keyword || 'business near me';
 
@@ -200,6 +204,8 @@ export default function Home() {
                 </label>
                 <PlaceAutocomplete
                   onPlaceSelect={handlePlaceSelect}
+                  onInputChange={setBusinessNameInput}
+                  value={businessNameInput}
                   placeholder="Start typing your business name..."
                   className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                   types={['establishment']}
