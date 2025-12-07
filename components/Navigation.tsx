@@ -28,6 +28,12 @@ export default function Navigation() {
               Scan
             </Link>
             <Link 
+              href="/upgrade" 
+              className="text-gray-700 hover:text-primary font-medium transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link 
               href="/results?businessName=Demo%20Business&city=San%20Francisco&keyword=dentist%20near%20me" 
               className="text-gray-700 hover:text-primary font-medium transition-colors"
             >
