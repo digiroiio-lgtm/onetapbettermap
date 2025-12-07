@@ -2,130 +2,96 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
   
   return (
-    <footer className="bg-gray-900 text-gray-200 pt-12 pb-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
-          {/* Product */}
+    <footer className="bg-gray-900 text-gray-200 pt-12 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Brand + CTA */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <h3 className="text-xs font-bold text-gray-400 mb-4 tracking-widest">PRODUCT</h3>
-            <ul className="space-y-2">
-              <li><a href="/" className="text-gray-200 hover:text-white transition">Home</a></li>
-              <li><a href="/scan" className="text-gray-200 hover:text-white transition">Free Scan</a></li>
-              <li><a href="/demo" className="text-gray-200 hover:text-white transition">Demo Results</a></li>
-            </ul>
+            <p className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-2">mapsrankchecker.com</p>
+            <h3 className="text-2xl font-bold text-white">Boost your Google Maps visibility with a single tap.</h3>
           </div>
-          {/* Resources */}
-          <div>
-            <h3 className="text-xs font-bold text-gray-400 mb-4 tracking-widest">RESOURCES</h3>
-            <ul className="space-y-2">
-              <li><a href="/seo-guides" className="text-gray-200 hover:text-white transition">SEO Guides Hub</a></li>
-              <li><a href="/blog" className="text-gray-200 hover:text-white transition">Blog</a></li>
-              <li><a href="/help" className="text-gray-200 hover:text-white transition">Help Center</a></li>
-            </ul>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <a
+              href="/scan"
+              className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-400 transition"
+            >
+              Start Free Scan
+            </a>
+            <a
+              href="/demo"
+              className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 font-semibold text-white hover:border-white hover:bg-white/10 transition"
+            >
+              See Demo
+            </a>
           </div>
-          {/* Legal */}
-          <div>
-            <h3 className="text-xs font-bold text-gray-400 mb-4 tracking-widest">LEGAL</h3>
-            <ul className="space-y-2">
-              <li><a href="/terms" className="text-gray-200 hover:text-white transition">Terms of Service</a></li>
-              <li><a href="/privacy" className="text-gray-200 hover:text-white transition">Privacy Policy</a></li>
-              <li><a href="/cookies" className="text-gray-200 hover:text-white transition">Cookie Policy</a></li>
-            </ul>
-          </div>
-          {/* Company */}
-          <div>
-            <h3 className="text-xs font-bold text-gray-400 mb-4 tracking-widest">COMPANY</h3>
-            <ul className="space-y-2">
-              <li><a href="/about" className="text-gray-200 hover:text-white transition">About Us</a></li>
-              <li><a href="/contact" className="text-gray-200 hover:text-white transition">Contact</a></li>
-              <li><a href="/careers" className="text-gray-200 hover:text-white transition">Careers</a></li>
-            </ul>
-          </div>
-          {/* Brand/CTA */}
-          <div>
-            <h3 className="text-xs font-bold text-gray-400 mb-4 tracking-widest">ONE TAP, BETTER MAP</h3>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">A simple Google Maps SEO checker that runs in one tap. Stop guessing. Start ranking.</p>
-            <div className="mt-4">
-              <span className="inline-block text-xs text-gray-500">Made with <span className="text-red-500">❤️</span> in London, UK</span>
-            </div>
-          </div>
-        </div>
-        <div className="mt-10 border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400">
-          <span>© 2025 One Tap, Better Map. All rights reserved.</span>
-          <span>Stop guessing. Start ranking.</span>
-        </div>
-      </div>
-    </footer>
-
-        {/* Resources Column */}
-        <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-3">
-            Resources
-          </h3>
-          <ul className="space-y-2 text-slate-300">
-            <li>
-              <a href="/google-maps-seo/" className="hover:text-emerald-400 transition-colors">
-                SEO Guides Hub
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/digiroiio-lgtm/onetapbettermap" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">
-                GitHub
-              </a>
-            </li>
-          </ul>
         </div>
 
-        {/* Google Maps SEO Guides (SEO Silo) */}
-        <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-3">
-            Google Maps SEO Guides
-          </h3>
-          <ul className="space-y-2 text-slate-300">
-            <li>
-              <a href="/google-maps-seo/checker/" className="hover:text-emerald-400 transition-colors">
-                Google Maps SEO Checker
-              </a>
-            </li>
-            <li>
-              <a href="/google-maps-seo/optimization/" className="hover:text-emerald-400 transition-colors">
-                Google Maps SEO Optimization
-              </a>
-            </li>
-            <li>
-              <a href="/google-maps-seo/how-it-works/" className="hover:text-emerald-400 transition-colors">
-                How Does Google Maps SEO Work?
-              </a>
-            </li>
-            <li>
-              <a href="/google-maps-seo/how-to/" className="hover:text-emerald-400 transition-colors">
-                How To Do Google Maps SEO
-              </a>
-            </li>
-            <li>
-              <a href="/google-maps-seo/extension/" className="hover:text-emerald-400 transition-colors">
-                Google Maps SEO Extension
-              </a>
-            </li>
-          </ul>
+        {/* Link columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div>
+            <h4 className="text-xs font-bold text-gray-400 tracking-[0.3em] mb-4">PRODUCT</h4>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li><a href="/" className="hover:text-white transition">Home</a></li>
+              <li><a href="/scan" className="hover:text-white transition">Free Scan</a></li>
+              <li><a href="/demo" className="hover:text-white transition">Demo Results</a></li>
+              <li><a href="/login" className="hover:text-white transition">Login</a></li>
+              <li><a href="/signup" className="hover:text-white transition">Sign Up Free</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-gray-400 tracking-[0.3em] mb-4">SUPPORT & RESOURCES</h4>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li><a href="/support" className="hover:text-white transition">Get Support</a></li>
+              <li><a href="/learning-center" className="hover:text-white transition">Learning Center</a></li>
+              <li><a href="/reviews" className="hover:text-white transition">Customer Reviews</a></li>
+              <li><a href="/success-stories" className="hover:text-white transition">Success Stories</a></li>
+              <li><a href="/blog" className="hover:text-white transition">Blog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-gray-400 tracking-[0.3em] mb-4">COMPANY & LEGAL</h4>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li><a href="/about" className="hover:text-white transition">About Us</a></li>
+              <li><a href="/contact" className="hover:text-white transition">Contact Us</a></li>
+              <li><a href="/privacy" className="hover:text-white transition">Privacy Policy</a></li>
+              <li><a href="/terms" className="hover:text-white transition">Terms of Use</a></li>
+              <li><a href="/cookies" className="hover:text-white transition">Cookies Policy</a></li>
+              <li><a href="/dpa" className="hover:text-white transition">Data Processing Agreement</a></li>
+              <li><a href="/affiliate" className="hover:text-white transition">Affiliate / Partner</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-gray-400 tracking-[0.3em] mb-4">EXTRAS</h4>
+            <ul className="space-y-2 text-sm text-gray-300">
+              <li><a href="/faq" className="hover:text-white transition">FAQ</a></li>
+              <li><a href="/help" className="hover:text-white transition">Help Center</a></li>
+              <li><a href="/docs" className="hover:text-white transition">Docs</a></li>
+              <li>
+                <a
+                  href="https://github.com/digiroiio-lgtm/onetapbettermap"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition"
+                >
+                  GitHub
+                </a>
+              </li>
+              <li className="flex gap-3">
+                <a href="https://twitter.com" className="hover:text-white transition" aria-label="Twitter">Twitter</a>
+                <a href="https://linkedin.com" className="hover:text-white transition" aria-label="LinkedIn">LinkedIn</a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* Brand Column */}
-        <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-3">
-            One Tap, Better Map
-          </h3>
-          <p className="text-slate-400 text-xs leading-relaxed">
-            A simple Google Maps SEO checker that runs in one tap. Stop guessing. Start ranking.
-          </p>
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 pt-6 flex flex-col gap-4 text-sm text-gray-400 md:flex-row md:items-center md:justify-between">
+          <span>© {currentYear} mapsrankchecker.com. All rights reserved.</span>
+          <span className="text-xs text-gray-500">
+            No credit card required • 3 scans/month free • Upgrade anytime to Pro
+          </span>
         </div>
-      </div>
-      
-      <div className="border-t border-slate-800">
-        <div className="mx-auto max-w-6xl px-4 py-4 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-          <span>© {currentYear} One Tap, Better Map. All rights reserved.</span>
-          <span>Stop guessing. Start ranking.</span>
-        </div>
+        <p className="text-center text-xs text-gray-600">Stop guessing. Start ranking.</p>
       </div>
     </footer>
   )

@@ -87,6 +87,21 @@ function PremiumCell({
 }
 
 function ResultsContent() {
+  // Premium metrikler dummy data
+  const premiumMetrics = {
+    keywordMatch: 82,
+    categoryAccuracy: 74,
+    reviewVelocity: 91,
+    photoFreshness: 88,
+    prominenceIndex: 79,
+    proximityReach: 85,
+    weakZone: 67,
+    criticalGaps: 59,
+    socialSignal: 93,
+    infoCompleteness: 97,
+    hoursUpdated: 90
+  }
+  
   const searchParams = useSearchParams()
   
   const businessName = searchParams.get('businessName') || 'Your Business'
@@ -313,25 +328,29 @@ function ResultsContent() {
             </div>
           </div>
         )}
-
         {/* Skor Hesaplama Açıklaması */}
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-4">
-              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-              </div>
-            </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Your Map Visibility Report
-            </h1>
-            <p className="text-xl text-gray-600">
-              <span className="font-semibold">{businessName}</span> in {city}
-            </p>
-            <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
-          </div>
+        <div className="mb-8 bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-xl text-sm text-gray-800">
+          <p className="font-semibold text-gray-900">
+            Skor Hesaplama Mantığı
+          </p>
+          <ul className="list-disc ml-5 mt-3 space-y-1">
+            <li>
+              <span className="font-semibold">Görünürlük Oranı (30%)</span>: Harita üzerindeki 49 noktanın yüzde kaçı ilk 20'de.
+            </li>
+            <li>
+              <span className="font-semibold">Ortalama Sıra Skoru (40%)</span>: Bulunan noktalardaki sıralama kalitesi.
+              <span className="block text-xs text-gray-600">
+                1-3: 100 puan, 4-7: 75 puan, 8-12: 50 puan, 13-16: 25 puan, 17-20: 10 puan
+              </span>
+            </li>
+            <li>
+              <span className="font-semibold">Premium Metrikler (30%)</span>: Anahtar kelime uyumu, kategori doğruluğu, yorum hızı, fotoğraf güncelliği, öne çıkma, yakınlık erişimi, zayıf bölgeler, kritik eksikler, sosyal sinyal, bilgi tamlığı, güncel çalışma saatleri.
+            </li>
+          </ul>
+          <p className="mt-2 text-xs text-gray-600">
+            Nihai skor: (Görünürlük × 0.3) + (Ortalama Sıra × 0.4) + (Premium Metrikler × 0.3)
+          </p>
+        </div>
 
         {/* Header */}
         <div className="text-center mb-12">
@@ -513,7 +532,7 @@ function ResultsContent() {
             Your ranking across 49 points around your business location
           </p>
           
-          <Heatmap data={heatmapData} />
+          <Heatmap data={displayHeatmap} />
           
           <div className="flex justify-center gap-8 mt-8 text-sm">
             <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
@@ -642,19 +661,25 @@ function ResultsContent() {
                         <span className="flex items-center gap-1">
                           <span className="text-yellow-500">👑</span> #1
                         </span>
-                        <span className="text-xs font-normal text-gray-500">{realCompetitors[0]?.name.substring(0, 20)}</span>
+                        <span className="text-xs font-normal text-gray-500">
+                          {realCompetitors[0]?.name?.substring(0, 20) ?? 'N/A'}
+                        </span>
                       </div>
                     </th>
                     <th className="text-center py-4 px-4 font-semibold text-gray-600">
                       <div className="flex flex-col items-center">
                         <span>#2</span>
-                        <span className="text-xs font-normal text-gray-500">{realCompetitors[1]?.name.substring(0, 20)}</span>
+                        <span className="text-xs font-normal text-gray-500">
+                          {realCompetitors[1]?.name?.substring(0, 20) ?? 'N/A'}
+                        </span>
                       </div>
                     </th>
                     <th className="text-center py-4 px-4 font-semibold text-gray-600 rounded-tr-lg">
                       <div className="flex flex-col items-center">
                         <span>#3</span>
-                        <span className="text-xs font-normal text-gray-500">{realCompetitors[2]?.name.substring(0, 20)}</span>
+                        <span className="text-xs font-normal text-gray-500">
+                          {realCompetitors[2]?.name?.substring(0, 20) ?? 'N/A'}
+                        </span>
                       </div>
                     </th>
                   </tr>
@@ -675,13 +700,19 @@ function ResultsContent() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[0]?.rating.toFixed(1)}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[0]?.rating?.toFixed(1) ?? 'N/A'}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[1]?.rating.toFixed(1)}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[1]?.rating?.toFixed(1) ?? 'N/A'}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[2]?.rating.toFixed(1)}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[2]?.rating?.toFixed(1) ?? 'N/A'}
+                      </span>
                     </td>
                   </tr>
                   
@@ -700,13 +731,19 @@ function ResultsContent() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[0]?.userRatingsTotal}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[0]?.userRatingsTotal ?? 'N/A'}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[1]?.userRatingsTotal}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[1]?.userRatingsTotal ?? 'N/A'}
+                      </span>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span className="text-lg font-semibold text-gray-900">{realCompetitors[2]?.userRatingsTotal}</span>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {realCompetitors[2]?.userRatingsTotal ?? 'N/A'}
+                      </span>
                     </td>
                   </tr>
                   
@@ -1444,20 +1481,6 @@ function ResultsContent() {
 }
 
 export default function ResultsPage() {
-    {/* Skor Hesaplama Açıklaması */}
-    <div className="mb-6">
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl text-sm text-gray-800">
-        <b>Skor Hesaplama Mantığı:</b><br/>
-        <ul className="list-disc ml-4 mt-2 space-y-1">
-          <li><b>Görünürlük Oranı</b> (%30): Harita üzerindeki noktaların yüzde kaçı ilk 20'de yer alıyor.</li>
-          <li><b>Ortalama Sıra Skoru</b> (%40): Bulunan noktalardaki sıralama kalitesi.<br/>
-            <span className="text-xs">1-3: 100 puan, 4-7: 75 puan, 8-12: 50 puan, 13-16: 25 puan, 17-20: 10 puan</span>
-          </li>
-          <li><b>Premium Metrikler</b> (%30): Anahtar kelime uyumu, kategori doğruluğu, yorum hızı, fotoğraf güncelliği, öne çıkma, yakınlık erişimi, zayıf bölgeler, kritik eksikler, sosyal sinyal, bilgi tamlığı, güncel çalışma saatleri.</li>
-        </ul>
-        <div className="mt-2 text-xs text-gray-600">Nihai skor: (Görünürlük × 0.3) + (Ortalama Sıra × 0.4) + (Premium Metrikler × 0.3)</div>
-      </div>
-    </div>
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
