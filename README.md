@@ -41,7 +41,9 @@ Create a `.env.local` file:
 
 ```env
 # Google Places API
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+AIzaSyADJ6VWnBqeqmYi35kb-A8xa_PCoedz7b4=your_google_maps_api_key
+# Optional fallback if your hosting provider strips NEXT_PUBLIC_ vars
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -65,7 +67,7 @@ CRON_SECRET=your_random_secret_string
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Enable Places API
 3. Create API Key
-4. Add to `.env.local`
+4. Add to `.env.local` (either `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` or `GOOGLE_MAPS_API_KEY`)
 
 ### 6. Run Development Server
 

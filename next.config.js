@@ -7,7 +7,7 @@ const nextConfig = {
   staticPageGenerationTimeout: 120,
   // Expose environment variables to browser
   env: {
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY,
   },
   // Reduce build memory usage
   experimental: {
