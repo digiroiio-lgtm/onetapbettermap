@@ -22,6 +22,7 @@ export default function SignUpPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const [success, setSuccess] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,30 +34,35 @@ export default function SignUpPage() {
       setIsLoading(false);
       return;
     }
+    // Strong password: min 8 chars, upper, lower, number, symbol
+    const strongPw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!strongPw.test(formData.password)) {
+      setError('Password must be at least 8 characters and include upper, lower, number, and symbol.');
+      setIsLoading(false);
+      return;
+    }
 
-    // Mock signup
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Create user object
-    const user = {
-      id: 'USR' + Date.now(),
-      name: formData.name,
-      email: formData.email,
-      businessName: formData.businessName || 'N/A',
-      city: formData.city || 'N/A',
-      country: formData.country || 'N/A',
-      plan: 'Free',
-      joinDate: new Date().toISOString(),
-      scansUsed: 0,
-      scansLimit: 3
-    };
-
-    // Save to localStorage
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    localStorage.setItem('isLoggedIn', 'true');
-
-    // Redirect to dashboard
-    router.push('/dashboard');
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Signup failed');
+        setIsLoading(false);
+        return;
+      }
+      setSuccess(true);
+    } catch (err) {
+      setError('Network error');
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -77,7 +83,17 @@ export default function SignUpPage() {
 
         {/* Signup Form */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {success ? (
+            <div className="text-center">
+              <svg className="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2l4-4" />
+              </svg>
+              <h2 className="text-2xl font-bold mb-2 text-green-700">Check your email!</h2>
+              <p className="text-gray-700 mb-4">We sent a verification link to <span className="font-semibold">{formData.email}</span>.<br/>Please verify your email to activate your account.</p>
+              <Link href="/login" className="text-primary font-semibold hover:text-blue-600">Go to Login</Link>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -204,7 +220,8 @@ export default function SignUpPage() {
                 'Create Account'
               )}
             </button>
-          </form>
+            </form>
+          )}
 
           {/* Login Link */}
           <div className="mt-6 text-center">

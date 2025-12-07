@@ -23,10 +23,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
 
-    // Mock login
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Check for demo account
+    // Demo account shortcut
     if (formData.email === 'demo@example.com' && formData.password === 'demo123') {
       const user = {
         id: 'USR001',
@@ -40,16 +37,37 @@ export default function LoginPage() {
         scansUsed: 12,
         scansLimit: 999
       };
-
       localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('premiumUser', 'true');
-      
       router.push('/dashboard');
-    } else {
-      setError('Invalid email or password. Try demo@example.com / demo123');
-      setIsLoading(false);
+      return;
     }
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Login failed');
+        setIsLoading(false);
+        return;
+      }
+      // Store session token (for demo, just localStorage)
+      localStorage.setItem('sessionToken', data.sessionToken);
+      localStorage.setItem('isLoggedIn', 'true');
+      // Optionally fetch user profile here
+      router.push('/dashboard');
+    } catch (err) {
+      setError('Network error');
+    }
+    setIsLoading(false);
   };
 
   return (

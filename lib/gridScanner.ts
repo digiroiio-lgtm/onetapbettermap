@@ -159,39 +159,65 @@ export async function scanGrid(
  * Final Score = (Visibility Rate × 0.4) + (Avg Rank Score × 0.6)
  */
 export function calculateRealVisibilityScore(results: RankingResult[]): number {
-  const totalPoints = results.length
-  const foundPoints = results.filter(r => r.found).length
-  
-  // Visibility Rate: percentage of points where business appears (0-100)
-  const visibilityRate = (foundPoints / totalPoints) * 100
-  
-  // Calculate average rank score for found points
-  let rankScoreSum = 0
+  const totalPoints = results.length;
+  const foundPoints = results.filter(r => r.found).length;
+  const visibilityRate = (foundPoints / totalPoints) * 100;
+  let rankScoreSum = 0;
   for (const result of results) {
     if (result.rank !== null) {
-      // Convert rank to score (1-20 scale)
-      let rankScore: number
+      let rankScore: number;
       if (result.rank <= 3) {
-        rankScore = 100
+        rankScore = 100;
       } else if (result.rank <= 7) {
-        rankScore = 75
+        rankScore = 75;
       } else if (result.rank <= 12) {
-        rankScore = 50
+        rankScore = 50;
       } else if (result.rank <= 16) {
-        rankScore = 25
+        rankScore = 25;
       } else {
-        rankScore = 10
+        rankScore = 10;
       }
-      rankScoreSum += rankScore
+      rankScoreSum += rankScore;
     }
   }
-  
-  const avgRankScore = foundPoints > 0 ? rankScoreSum / foundPoints : 0
-  
-  // Weighted final score: 40% visibility rate + 60% rank quality
-  const finalScore = (visibilityRate * 0.4) + (avgRankScore * 0.6)
-  
-  return Math.round(finalScore)
+  const avgRankScore = foundPoints > 0 ? rankScoreSum / foundPoints : 0;
+
+  // --- PREMIUM METRICS ---
+  // Varsayılan dummy değerler, gerçek değerler ilgili analizden alınmalı
+  // Bu değerler ResultsContent veya API'den alınarak buraya parametre olarak eklenmeli
+  // Şimdilik örnek dummy değerler ile gösteriliyor
+  const premiumMetrics = {
+    keywordMatch: 80, // 0-100
+    categoryAccuracy: 70, // 0-100
+    reviewVelocity: 60, // 0-100
+    photoFreshness: 75, // 0-100
+    prominenceIndex: 65, // 0-100
+    proximityReach: 85, // 0-100
+    weakZone: 50, // 0-100
+    criticalGaps: 40, // 0-100
+    socialSignal: 55, // 0-100
+    infoCompleteness: 90, // 0-100
+    hoursUpdated: 80 // 0-100
+  };
+
+  // Premium metriklerin ortalaması
+  const premiumScore = (
+    premiumMetrics.keywordMatch +
+    premiumMetrics.categoryAccuracy +
+    premiumMetrics.reviewVelocity +
+    premiumMetrics.photoFreshness +
+    premiumMetrics.prominenceIndex +
+    premiumMetrics.proximityReach +
+    premiumMetrics.weakZone +
+    premiumMetrics.criticalGaps +
+    premiumMetrics.socialSignal +
+    premiumMetrics.infoCompleteness +
+    premiumMetrics.hoursUpdated
+  ) / 11;
+
+  // Yeni ağırlıklı skor: 30% visibility rate + 40% rank + 30% premium metrics
+  const finalScore = (visibilityRate * 0.3) + (avgRankScore * 0.4) + (premiumScore * 0.3);
+  return Math.round(finalScore);
 }
 
 /**

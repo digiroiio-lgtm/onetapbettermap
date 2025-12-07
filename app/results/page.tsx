@@ -89,25 +89,102 @@ function PremiumCell({
 function ResultsContent() {
   const searchParams = useSearchParams()
   
-  const businessName = searchParams.get('businessName') || 'Your Business'
-  const city = searchParams.get('city') || 'Your City'
-  const keyword = searchParams.get('keyword') || 'dentist near me'
+  const businessName = searchParams?.get('businessName') || 'Your Business'
+  const city = searchParams?.get('city') || 'Your City'
+  const keyword = searchParams?.get('keyword') || 'dentist near me'
   
   // Check if user upgraded
   const [isPremium, setIsPremium] = useState(false)
-  
   useEffect(() => {
-    // Check localStorage for premium status
-    const premiumStatus = localStorage.getItem('premiumUser') === 'true'
-    setIsPremium(premiumStatus)
-    
-    // Also check URL parameter
-    const upgraded = searchParams.get('upgraded') === 'true'
+    const premiumStatus = localStorage.getItem('premiumUser') === 'true';
+    setIsPremium(premiumStatus);
+    const upgraded = searchParams?.get('upgraded') === 'true';
     if (upgraded && !premiumStatus) {
-      localStorage.setItem('premiumUser', 'true')
-      setIsPremium(true)
+      localStorage.setItem('premiumUser', 'true');
+      setIsPremium(true);
     }
-  }, [searchParams])
+  }, [searchParams]);
+
+  // Premium metrics teaser content
+  const premiumMetrics = [
+    {
+      key: 'keywordMatch',
+      label: 'Anahtar Kelime Uyumu',
+      icon: '🎯',
+      value: 42,
+      description: 'Ne kadar alakalı içerik kullandığın'
+    },
+    {
+      key: 'categoryAccuracy',
+      label: 'Kategori Doğruluğu',
+      icon: '📂',
+      value: 25,
+      description: 'Eksik kategori sayısı'
+    },
+    {
+      key: 'reviewVelocity',
+      label: 'Yorum Hızı',
+      icon: '⚡',
+      value: 18,
+      description: 'Son 30 gündeki yorum performansı'
+    },
+    {
+      key: 'photoFreshness',
+      label: 'Fotoğraf Güncelliği',
+      icon: '📷',
+      value: 0,
+      description: 'Güncel görsel paylaşım durumu'
+    },
+    {
+      key: 'prominenceIndex',
+      label: 'Prominence Index',
+      icon: '🏆',
+      value: 24,
+      description: 'Toplam otorite puanı'
+    },
+    {
+      key: 'proximityReach',
+      label: 'Yakınlık Erişimi',
+      icon: '📡',
+      value: 40,
+      description: 'Haritada görünür olduğun mesafe'
+    },
+    {
+      key: 'weakZone',
+      label: 'Zayıf Bölgeler',
+      icon: '🗺️',
+      value: 30,
+      description: 'Sorunlu grid noktaları'
+    },
+    {
+      key: 'criticalGaps',
+      label: 'Kritik Eksikler',
+      icon: '🚨',
+      value: 15,
+      description: 'Acil çözülmesi gereken konu sayısı'
+    },
+    {
+      key: 'socialSignal',
+      label: 'Sosyal Sinyal',
+      icon: '💬',
+      value: 53,
+      description: 'Yorum/payarım dengesi'
+    },
+    {
+      key: 'infoCompleteness',
+      label: 'Bilgi Tamlığı',
+      icon: '✅',
+      value: 60,
+      description: 'Profil bilgilerinin doluluk oranı'
+    },
+    {
+      key: 'hoursUpdated',
+      label: 'Güncellenmiş Saatler',
+      icon: '⏰',
+      value: 80,
+      description: 'Çalışma saatleri doğruluğu'
+    }
+  ] as const;
   
   // Debug log
   console.log('Results page params:', { businessName, city, keyword, isPremium })
@@ -298,7 +375,7 @@ function ResultsContent() {
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Premium Success Banner - Show only once after upgrade */}
-        {isPremium && searchParams.get('upgraded') === 'true' && (
+        {isPremium && searchParams?.get('upgraded') === 'true' && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-2xl p-6 mb-8 text-white animate-bounce">
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
@@ -314,39 +391,24 @@ function ResultsContent() {
           </div>
         )}
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-              <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-              </svg>
+        {/* Skor Hesaplama Açıklaması */}
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-4">
+              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+              </div>
             </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Your Map Visibility Report
+            </h1>
+            <p className="text-xl text-gray-600">
+              <span className="font-semibold">{businessName}</span> in {city}
+            </p>
+            <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Your Map Visibility Report
-          </h1>
-          <p className="text-xl text-gray-600">
-            <span className="font-semibold">{businessName}</span> in {city}
-          </p>
-          <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
-        </div>
-
-        {/* Real-Time Analysis Button - only show if not demo */}
-        {businessName !== 'Demo Business' && (
-          <div className="flex flex-col items-center mb-8">
-            <button
-              onClick={startGridScan}
-              disabled={isScanning}
-              className="bg-primary hover:bg-blue-600 text-white font-bold px-8 py-4 rounded-full text-lg shadow-lg transition-all duration-200 mb-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isScanning ? 'Scanning...' : 'Start Real-Time Analysis'}
-            </button>
-            <span className="text-sm text-gray-600 max-w-xl text-center">
-              Run a live scan to see your real-time visibility and competitors based on your business and keyword.
-            </span>
-          </div>
-        )}
 
         {/* Live Map Section */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
@@ -777,49 +839,61 @@ function ResultsContent() {
                   </tr>
 
                   {/* PREMIUM METRICS - FOMO BOOSTERS */}
-                  
-                  {/* Keyword Match Score Row - Premium */}
-                  <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-amber-50/30 to-transparent">
-                    <td className="py-4 px-4 font-medium text-gray-700">
-                      <div className="flex items-center gap-2">
-                        <span className="text-amber-500">🎯</span>
-                        Keyword Match Score
-                        <span className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">PREMIUM</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center bg-blue-50">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
+                  {/* Free kullanıcıya dinamik özet metrik kutusu - modern UI */}
+                  {!isPremium && (
+                    <tr>
+                      <td colSpan={5} className="py-8 px-4 bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-100 border border-yellow-200 rounded-2xl text-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <span className="text-2xl font-extrabold text-yellow-700 tracking-tight mb-2">Özet Premium Metrikler</span>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mx-auto">
+                            {premiumMetrics.map((metric) => {
+                              const trend = Math.round((Math.random() - 0.5) * 10);
+                              const valNum = metric.value;
+                              const history = Array.from({length: 7}, (_, i) => Math.max(0, Math.min(100, valNum + Math.round((Math.random()-0.5)*10))));
+                              let color = '#e5e7eb';
+                              if (valNum >= 80) color = '#22c55e';
+                              else if (valNum >= 60) color = '#fde047';
+                              else if (valNum >= 40) color = '#fb923c';
+                              else color = '#ef4444';
+                              return (
+                                <div key={metric.key} className="relative flex flex-col items-center bg-white rounded-xl shadow-md p-4 border border-gray-100 group overflow-hidden">
+                                  <span className="text-3xl mb-2">{metric.icon}</span>
+                                  <span className="font-semibold text-gray-800 mb-1 text-sm text-center">{metric.label}</span>
+                                  <p className="text-[11px] text-gray-500 mb-2 text-center">{metric.description}</p>
+                                  <svg width="60" height="60" className="mb-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                                    <circle cx="30" cy="30" r="26" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+                                    <circle cx="30" cy="30" r="26" stroke={color} strokeWidth="6" fill="none" strokeDasharray={Math.round((valNum/100)*163)+',163'} strokeLinecap="round" style={{transition:'stroke-dasharray 1s'}} />
+                                    <text x="30" y="36" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#333">{valNum}</text>
+                                  </svg>
+                                  <span className={`flex items-center gap-1 text-xs font-bold ${trend > 0 ? 'text-green-600' : trend < 0 ? 'text-red-600' : 'text-gray-400'}`}>
+                                    {trend > 0 ? '▲' : trend < 0 ? '▼' : '■'} {trend > 0 ? '+' : ''}{trend}
+                                  </span>
+                                  <svg width="60" height="20" className="mt-1">
+                                    <polyline
+                                      fill="none"
+                                      stroke={color}
+                                      strokeWidth="2"
+                                      points={history.map((h,i) => `${i*10},${20-h*0.18}`).join(' ')}
+                                    />
+                                  </svg>
+                                  <div className="absolute inset-0 bg-white/85 backdrop-blur-sm flex flex-col items-center justify-center text-center px-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <p className="text-xs font-semibold text-gray-800 mb-1">Tam değerler kilitli</p>
+                                    <p className="text-[11px] text-gray-500 mb-2">Bu metriğin detayları premium üyelikte açılır.</p>
+                                    <Link href="/upgrade" className="text-[11px] font-bold text-orange-600 underline">
+                                      Premiumu aç
+                                    </Link>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <span className="text-xs text-gray-500 mt-4">Tüm detaylar ve tam analiz için <span className="font-bold text-orange-600">premiuma geçiş yapabilirsin</span>.</span>
                         </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">34/100</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">87/100</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">82/100</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="relative">
-                        <div className="absolute inset-0 backdrop-blur-sm bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded flex items-center justify-center">
-                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">74/100</span>
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  )}
+                  {/* ...existing code... */}
+                  {/* Burada fazladan kapanışlar kaldırıldı, premium özet kutusu satırından sonra doğrudan premium satırlara geçiliyor */}
 
                   {/* Category Accuracy Row - Premium */}
                   <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-purple-50/30 to-transparent">
@@ -1392,20 +1466,5 @@ function ResultsContent() {
         </div>
       </div>
     </main>
-  )
-}
-
-export default function ResultsPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading results...</p>
-        </div>
-      </div>
-    }>
-      <ResultsContent />
-    </Suspense>
-  )
+  );
 }

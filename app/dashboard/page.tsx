@@ -1,6 +1,10 @@
 'use client';
 
+import { PLAN_CREDIT_LIMITS, PlanType } from '@/lib/creditSystem';
+import { getUserPlan, changeUserPlan, spendCredits } from '@/lib/planApi';
 import { useEffect, useState } from 'react';
+
+
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { locales, type LocaleCode, setLocale } from '@/lib/i18n';
@@ -30,6 +34,38 @@ interface ScanHistory {
 type TabType = 'overview' | 'scans' | 'billing' | 'settings';
 
 export default function DashboardPage() {
+  // Kredi ve plan: backend senkronize
+  const [userPlan, setUserPlan] = useState<{
+    userId: string;
+    plan: PlanType;
+    credits: number;
+    lastReset: string;
+  } | null>(null);
+  const [planLoading, setPlanLoading] = useState(true);
+  const planLabel: Record<PlanType, string> = {
+    starter: 'Starter',
+    scale: 'Scale',
+    dominance: 'Dominance',
+  };
+  useEffect(() => {
+    setPlanLoading(true);
+    getUserPlan().then((data) => {
+      setUserPlan(data);
+      setPlanLoading(false);
+    });
+  }, []);
+  const handlePlanChange = async (newPlan: PlanType) => {
+    setPlanLoading(true);
+    const data = await changeUserPlan(newPlan);
+    setUserPlan(data);
+    setPlanLoading(false);
+  };
+  const handleSpendCredit = async (amount: number) => {
+    setPlanLoading(true);
+    const data = await spendCredits(amount);
+    setUserPlan(data);
+    setPlanLoading(false);
+  };
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -38,6 +74,16 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
   const [currentLocale, setCurrentLocale] = useState<LocaleCode>('en');
+  // Skor trend tabı ve dummy veri
+  const [trendTab, setTrendTab] = useState(0); // 0: 3 ay, 1: 6 ay, 2: 12 ay
+  const trendData: number[][] = [
+    // 3 ay (12 hafta)
+    [65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95],
+    // 6 ay (24 hafta)
+    [60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95],
+    // 12 ay (48 hafta)
+    [55, 58, 60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73]
+  ];
 
   // Mock scan history
   const [scanHistory] = useState<ScanHistory[]>([
@@ -278,6 +324,30 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Kullanıcı Plan & Kredi Bilgisi */}
+        <div className="flex items-center gap-4 mb-6">
+          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm">
+            Plan: {planLoading || !userPlan ? '...' : planLabel[userPlan.plan]}
+          </span>
+          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
+            Kalan Kredi: {planLoading || !userPlan ? '...' : `${userPlan.credits} / ${PLAN_CREDIT_LIMITS[userPlan.plan]}`}
+          </span>
+          <button
+            className="px-3 py-1 rounded bg-blue-500 text-white text-xs font-semibold disabled:opacity-50"
+            disabled={planLoading || !userPlan}
+            onClick={() => userPlan && handlePlanChange(userPlan.plan === 'starter' ? 'scale' : userPlan.plan === 'scale' ? 'dominance' : 'starter')}
+          >
+            Planı Değiştir
+          </button>
+          <button
+            className="px-3 py-1 rounded bg-green-500 text-white text-xs font-semibold disabled:opacity-50"
+            disabled={planLoading || !userPlan || userPlan.credits <= 0}
+            onClick={() => handleSpendCredit(1)}
+          >
+            1 Kredi Harca
+          </button>
+          <span className="ml-2 text-xs text-gray-500">Son sıfırlama: {userPlan ? new Date(userPlan.lastReset).toLocaleDateString() : '-'}</span>
+        </div>
         {/* Tab Content */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           {/* Overview Tab */}
@@ -308,12 +378,47 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Score Trend Chart */}
+  // Skor trend tabı ve dummy veri
+  const [trendTab, setTrendTab] = useState(0); // 0: 3 ay, 1: 6 ay, 2: 12 ay
+  const trendData: number[][] = [
+    // 3 ay (12 hafta)
+    [65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95],
+    // 6 ay (24 hafta)
+    [60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95],
+    // 12 ay (48 hafta)
+    [55, 58, 60, 62, 65, 68, 57, 72, 78, 87, 92, 88, 90, 91, 93, 95, 94, 96, 97, 98, 99, 100, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73]
+  ];
+              {/* Skor Hesaplama Açıklaması */}
+              <div className="mb-6">
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl text-sm text-gray-800">
+                  <b>Skor Hesaplama Mantığı:</b><br/>
+                  <ul className="list-disc ml-4 mt-2 space-y-1">
+                    <li><b>Görünürlük Oranı</b> (%30): Harita üzerindeki noktaların yüzde kaçı ilk 20'de yer alıyor.</li>
+                    <li><b>Ortalama Sıra Skoru</b> (%40): Bulunan noktalardaki sıralama kalitesi.<br/>
+                      <span className="text-xs">1-3: 100 puan, 4-7: 75 puan, 8-12: 50 puan, 13-16: 25 puan, 17-20: 10 puan</span>
+                    </li>
+                    <li><b>Premium Metrikler</b> (%30): Anahtar kelime uyumu, kategori doğruluğu, yorum hızı, fotoğraf güncelliği, öne çıkma, yakınlık erişimi, zayıf bölgeler, kritik eksikler, sosyal sinyal, bilgi tamlığı, güncel çalışma saatleri.</li>
+                  </ul>
+                  <div className="mt-2 text-xs text-gray-600">Nihai skor: (Görünürlük × 0.3) + (Ortalama Sıra × 0.4) + (Premium Metrikler × 0.3)</div>
+                </div>
+              </div>
+              {/* Score Trend Chart - 3/6/12 Ay */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Score Trend (Last 30 Days)</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Score Trend</h3>
+                <div className="mb-4 flex gap-2">
+                  {['3 Ay', '6 Ay', '12 Ay'].map((label, idx) => (
+                    <button
+                      key={label}
+                      className={`px-4 py-2 rounded-full font-semibold border transition-colors ${trendTab === idx ? 'bg-primary text-white border-primary' : 'bg-gray-100 text-gray-700 border-gray-300'}`}
+                      onClick={() => setTrendTab(idx)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
                 <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
                   <div className="flex items-end justify-between h-48 gap-2">
-                    {[65, 68, 57, 72, 78, 87, 92].map((score, idx) => (
+                    {trendData[trendTab].map((score: number, idx: number) => (
                       <div key={idx} className="flex-1 flex flex-col items-center">
                         <div 
                           className="w-full bg-gradient-to-t from-primary to-blue-400 rounded-t-lg transition-all hover:from-blue-600 hover:to-blue-500"
@@ -324,8 +429,8 @@ export default function DashboardPage() {
                     ))}
                   </div>
                   <div className="flex justify-between mt-4 text-xs text-gray-500">
-                    <span>5 days ago</span>
-                    <span>Today</span>
+                    <span>{trendTab === 0 ? '3 ay önce' : trendTab === 1 ? '6 ay önce' : '12 ay önce'}</span>
+                    <span>Bugün</span>
                   </div>
                 </div>
               </div>

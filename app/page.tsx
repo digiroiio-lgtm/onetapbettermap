@@ -1,81 +1,12 @@
-      {/* MapsRankCheck Testimonials Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-50">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">Trusted by 2,000+ Local Businesses</h2>
-          <p className="text-lg text-gray-700 mb-10">See how <span className="font-semibold text-primary">MapsRankCheck</span> is helping businesses grow their online presence and dominate local search.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* Review 1 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
-              <div>
-                <div className="flex items-center mb-4">
-                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
-                </div>
-                <p className="text-gray-800 mb-6">“MapsRankCheck makes it so easy to track my business rankings and spot new opportunities. The heatmap is a game changer for local SEO!”</p>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <span className="w-10 h-10 rounded-full bg-blue-300 border-4 border-white inline-block"></span>
-                <div>
-                  <span className="font-bold text-gray-900">Ayşe Yıldız</span><br />
-                  <span className="text-sm text-gray-500">Cafe Owner, Istanbul</span>
-                </div>
-              </div>
-            </div>
-            {/* Review 2 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
-              <div>
-                <div className="flex items-center mb-4">
-                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
-                </div>
-                <p className="text-gray-800 mb-6">“The competitor insights and actionable tips from MapsRankCheck helped us climb to the top 3 in Google Maps. Highly recommended!”</p>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <span className="w-10 h-10 rounded-full bg-blue-400 border-4 border-white inline-block"></span>
-                <div>
-                  <span className="font-bold text-gray-900">John Carter</span><br />
-                  <span className="text-sm text-gray-500">Dentist, London</span>
-                </div>
-              </div>
-            </div>
-            {/* Review 3 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 text-left flex flex-col justify-between">
-              <div>
-                <div className="flex items-center mb-4">
-                  <span className="text-yellow-400 text-xl mr-2">★★★★★</span>
-                </div>
-                <p className="text-gray-800 mb-6">“I love how MapsRankCheck visualizes my local SEO progress. The dashboard is intuitive and the support team is fantastic!”</p>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <span className="w-10 h-10 rounded-full bg-blue-500 border-4 border-white inline-block"></span>
-                <div>
-                  <span className="font-bold text-gray-900">Elif Demir</span><br />
-                  <span className="text-sm text-gray-500">Bakery Manager, Berlin</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-            <div className="text-center">
-              <span className="text-3xl font-bold text-primary">142%</span>
-              <div className="text-gray-600 mt-2 text-sm">Average ranking improvement</div>
-            </div>
-            <div className="text-center">
-              <span className="text-3xl font-bold text-primary">2,000+</span>
-              <div className="text-gray-600 mt-2 text-sm">Satisfied customers</div>
-            </div>
-            <div className="text-center">
-              <span className="text-3xl font-bold text-primary">1.8M</span>
-              <div className="text-gray-600 mt-2 text-sm">Citations built</div>
-            </div>
-            <div className="text-center">
-              <span className="text-3xl font-bold text-primary">97%</span>
-              <div className="text-gray-600 mt-2 text-sm">Customer satisfaction</div>
-            </div>
-          </div>
-        </div>
-      </section>
+'use client'
 
-    import dynamic from 'next/dynamic'
-    // ...existing code...
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { useTranslation } from '@/lib/i18n';
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+// Dynamic import to avoid SSR issues
 const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete'), {
   ssr: false,
   loading: () => (
@@ -93,12 +24,29 @@ const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete')
   )
 })
 
+
 export default function Home() {
   const t = useTranslation().scan;
   const router = useRouter();
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [city, setCity] = useState('');
   const [keyword, setKeyword] = useState('');
+  const [freeScansLeft, setFreeScansLeft] = useState(3);
+  const [limitReached, setLimitReached] = useState(false);
+
+  // Helper: get current month key
+  const getMonthKey = () => {
+    const now = new Date();
+    return `freeScans_${now.getFullYear()}_${now.getMonth() + 1}`;
+  };
+
+  // On mount, check localStorage for scan count
+  useEffect(() => {
+    const key = getMonthKey();
+    const scans = parseInt(localStorage.getItem(key) || '0', 10);
+    setFreeScansLeft(Math.max(0, 3 - scans));
+    setLimitReached(scans >= 3);
+  }, []);
 
   const scrollToScan = () => {
     const scanSection = document.getElementById('scan-section')
@@ -112,7 +60,6 @@ export default function Home() {
 
   const handlePlaceSelect = (place: google.maps.places.PlaceResult) => {
     setSelectedPlace(place);
-    
     // Extract city from address components
     const cityComponent = place.address_components?.find(
       component => component.types.includes('locality') || component.types.includes('administrative_area_level_1')
@@ -124,18 +71,30 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    if (limitReached) return;
     if (!selectedPlace) {
       alert('Please select a business from the suggestions');
       return;
     }
-
     const businessName = selectedPlace.name || '';
     const finalCity = city || 'Unknown';
     const finalKeyword = keyword || 'business near me';
 
+    // Update localStorage scan count
+    const key = getMonthKey();
+    const scans = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+    localStorage.setItem(key, scans.toString());
+    setFreeScansLeft(Math.max(0, 3 - scans));
+    setLimitReached(scans >= 3);
+
     router.push(`/scanning?businessName=${encodeURIComponent(businessName)}&city=${encodeURIComponent(finalCity)}&keyword=${encodeURIComponent(finalKeyword)}`);
   };
+
+  return (
+    <main className="min-h-screen">
+      {/* ...existing code... */}
+    </main>
+  )
 
   return (
     <main className="min-h-screen">
@@ -228,6 +187,16 @@ export default function Home() {
             </p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
+              {limitReached && (
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded text-center">
+                  <p className="text-red-600 font-semibold text-lg">You have reached your free scan limit for this month.</p>
+                  <p className="text-gray-600 mt-2">Sign up or upgrade to Pro for unlimited scans.</p>
+                  <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center">
+                    <Link href="/signup" className="bg-primary text-white px-6 py-2 rounded font-bold hover:bg-blue-700 transition">Sign Up Free</Link>
+                    <Link href="/login" className="bg-white border border-primary text-primary px-6 py-2 rounded font-bold hover:bg-blue-50 transition">Login</Link>
+                  </div>
+                </div>
+              )}
               <div>
                 <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                   <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
@@ -246,7 +215,7 @@ export default function Home() {
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                     </svg>
-                    Selected: {selectedPlace.name}
+                    Selected: {selectedPlace?.name}
                   </p>
                 )}
               </div>
@@ -297,17 +266,18 @@ export default function Home() {
                     🔍
                   </div>
                 </div>
-                  <span className="text-xs text-gray-500 mt-1 block">{t.keywordPlaceholder} ({t.keyword} {t.optional ? t.optional : 'optional'})</span>
+                  <span className="text-xs text-gray-500 mt-1 block">{t.keywordPlaceholder} ({t.keyword} optional)</span>
               </div>
               
               <button
                 type="submit"
-                className="w-full bg-primary hover:bg-blue-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
+                className="w-full bg-primary hover:bg-blue-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={limitReached}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
                 </svg>
-                Run My Free Scan
+                {limitReached ? 'Limit Reached' : `Run My Free Scan (${freeScansLeft} left)`}
               </button>
               
               <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
@@ -406,39 +376,6 @@ export default function Home() {
           <p className="text-blue-100 text-sm mt-6">
             No credit card required • 3 scans/month free • Upgrade anytime to Pro
           </p>
-        </div>
-      </section>
-
-      {/* Viral on X.com & As Seen On Section */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-6 flex flex-col items-center gap-2">
-            <span className="inline-flex items-center gap-2 text-primary font-semibold text-lg">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M12 2l2.09 6.26L20 9.27l-5 4.87L16.18 21 12 17.27 7.82 21 9 14.14l-5-4.87 5.91-.91z" />
-              </svg>
-              Viral on X.com
-            </span>
-            <div className="flex items-center justify-center gap-2 mt-2">
-              {/* User avatars - placeholder circles */}
-              <span className="w-10 h-10 rounded-full bg-blue-300 border-4 border-white inline-block"></span>
-              <span className="w-10 h-10 rounded-full bg-blue-400 border-4 border-white inline-block"></span>
-              <span className="w-10 h-10 rounded-full bg-blue-500 border-4 border-white inline-block"></span>
-              <span className="w-10 h-10 rounded-full bg-blue-600 border-4 border-white inline-block"></span>
-              <span className="w-10 h-10 rounded-full bg-blue-700 border-4 border-white inline-block"></span>
-              <span className="ml-3 text-yellow-400 text-xl">★★★★★</span>
-              <span className="ml-2 text-gray-700 font-semibold">500+ paying agencies</span>
-            </div>
-          </div>
-          <div className="mt-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">As Seen On:</h3>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-3xl text-gray-700">
-              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">yahoo!</text></svg>finance</span>
-              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">TikTok</text></svg></span>
-              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><text x="0" y="24" fontSize="24" fontFamily="Arial">MarketWatch</text></svg></span>
-              <span className="font-bold flex items-center gap-2"><svg className="w-8 h-8" fill="currentColor" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#222"/><polygon points="12,10 24,16 12,22" fill="#fff"/></svg>YouTube</span>
-            </div>
-          </div>
         </div>
       </section>
     </main>
