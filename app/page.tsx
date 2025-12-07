@@ -73,15 +73,9 @@
           </div>
         </div>
       </section>
-"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { useTranslation } from '@/lib/i18n';
-import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
-
-// Dynamic import to avoid SSR issues
+    import dynamic from 'next/dynamic'
+    // ...existing code...
 const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete'), {
   ssr: false,
   loading: () => (
