@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPage() {
+function ResetContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") || "";
+  const token = searchParams?.get("token") ?? "";
   const [form, setForm] = useState({ password: "", confirm: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
@@ -110,5 +110,17 @@ export default function ResetPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResetPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+        <p className="text-gray-700">Loading reset form...</p>
+      </div>
+    }>
+      <ResetContent />
+    </Suspense>
   );
 }

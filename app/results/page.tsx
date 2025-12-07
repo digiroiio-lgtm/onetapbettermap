@@ -74,8 +74,8 @@ function PremiumCell({
 }) {
   if (isPremium) {
     return <span className="text-lg font-semibold text-gray-900">{value}</span>
-  }
-  
+  };
+
   return (
     <div className="relative">
       <div className={`absolute inset-0 backdrop-blur-sm ${gradient} rounded flex items-center justify-center`}>
@@ -101,12 +101,38 @@ function ResultsContent() {
     infoCompleteness: 97,
     hoursUpdated: 90
   }
+  const premiumMetricIcons: Record<keyof typeof premiumMetrics, string> = {
+    keywordMatch: '🎯',
+    categoryAccuracy: '📂',
+    reviewVelocity: '⚡',
+    photoFreshness: '📷',
+    prominenceIndex: '🏆',
+    proximityReach: '📡',
+    weakZone: '🗺️',
+    criticalGaps: '🚨',
+    socialSignal: '💬',
+    infoCompleteness: '✅',
+    hoursUpdated: '⏰'
+  }
+  const premiumMetricLabels: Record<keyof typeof premiumMetrics, string> = {
+    keywordMatch: 'Anahtar Kelime Uyumu',
+    categoryAccuracy: 'Kategori Doğruluğu',
+    reviewVelocity: 'Yorum Hızı',
+    photoFreshness: 'Fotoğraf Güncelliği',
+    prominenceIndex: 'Prominence Index',
+    proximityReach: 'Yakınlık Erişimi',
+    weakZone: 'Zayıf Bölgeler',
+    criticalGaps: 'Kritik Eksikler',
+    socialSignal: 'Sosyal Sinyal',
+    infoCompleteness: 'Bilgi Tamlığı',
+    hoursUpdated: 'Güncellenmiş Saatler'
+  }
   
   const searchParams = useSearchParams()
   
-  const businessName = searchParams.get('businessName') || 'Your Business'
-  const city = searchParams.get('city') || 'Your City'
-  const keyword = searchParams.get('keyword') || 'dentist near me'
+  const businessName = searchParams?.get('businessName') ?? 'Your Business'
+  const city = searchParams?.get('city') ?? 'Your City'
+  const keyword = searchParams?.get('keyword') ?? 'dentist near me'
   
   // Check if user upgraded
   const [isPremium, setIsPremium] = useState(false)
@@ -117,7 +143,7 @@ function ResultsContent() {
     setIsPremium(premiumStatus)
     
     // Also check URL parameter
-    const upgraded = searchParams.get('upgraded') === 'true'
+    const upgraded = searchParams?.get('upgraded') === 'true'
     if (upgraded && !premiumStatus) {
       localStorage.setItem('premiumUser', 'true')
       setIsPremium(true)
@@ -313,7 +339,7 @@ function ResultsContent() {
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Premium Success Banner - Show only once after upgrade */}
-        {isPremium && searchParams.get('upgraded') === 'true' && (
+        {isPremium && searchParams?.get('upgraded') === 'true' && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-2xl p-6 mb-8 text-white animate-bounce">
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
@@ -825,32 +851,9 @@ function ResultsContent() {
                           <span className="text-2xl font-extrabold text-yellow-700 tracking-tight mb-2">Özet Premium Metrikler</span>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mx-auto">
                             {Object.entries(premiumMetrics).map(([key, value]) => {
-                              const icons = {
-                                keywordMatch: '🎯',
-                                categoryAccuracy: '📂',
-                                reviewVelocity: '⚡',
-                                photoFreshness: '📷',
-                                prominenceIndex: '🏆',
-                                proximityReach: '📡',
-                                weakZone: '🗺️',
-                                criticalGaps: '🚨',
-                                socialSignal: '💬',
-                                infoCompleteness: '✅',
-                                hoursUpdated: '⏰'
-                              };
-                              const labels = {
-                                keywordMatch: 'Anahtar Kelime Uyumu',
-                                categoryAccuracy: 'Kategori Doğruluğu',
-                                reviewVelocity: 'Yorum Hızı',
-                                photoFreshness: 'Fotoğraf Güncelliği',
-                                prominenceIndex: 'Prominence Index',
-                                proximityReach: 'Yakınlık Erişimi',
-                                weakZone: 'Zayıf Bölgeler',
-                                criticalGaps: 'Kritik Eksikler',
-                                socialSignal: 'Sosyal Sinyal',
-                                infoCompleteness: 'Bilgi Tamlığı',
-                                hoursUpdated: 'Güncellenmiş Saatler'
-                              };
+                              const metricKey = key as keyof typeof premiumMetrics
+                              const metricLabel = premiumMetricLabels[metricKey]
+                              const metricIcon = premiumMetricIcons[metricKey]
                               // Dummy trend & history
                               const trend = Math.round((Math.random() - 0.5) * 10); // -10/+10
                               const history = Array.from({length: 7}, (_, i) => Math.max(0, Math.min(100, value + Math.round((Math.random()-0.5)*10))));
@@ -861,15 +864,15 @@ function ResultsContent() {
                               else if (value >= 40) color = '#fb923c';
                               else color = '#ef4444';
                               // Tooltip açıklama
-                              const tooltip = `${labels[key]}: Son güncelleme 2 gün önce. Puanlama kriteri: ${labels[key]} için Google verileri.`;
+                              const tooltip = `${metricLabel}: Son güncelleme 2 gün önce. Puanlama kriteri: ${metricLabel} için Google verileri.`;
                               return (
                                 <div key={key} className="flex flex-col items-center bg-white rounded-xl shadow-md p-4 border border-gray-100 group relative">
                                   {/* İkon + Tooltip */}
                                   <span className="text-3xl mb-2 cursor-pointer relative">
-                                    {icons[key]}
+                                    {metricIcon}
                                     <span className="absolute left-8 top-0 z-10 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg">{tooltip}</span>
                                   </span>
-                                  <span className="font-semibold text-gray-800 mb-1 text-sm">{labels[key]}</span>
+                                  <span className="font-semibold text-gray-800 mb-1 text-sm">{metricLabel}</span>
                                   {/* Radial Gauge */}
                                   <svg width="60" height="60" className="mb-2">
                                     <circle cx="30" cy="30" r="26" stroke="#e5e7eb" strokeWidth="6" fill="none" />
@@ -898,14 +901,6 @@ function ResultsContent() {
                       </td>
                     </tr>
                   )}
-                  {/* ...existing code... */}
-                          <span className="text-xs font-semibold text-amber-700">🔒 Premium</span>
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400 blur-sm">74/100</span>
-                      </div>
-                    </td>
-                  </tr>
-
                   {/* Category Accuracy Row - Premium */}
                   <tr className="border-b border-gray-100 hover:bg-gray-50 bg-gradient-to-r from-purple-50/30 to-transparent">
                     <td className="py-4 px-4 font-medium text-gray-700">

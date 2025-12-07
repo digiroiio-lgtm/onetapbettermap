@@ -18,10 +18,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   // POST: Plan değiştir
   if (req.method === 'POST') {
-    const { plan } = req.body;
-    if (!plan || !PLAN_CREDIT_LIMITS[plan]) return res.status(400).json({ error: 'Invalid plan' });
-    userPlans[userId].plan = plan;
-    userPlans[userId].credits = PLAN_CREDIT_LIMITS[plan];
+    const { plan } = req.body as { plan?: PlanType };
+    const nextPlan = plan && PLAN_CREDIT_LIMITS[plan] ? plan : null;
+    if (!nextPlan) return res.status(400).json({ error: 'Invalid plan' });
+    userPlans[userId].plan = nextPlan;
+    userPlans[userId].credits = PLAN_CREDIT_LIMITS[nextPlan];
     userPlans[userId].lastReset = new Date().toISOString();
     return res.status(200).json({ userId, ...userPlans[userId] });
   }

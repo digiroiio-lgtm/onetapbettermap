@@ -7,9 +7,9 @@ function ScanningContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  const businessName = searchParams.get('businessName')
-  const city = searchParams.get('city')
-  const keyword = searchParams.get('keyword')
+  const businessName = searchParams?.get('businessName') ?? ''
+  const city = searchParams?.get('city') ?? ''
+  const keyword = searchParams?.get('keyword') ?? ''
 
   // Debug log
   console.log('Scanning page params:', { businessName, city, keyword })
