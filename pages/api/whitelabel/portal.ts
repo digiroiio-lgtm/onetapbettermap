@@ -21,15 +21,10 @@ const mockPortals = [
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // GET /api/whitelabel/portal?agencyId=agency-123
   if (req.method === 'GET') {
-     const { agencyId } = req.query;
-     const portal = mockPortals.find(p => p.agencyId === agencyId);
-     if (!portal) return res.status(404).json({ error: 'Not found' });
-     // Token auth (mock)
-     const auth = req.headers.authorization;
-     if (!auth || auth !== 'Bearer mock-token') {
-      return res.status(401).json({ error: 'Unauthorized' });
-     }
-     return res.status(200).json(portal);
+    const { agencyId } = req.query;
+    const portal = mockPortals.find(p => p.agencyId === agencyId);
+    if (!portal) return res.status(404).json({ error: 'Not found' });
+    return res.status(200).json(portal);
   }
   res.status(405).json({ error: 'Method not allowed' });
 }

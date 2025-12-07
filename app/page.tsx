@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
@@ -89,12 +89,6 @@ export default function Home() {
 
     router.push(`/scanning?businessName=${encodeURIComponent(businessName)}&city=${encodeURIComponent(finalCity)}&keyword=${encodeURIComponent(finalKeyword)}`);
   };
-
-  return (
-    <main className="min-h-screen">
-      {/* ...existing code... */}
-    </main>
-  )
 
   return (
     <main className="min-h-screen">
