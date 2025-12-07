@@ -298,6 +298,7 @@ function ResultsContent() {
     : isDemo
       ? mockCompetitors
       : [];
+  const showGuidedState = !isDemo && !useRealData;
   
   // Debug log
   console.log('Displaying competitors:', {
@@ -409,6 +410,34 @@ function ResultsContent() {
           <p className="text-gray-500 mt-1">Keyword: "{keyword}"</p>
         </div>
         
+        {showGuidedState && (
+          <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-amber-500 mb-1">No live data yet</p>
+                <h3 className="text-xl font-semibold text-gray-900">Launch your first real-time scan</h3>
+                <p className="text-sm text-gray-700">
+                  Start by selecting your business and keyword on the home page. Need help? Follow the onboarding guide or chat with support.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  href="/#scan-section"
+                  className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-white font-semibold shadow-lg hover:bg-blue-600 transition"
+                >
+                  Go to Scan Form
+                </Link>
+                <Link
+                  href="/support"
+                  className="inline-flex items-center justify-center rounded-xl border border-amber-200 px-4 py-3 text-sm font-semibold text-amber-900 hover:bg-white transition"
+                >
+                  Need Guidance?
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Live Map Section */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
           <div className="flex items-center gap-3 mb-6">

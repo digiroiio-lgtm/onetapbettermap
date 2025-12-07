@@ -27,13 +27,17 @@ const PlaceAutocomplete = dynamic(() => import('@/components/PlaceAutocomplete')
 
 export default function Home() {
   const t = useTranslation().scan;
-  const router = useRouter();
-  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const [businessNameInput, setBusinessNameInput] = useState('');
-  const [city, setCity] = useState('');
-  const [keyword, setKeyword] = useState('');
-  const [freeScansLeft, setFreeScansLeft] = useState(3);
-  const [limitReached, setLimitReached] = useState(false);
+  const router = useRouter()
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null)
+  const [businessNameInput, setBusinessNameInput] = useState('')
+  const [city, setCity] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const [freeScansLeft, setFreeScansLeft] = useState(3)
+  const [limitReached, setLimitReached] = useState(false)
+  const [resetDate, setResetDate] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [planError, setPlanError] = useState<string | null>(null)
 
   // Helper: get current month key
   const getMonthKey = () => {
@@ -41,13 +45,30 @@ export default function Home() {
     return `freeScans_${now.getFullYear()}_${now.getMonth() + 1}`;
   };
 
-  // On mount, check localStorage for scan count
+  // On mount, check localStorage for scan count and auth state
   useEffect(() => {
-    const key = getMonthKey();
-    const scans = parseInt(localStorage.getItem(key) || '0', 10);
-    setFreeScansLeft(Math.max(0, 3 - scans));
-    setLimitReached(scans >= 3);
-  }, []);
+    const key = getMonthKey()
+    const scans = parseInt(localStorage.getItem(key) || '0', 10)
+    setFreeScansLeft(Math.max(0, 3 - scans))
+    setLimitReached(scans >= 3)
+
+    const now = new Date()
+    const reset = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+    setResetDate(reset.toLocaleDateString(undefined, { month: 'long', day: 'numeric' }))
+
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true'
+    setIsLoggedIn(loggedIn)
+    if (loggedIn) {
+      try {
+        const profile = JSON.parse(localStorage.getItem('currentUser') || '{}')
+        if (profile?.id) {
+          setUserId(profile.id)
+        }
+      } catch {
+        setUserId(null)
+      }
+    }
+  }, [])
 
   const scrollToScan = () => {
     const scanSection = document.getElementById('scan-section')
@@ -90,26 +111,49 @@ export default function Home() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (limitReached) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPlanError(null)
     if (!selectedPlace && !businessNameInput.trim()) {
-      alert('Please enter your business name');
-      return;
+      alert('Please enter your business name')
+      return
     }
-    const businessName = selectedPlace?.name || businessNameInput.trim();
-    const finalCity = city || 'Unknown';
-    const finalKeyword = keyword || 'business near me';
+    if (!isLoggedIn && limitReached) return
 
-    // Update localStorage scan count
-    const key = getMonthKey();
-    const scans = parseInt(localStorage.getItem(key) || '0', 10) + 1;
-    localStorage.setItem(key, scans.toString());
-    setFreeScansLeft(Math.max(0, 3 - scans));
-    setLimitReached(scans >= 3);
+    const businessName = selectedPlace?.name || businessNameInput.trim()
+    const finalCity = city || 'Unknown'
+    const finalKeyword = keyword || 'business near me'
 
-    router.push(`/scanning?businessName=${encodeURIComponent(businessName)}&city=${encodeURIComponent(finalCity)}&keyword=${encodeURIComponent(finalKeyword)}`);
-  };
+    if (isLoggedIn) {
+      try {
+        const res = await fetch(`/api/user/plan?userId=${encodeURIComponent(userId || 'demo')}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: 1 }),
+        })
+        if (res.status === 402) {
+          const data = await res.json()
+          setPlanError(`Plan limit reached. Next reset: ${new Date(data.nextReset).toLocaleDateString()}. Upgrade for unlimited scans.`)
+          return
+        }
+        if (!res.ok) {
+          setPlanError('Unable to start scan. Please try again or contact support.')
+          return
+        }
+      } catch (error) {
+        setPlanError('Network error. Please try again.')
+        return
+      }
+    } else {
+      const key = getMonthKey()
+      const scans = parseInt(localStorage.getItem(key) || '0', 10) + 1
+      localStorage.setItem(key, scans.toString())
+      setFreeScansLeft(Math.max(0, 3 - scans))
+      setLimitReached(scans >= 3)
+    }
+
+    router.push(`/scanning?businessName=${encodeURIComponent(businessName)}&city=${encodeURIComponent(finalCity)}&keyword=${encodeURIComponent(finalKeyword)}`)
+  }
 
   return (
     <main className="min-h-screen">
@@ -284,7 +328,7 @@ export default function Home() {
               <button
                 type="submit"
                 className="w-full bg-primary hover:bg-blue-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={limitReached}
+                disabled={!isLoggedIn && limitReached}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
@@ -292,11 +336,48 @@ export default function Home() {
                 {limitReached ? 'Limit Reached' : `Run My Free Scan (${freeScansLeft} left)`}
               </button>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                <p className="text-sm text-gray-600 text-center">
-                  💡 <strong>Tip:</strong> Start typing your business name and select from Google's suggestions for accurate results
-                </p>
-              </div>
+              {planError ? (
+                <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-100 text-sm text-red-700 text-center">
+                  <p className="font-semibold">{planError}</p>
+                  <div className="mt-3 flex flex-col sm:flex-row gap-2 justify-center">
+                    <Link href="/upgrade" className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition">
+                      Upgrade Plan
+                    </Link>
+                    <Link href="/support" className="border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition">
+                      Contact Support
+                    </Link>
+                  </div>
+                </div>
+              ) : !isLoggedIn && limitReached ? (
+                <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-100 text-sm text-red-700 text-center">
+                  <p className="font-semibold">You’ve used all 3 free scans this month.</p>
+                  <p className="text-xs mt-1">
+                    Free scans reset on {resetDate}. Sign up or upgrade to keep scanning.
+                  </p>
+                  <div className="mt-3 flex flex-col sm:flex-row gap-2 justify-center">
+                    <Link href="/signup" className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition">
+                      Create Free Account
+                    </Link>
+                    <Link href="/upgrade" className="border border-primary text-primary px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-50 transition">
+                      Upgrade to Pro
+                    </Link>
+                  </div>
+                </div>
+              ) : isLoggedIn ? (
+                <div className="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-100">
+                  <p className="text-sm text-emerald-900 text-center">
+                    Logged in users consume 1 credit per scan. Need more?{' '}
+                    <Link href="/upgrade" className="font-semibold underline">Upgrade to Pro</Link>.
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                  <p className="text-sm text-gray-600 text-center">
+                    💡 <strong>Tip:</strong> Start typing your business name and select from Google’s suggestions for accurate results.
+                    Free scans remaining this month: <span className="font-semibold">{freeScansLeft}</span> (resets on {resetDate}).
+                  </p>
+                </div>
+              )}
             </form>
             </div>
           </div>

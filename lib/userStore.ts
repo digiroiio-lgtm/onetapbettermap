@@ -11,6 +11,10 @@ export interface DemoUser {
   resetToken: string | null
   resetTokenExpires: number | null
   sessionToken: string | null
+  businessName: string | null
+  teamName: string | null
+  role: 'owner' | 'member'
+  deletedAt: string | null
   createdAt: string
   updatedAt: string
   lastLoginAt: string | null
@@ -52,6 +56,10 @@ export function createDemoUser(params: { name: string; email: string; password: 
     resetToken: null,
     resetTokenExpires: null,
     sessionToken: null,
+     businessName: null,
+     teamName: null,
+     role: 'owner',
+     deletedAt: null,
     createdAt: now,
     updatedAt: now,
     lastLoginAt: null,
@@ -73,6 +81,10 @@ export function findUserByResetToken(token: string): DemoUser | undefined {
   return users.find(user => user.resetToken === token)
 }
 
+export function findUserBySessionToken(token: string): DemoUser | undefined {
+  return users.find(user => user.sessionToken === token)
+}
+
 export function updateUser(user: DemoUser, updates: Partial<DemoUser>): DemoUser {
   Object.assign(user, updates, { updatedAt: new Date().toISOString() })
   return user
@@ -80,4 +92,26 @@ export function updateUser(user: DemoUser, updates: Partial<DemoUser>): DemoUser
 
 export function getAllUsers(): DemoUser[] {
   return users
+}
+
+export function deleteUser(userId: string): boolean {
+  const index = users.findIndex(user => user.id === userId)
+  if (index === -1) return false
+  users.splice(index, 1)
+  return true
+}
+
+export function getPublicProfile(user: DemoUser) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    verified: user.verified,
+    businessName: user.businessName,
+    teamName: user.teamName,
+    role: user.role,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    lastLoginAt: user.lastLoginAt,
+  }
 }

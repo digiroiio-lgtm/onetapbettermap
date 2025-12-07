@@ -4,16 +4,17 @@ import { PLAN_CREDIT_LIMITS, PlanType } from '@/lib/creditSystem';
 import { getUserPlan, changeUserPlan, spendCredits } from '@/lib/planApi';
 import { useEffect, useState } from 'react';
 
-
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { locales, type LocaleCode, setLocale } from '@/lib/i18n';
+import OnboardingPanel from '@/components/OnboardingPanel';
 
 interface User {
   id: string;
   name: string;
   email: string;
   businessName: string;
+  teamName?: string;
   city: string;
   country: string;
   plan: string;
@@ -192,6 +193,36 @@ export default function DashboardPage() {
 
   const scansRemaining = user.scansLimit - user.scansUsed;
   const scansPercentage = (user.scansUsed / user.scansLimit) * 100;
+  const onboardingSteps = [
+    {
+      id: 'profile',
+      title: 'Complete your profile',
+      description: 'Add your business and team info so reports stay personalized.',
+      status: user.businessName ? 'done' : 'current',
+      action: { label: 'Edit Profile', href: '/support' }
+    },
+    {
+      id: 'scan',
+      title: 'Run your first live scan',
+      description: 'Launch a 49-point visibility scan for your top keyword.',
+      status: user.scansUsed > 0 ? 'done' : 'todo',
+      action: { label: 'Start Scan', href: '/#scan-section' }
+    },
+    {
+      id: 'team',
+      title: 'Invite your team',
+      description: 'Share dashboards and export PDFs with teammates or clients.',
+      status: user.teamName ? 'done' : 'todo',
+      action: { label: 'Manage Access', href: '/support' }
+    },
+    {
+      id: 'community',
+      title: 'Join the community',
+      description: 'Get onboarding tips and compare playbooks with other agencies.',
+      status: 'todo',
+      action: { label: 'Join Discord', href: 'https://discord.gg/' }
+    }
+  ] as const;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -255,6 +286,13 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
+
+        <OnboardingPanel
+          steps={onboardingSteps.map(step => ({
+            ...step,
+            status: step.status as 'done' | 'current' | 'todo'
+          }))}
+        />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
