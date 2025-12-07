@@ -215,6 +215,7 @@ export default function MapComponent({
   }, [markers])
 
   if (error) {
+    const isMissingApiKey = error.toLowerCase().includes('api key')
     return (
       <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center p-4">
         <div className="text-center">
@@ -223,6 +224,12 @@ export default function MapComponent({
           </svg>
           <p className="text-red-600 font-medium">Failed to load map</p>
           <p className="text-sm text-gray-600 mt-1">{error}</p>
+          {isMissingApiKey && (
+            <div className="mt-4 text-sm text-gray-600 space-y-1">
+              <p>Add <code className="px-1 py-0.5 bg-white rounded border border-gray-200 text-xs">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your environment to enable the live map.</p>
+              <p>After updating your env vars, redeploy to load the Business Location & Competitors map.</p>
+            </div>
+          )}
         </div>
       </div>
     )
