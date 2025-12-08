@@ -1,63 +1,82 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+
+const navLinks = [
+  { label: 'Features', href: '/#features' },
+  { label: 'Pricing', href: '/upgrade' },
+  { label: 'Guides', href: '/guide' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Login', href: '/login' },
+]
 
 export default function Navigation() {
+  const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-3 px-3 py-1 rounded-2xl bg-white border border-gray-200 shadow-sm">
-              <svg className="w-9 h-9 text-primary" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-              </svg>
-              <div className="leading-tight">
-                <span className="block text-xs font-semibold uppercase tracking-[0.4em] text-gray-400">
-                  Maps
-                </span>
-                <span className="block text-xl font-black text-gray-900">
-                  Rank Checker
-                </span>
-              </div>
-            </span>
+    <header className="sticky top-0 z-50 bg-[#020617]/90 backdrop-blur border-b border-white/5 text-white">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-8 lg:px-16 h-20">
+        <Link href="/" className="text-lg font-semibold tracking-wide">
+          MapsRankChecker™
+        </Link>
+
+        <div className="hidden md:flex items-center gap-6">
+          {navLinks.map(link => {
+            const isActive = pathname === '/upgrade' ? link.label === 'Pricing' : link.href === '/#features' && pathname === '/'
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition ${
+                  isActive ? 'text-white' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
+          <Link
+            href="/#scan-section"
+            className="inline-flex items-center rounded-full bg-white text-black text-sm font-semibold px-5 py-2 transition hover:bg-white/90"
+          >
+            Start Free Scan
           </Link>
-          
-          <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/" 
-              className="text-gray-700 hover:text-primary font-medium transition-colors"
-            >
-              Home
-            </Link>
-            <Link 
-              href="/#scan-section" 
-              className="text-gray-700 hover:text-primary font-medium transition-colors"
-            >
-              Scan
-            </Link>
-            <Link 
-              href="/upgrade" 
-              className="text-gray-700 hover:text-primary font-medium transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link 
-              href="/results?businessName=Demo%20Business&city=San%20Francisco&keyword=dentist%20near%20me" 
-              className="text-gray-700 hover:text-primary font-medium transition-colors"
-            >
-              Results (Demo)
-            </Link>
-          </div>
-          
-          {/* Mobile menu button - simplified for now */}
-          <div className="md:hidden">
-            <button className="text-gray-700 hover:text-primary">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
         </div>
-      </div>
-    </nav>
+
+        <button
+          className="md:hidden text-white"
+          onClick={() => setMenuOpen(prev => !prev)}
+          aria-label="Toggle menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </nav>
+      {menuOpen && (
+        <div className="md:hidden border-t border-white/5 bg-[#020617] px-5 py-4 space-y-3">
+          {navLinks.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="block text-sm text-slate-300"
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link
+            href="/#scan-section"
+            className="block text-center rounded-full bg-white text-black text-sm font-semibold px-4 py-2"
+            onClick={() => setMenuOpen(false)}
+          >
+            Start Free Scan
+          </Link>
+        </div>
+      )}
+    </header>
   )
 }
