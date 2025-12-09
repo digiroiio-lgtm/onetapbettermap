@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import RevenueImpactCard from '@/components/RevenueImpactCard'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
-import BlurredRevenuePreview from '@/components/BlurredRevenuePreview'
 
 const socialProofIcons = ['Dentists', 'Clinics', 'Restaurants', 'Real Estate', 'Agencies']
 
@@ -21,9 +19,9 @@ const problemCards = [
 ]
 
 const howItWorks = [
-  { label: 'Step 1', title: 'Enter your business', body: 'Search your Google Business Profile or paste your name + city.' },
-  { label: 'Step 2', title: 'Run your scan', body: 'Get instant heatmap, visibility score, and keyword positions.' },
-  { label: 'Step 3', title: 'Follow your plan', body: 'Use the AI-powered checklist to close your ranking gaps.' },
+  { label: 'Step 1', title: 'Enter your business', body: 'Search your Google Business Profile or paste name + city.' },
+  { label: 'Step 2', title: 'Get instant heatmap', body: '49-point GeoGrid shows the exact ranks nearby customers see.' },
+  { label: 'Step 3', title: 'Follow AI checklist', body: 'Actionable tasks remove ranking blockers in priority order.' },
 ]
 
 type CoreFeature = {
@@ -35,30 +33,56 @@ type CoreFeature = {
 
 const coreFeatures: CoreFeature[] = [
   {
-    title: 'Full Visibility Score',
-    body: 'A single score that summarizes your real map exposure in every direction.',
+    title: 'Visibility Score',
+    body: 'A single metric showing how dominant you are across your entire service radius.',
   },
   {
     title: 'Multi-Area Heatmaps',
-    body: 'See how your rank shifts as customers move across neighborhoods.',
+    body: 'Drag-and-drop grids that reveal hot spots, weak zones, and where to expand next.',
+  },
+  {
+    title: 'Keyword Position Tracking',
+    body: 'Monitor the exact keywords customers search and how you rank for each one.',
   },
   {
     title: 'AI Action Checklist',
-    body: 'Personalized, prioritized steps to improve your ranking — without guesswork.',
+    body: 'Guided fixes prioritized by impact so teams always know what to do next.',
   },
   {
-    title: 'Revenue Intelligence',
-    body: 'Predict how many calls, visits, and customers you gain by improving your map ranking.',
-    subtext: 'Built on real CTR + conversion benchmarks.',
-    icon: '💹',
+    title: 'Revenue Forecaster',
+    body: 'Preview how many calls, visits, and customers you’ll unlock at each rank.',
+    subtext: 'Powered by CTR + conversion benchmarks.',
+  },
+  {
+    title: 'Competitor Alerts & Auto Reports',
+    body: 'Get notified when rivals overtake you and ship branded reports in one click.',
   },
 ]
 
 const retentionHighlights = [
-  { label: 'Daily Rank Changes', body: 'See how your visibility shifts day by day.' },
-  { label: 'Competitor Movements', body: 'Get alerted when competitors gain ground near you.' },
-  { label: 'Opportunity Alerts', body: 'Discover low-competition keywords and nearby gaps you can own.' },
-  { label: 'Health Score', body: 'Monitor profile completeness, reviews, posting, and citations in one place.' },
+  { label: 'Daily Monitoring', body: 'Auto-tracking for rank changes, coverage gaps, and health score in every location.' },
+  { label: 'Smart Alerts', body: 'Instant alerts for competitor jumps, opportunity keywords, and zones trending down.' },
+]
+
+const demoTimeline = [
+  { name: 'BellaDent Clinic', rank: '#3', change: '+3 this week', coverage: '41/49 zones' },
+  { name: 'WhiteSmile Antalya', rank: '#11', change: '-1 this week', coverage: '32/49 zones' },
+  { name: 'Elite Dental Center', rank: '#16', change: '+1 this week', coverage: '24/49 zones' },
+]
+
+const socialProofLogos = ['SmileWorks', 'Radiant Dental', 'Urban Realty', 'ClinicOne', 'Coastal MedSpa']
+
+const testimonials = [
+  {
+    quote:
+      'We replaced six spreadsheets with one dashboard. Ops team sees every rank change and fixes issues the same day.',
+    author: 'Dr. Alina Perez, SmileWorks',
+  },
+  {
+    quote:
+      'Revenue Forecaster convinced finance to fund SEO. We know exactly what moving from #8 to #3 is worth.',
+    author: 'Marcus Li, Urban Realty Group',
+  },
 ]
 
 const faqItems = [
@@ -92,6 +116,11 @@ const faqItems = [
     answer:
       'No. You get 100 free scans every month forever. Upgrade only when you’re ready for unlimited scans and automation.',
   },
+  {
+    question: 'How is this different from Google Search Console?',
+    answer:
+      'Search Console shows web clicks from one location. MapsRankChecker scans 49+ coordinates across your city to reveal the real local pack rankings customers see.',
+  },
 ]
 
 export default function HomePage() {
@@ -101,13 +130,12 @@ export default function HomePage() {
         <HeroSection />
         <SocialProofStrip />
         <ProblemSolution />
+        <ScanFormSection />
+        <DemoExperienceSection />
         <HowItWorksSection />
-        <SampleReportSection />
-        <DashboardPreviewSection />
         <CoreFeaturesSection />
         <RetentionSection />
-        <SecondaryCTA />
-        <ScanFormSection />
+        <SocialProofSpotlight />
         <LandingFAQ />
         <FinalCTA />
       </main>
@@ -140,20 +168,20 @@ function HeroSection() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
-              href="#scan-section"
-              className="inline-flex items-center justify-center rounded-full bg-white text-black px-8 py-3 text-base font-semibold transition hover:bg-white/90"
+              href="#scan-now"
+              className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-8 py-3 text-base font-semibold transition hover:bg-[#1d4ed8]"
             >
-              Start Free Scan →
+              See Your Map Visibility →
             </Link>
             <Link
-              href="#sample-report"
+              href="#demo-experience"
               className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
             >
-              See Sample Scan →
+              View Sample Report →
             </Link>
           </div>
           <p className="text-sm text-slate-400">
-            100 free scans/month • No credit card required • 49-point accuracy
+            ✓ 100 free scans/month • No credit card • Setup in 2 minutes
           </p>
         </div>
         <div className="relative">
@@ -257,125 +285,100 @@ function HowItWorksSection() {
             <p className="text-slate-400 text-sm leading-relaxed">{step.body}</p>
           </div>
         ))}
-        <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-6 text-left md:col-start-3 md:row-start-2">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#3b82f6]/30 bg-[#3b82f6]/10 px-3 py-1 text-[11px] font-semibold text-[#3b82f6]">
-            NEW · Step 4
-          </div>
-          <h3 className="text-xl font-semibold text-white">See your revenue potential</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Understand the real monetary impact of ranking improvements with the Revenue Forecaster.
-          </p>
-        </div>
       </div>
     </section>
   )
 }
 
-function SampleReportSection() {
+
+function DemoExperienceSection() {
   return (
-    <section id="sample-report" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
-      <div className="text-center space-y-6 max-w-3xl mx-auto">
-        <h2 className="text-3xl font-semibold">
-          See exactly how Google ranks your business across the map.
-        </h2>
-        <div className="relative">
-          <div className="absolute inset-0 blur-3xl bg-emerald-500/10 rounded-[36px]" aria-hidden />
-          <div className="relative bg-white/5 border border-white/10 rounded-[36px] p-10 space-y-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="rounded-3xl bg-gradient-to-br from-emerald-500/20 to-blue-500/10 border border-white/10 p-6 space-y-4">
-                <p className="text-sm text-slate-300">Heatmap Preview</p>
-                <div className="grid grid-cols-7 gap-2">
-                  {Array.from({ length: 42 }).map((_, idx) => (
-                    <span
-                      key={idx}
-                      className="aspect-square rounded-lg"
-                      style={{
-                        background:
-                          idx % 4 === 0
-                            ? 'rgba(74,222,128,0.9)'
-                            : idx % 3 === 0
-                            ? 'rgba(251,191,36,0.8)'
-                            : 'rgba(248,113,113,0.7)',
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="rounded-3xl bg-white/5 border border-white/10 p-6">
-                  <p className="text-sm text-slate-300">Visibility Score</p>
-                  <p className="text-4xl font-semibold">74/100</p>
-                </div>
-                <div className="rounded-3xl bg-white/5 border border-white/10 p-6">
-                  <p className="text-sm text-slate-300">Ranking Timeline</p>
-                  <div className="h-16 rounded-2xl bg-gradient-to-r from-rose-400 via-amber-300 to-emerald-400" />
-                </div>
-                <div className="rounded-3xl bg-white/5 border border-white/10 p-4 text-left text-sm">
-                  <p className="text-white font-semibold">BellaDent climbed +3 this week</p>
-                  <p className="text-slate-400">Watch NW visibility</p>
-                </div>
-                <RevenueImpactCard
-                  rankImprovementTo3={3}
-                  callsGained={18}
-                  directionsGained={7}
-                  customersGained={2}
-                  monthlyRevenueImpact={1240}
-                  className="bg-transparent"
-                />
-              </div>
+    <section id="demo-experience" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+      <div className="space-y-6 text-center max-w-3xl mx-auto">
+        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Interactive Demo</p>
+        <h2 className="text-3xl font-semibold text-white">See the entire Maps intelligence loop in one view.</h2>
+        <p className="text-slate-400">
+          Visibility score, GeoGrid heatmap, competitor movement, and revenue forecasting — all in one login.
+        </p>
+      </div>
+      <div className="mt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
+        <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-8 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-slate-400">Visibility Score</p>
+              <p className="text-4xl font-semibold text-white">74/100</p>
             </div>
+            <span className="text-xs text-emerald-300">+5 this week</span>
           </div>
-        </div>
-        <Link href="/results?businessName=Demo%20Business&city=London&keyword=dentist%20near%20me" className="text-sm text-white/70 hover:text-white underline underline-offset-4">
-          View Full Sample Report →
-        </Link>
-      </div>
-    </section>
-  )
-}
-
-function DashboardPreviewSection() {
-  return (
-    <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
-      <div className="grid gap-10 lg:grid-cols-2 items-start">
-        <div className="space-y-6">
           <div>
-            <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Dashboard Preview</p>
-            <h2 className="text-3xl font-semibold text-white mt-2">See the visibility cockpit + revenue layer.</h2>
-            <p className="text-slate-400 mt-3">Score, timeline, competitor alerts — now boosted with the Revenue Forecaster.</p>
+            <p className="text-sm text-slate-400 mb-3">Heatmap Preview</p>
+            <div className="grid grid-cols-7 gap-2">
+              {Array.from({ length: 49 }).map((_, idx) => (
+                <span
+                  key={idx}
+                  className="aspect-square rounded-lg"
+                  style={{
+                    background:
+                      idx % 6 === 0
+                        ? 'rgba(74,222,128,0.85)'
+                        : idx % 4 === 0
+                        ? 'rgba(251,191,36,0.8)'
+                        : 'rgba(248,113,113,0.7)',
+                  }}
+                />
+              ))}
+            </div>
           </div>
-          <div className="rounded-[36px] border border-white/10 bg-white/5 p-8 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-400">Visibility Score</p>
-                <p className="text-4xl font-semibold text-white">82<span className="text-lg text-slate-500">/100</span></p>
-              </div>
-              <span className="text-emerald-300 text-sm font-semibold">+4 this week ↑</span>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-              <p className="text-sm text-slate-400">Ranking Timeline</p>
-              <div className="mt-3 h-20 rounded-2xl bg-gradient-to-r from-emerald-400/60 via-amber-300/50 to-rose-400/60" />
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 space-y-3">
-              <p className="text-sm text-slate-400">Competitor Alert</p>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white font-semibold">BellaDent +3</p>
-                  <p className="text-slate-400 text-sm">They now outrank you NW.</p>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-3">
+            <p className="text-sm text-slate-400">Competitor Timeline</p>
+            <div className="space-y-3">
+              {demoTimeline.map(item => (
+                <div key={item.name} className="flex items-center justify-between text-sm">
+                  <div>
+                    <p className="text-white font-semibold">{item.name}</p>
+                    <p className="text-slate-400 text-xs">{item.coverage}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-white font-semibold">{item.rank}</p>
+                    <p className="text-emerald-300 text-xs">{item.change}</p>
+                  </div>
                 </div>
-                <button className="text-sm text-white/80 underline-offset-4 hover:underline">See movement →</button>
-              </div>
+              ))}
             </div>
           </div>
         </div>
-        <RevenueForecastPanel
-          currentRank={12}
-          targetRank={3}
-          avgOrderValue={220}
-          conversionRate={0.3}
-          ctrModel={{ 1: 0.22, 2: 0.16, 3: 0.12, 5: 0.08 }}
-          gbpInsights={{ calls: 42, directions: 18, clicks: 260 }}
-        />
+        <div className="space-y-6">
+          <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Revenue Forecaster (preview)</p>
+            <RevenueForecastPanel
+              currentRank={12}
+              targetRank={3}
+              avgOrderValue={260}
+              conversionRate={0.26}
+              ctrModel={{ 1: 0.25, 2: 0.17, 3: 0.12, 5: 0.08, 10: 0.03 }}
+              gbpInsights={{ calls: 62, directions: 25, clicks: 340 }}
+            />
+          </div>
+          <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 space-y-4">
+            <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">What you unlock</p>
+            <ul className="space-y-3 text-sm text-slate-300 text-left">
+              <li>• Instant heatmap + coverage score</li>
+              <li>• Competitor movement + smart alerts</li>
+              <li>• Revenue projections at each rank</li>
+            </ul>
+            <Link
+              href="#scan-now"
+              className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-6 py-3 text-sm font-semibold transition hover:bg-[#1d4ed8]"
+            >
+              Run Your Own Scan →
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div className="mt-10 text-center">
+        <Link href="/results?businessName=Demo%20Business&city=London&keyword=dentist%20near%20me" className="text-sm text-white/70 hover:text-white underline underline-offset-4">
+          Explore the full sample report →
+        </Link>
       </div>
     </section>
   )
@@ -445,34 +448,31 @@ function SecondaryCTA() {
 
 function ScanFormSection() {
   return (
-    <section id="scan-section" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+    <section id="scan-now" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
       <div className="max-w-4xl mx-auto rounded-[32px] bg-white/5 border border-white/10 p-8 space-y-6">
         <div className="space-y-3 text-center">
           <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Scan Now</p>
-          <h2 className="text-3xl font-semibold text-white">Check Your Map Ranking</h2>
-          <p className="text-slate-400">Enter your business details to see how you rank on Google Maps.</p>
+          <h2 className="text-3xl font-semibold text-white">Check Your Real Map Ranking in 30 Seconds</h2>
+          <p className="text-slate-400">Enter your business details to see what nearby customers see.</p>
+        </div>
+        <div className="rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm text-rose-100">
+          <p className="font-semibold">⚠️ You’ve used all 100 free scans today.</p>
+          <p className="text-rose-200 mt-1">
+            <Link href="/signup" className="underline">Sign up</Link> for 100/month or{' '}
+            <Link href="/upgrade" className="underline">upgrade</Link> for unlimited scans.
+          </p>
         </div>
         <form className="space-y-4">
           <InputField label="Business Name" placeholder="e.g., SmileBright Dental" icon="🏢" />
           <InputField label="City" placeholder="Antalya" icon="📍" />
           <InputField label="Search Keyword (optional)" placeholder='e.g., "dentist near me"' icon="🔍" />
-          <button className="w-full rounded-full bg-white text-black py-3 font-semibold hover:bg-white/90 transition">
-            Start Free Scan →
+          <button className="w-full rounded-full bg-[#2563eb] text-white py-3 font-semibold hover:bg-[#1d4ed8] transition">
+            Scan My Visibility →
           </button>
         </form>
-        <div className="rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm text-rose-100">
-          <p className="font-semibold">You’ve used all 100 free scans this month.</p>
-          <p className="text-rose-200 mt-1">Create a free account or upgrade to keep scanning.</p>
-          <div className="mt-3 flex flex-col sm:flex-row gap-3">
-            <Link href="/signup" className="inline-flex w-full items-center justify-center rounded-full bg-white text-black px-4 py-2 font-semibold">
-              Sign Up Free
-            </Link>
-            <Link href="/upgrade" className="inline-flex w-full items-center justify-center rounded-full border border-white/30 px-4 py-2 font-semibold text-white hover:bg-white/10">
-              Upgrade to Pro
-            </Link>
-          </div>
-        </div>
-        <BlurredRevenuePreview />
+        <p className="text-center text-sm text-slate-400">
+          ✓ 100 free scans/month • No credit card required • Takes under 2 minutes
+        </p>
       </div>
     </section>
   )
