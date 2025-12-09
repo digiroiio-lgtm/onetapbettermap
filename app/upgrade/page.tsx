@@ -213,16 +213,16 @@ export default function PricingPage() {
             <tbody>
               <tr className="border-t border-white/10">
                 <td className="px-4 py-4 font-semibold text-white">Revenue Forecasting</td>
-                <td className="px-4 py-4 text-slate-500">–</td>
-                <td className="px-4 py-4 text-white">Lite</td>
-                <td className="px-4 py-4 text-emerald-300">Full</td>
+                <td className="px-4 py-4 text-emerald-300 font-semibold">Full</td>
+                <td className="px-4 py-4 text-emerald-300 font-semibold">Full</td>
+                <td className="px-4 py-4 text-emerald-300 font-semibold">Full</td>
               </tr>
             </tbody>
           </table>
         </section>
 
         <p className="text-center text-sm text-slate-400">
-          <span className="font-semibold text-[#3b82f6]">NEW · Revenue Forecaster</span> — Included in Growth &amp; Scale plans
+          <span className="font-semibold text-[#3b82f6]">NEW · Revenue Forecaster</span> — Included in every plan
         </p>
 
         <section className="rounded-[28px] border border-white/10 bg-white/5 p-8 space-y-4 text-center">
