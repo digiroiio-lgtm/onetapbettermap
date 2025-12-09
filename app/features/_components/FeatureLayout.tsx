@@ -49,6 +49,9 @@ export default function FeatureLayout({
   miniKpis,
   revenueHook,
   finalCta,
+  planLock,
+  industryVariants,
+  featureName,
 }: Props) {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100">

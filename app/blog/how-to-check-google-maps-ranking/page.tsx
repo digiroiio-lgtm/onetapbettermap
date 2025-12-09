@@ -36,7 +36,7 @@ export default function HowToCheckPage() {
           </header>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">GeoGrid > single-point checks</h2>
+            <h2 className="text-xl font-semibold text-white">GeoGrid &gt; single-point checks</h2>
             <p className="text-slate-300">
               Google Maps rankings shift every few blocks. A single search result is noise. Instead, run a GeoGrid scan that captures 49 nearby points and spot where you really outrank competitors.
             </p>

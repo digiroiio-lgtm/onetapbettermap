@@ -13,7 +13,15 @@ type Props = {
   plan?: { name: string; focus: string; link: string }
 }
 
-export default function CaseStudyLayout({ title, sections, revenue, quote, ctaText }: Props) {
+export default function CaseStudyLayout({
+  title,
+  sections,
+  revenue,
+  quote,
+  ctaText,
+  features,
+  plan,
+}: Props) {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100">
       <div className="mx-auto max-w-4xl px-4 py-10 space-y-8">
