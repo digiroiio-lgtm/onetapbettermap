@@ -1,6 +1,9 @@
 import Link from 'next/link'
 
-type CTRModel = Record<number, number> | Record<string, number>
+type CTRModel = {
+  [key: number]: number;
+  [key: string]: number;
+};
 
 type GbpInsights = {
   calls: number
@@ -32,10 +35,16 @@ const formatCurrency = (value: number) =>
   }).format(value)
 
 const getCtrValue = (rank: number, ctrModel: CTRModel) => {
-  const direct = (ctrModel as Record<number, number>)[rank]
-  if (typeof direct === 'number') return direct
+  const numericRecord = ctrModel as Record<number, number>
+  if (typeof numericRecord[rank] === 'number') {
+    return numericRecord[rank]!
+  }
+
+  const stringRecord = ctrModel as Record<string, number>
   const stringKey = rank.toString()
-  if (typeof ctrModel[stringKey] === 'number') return ctrModel[stringKey] as number
+  if (typeof stringRecord[stringKey] === 'number') {
+    return stringRecord[stringKey]!
+  }
 
   if (rank === 1) return 0.22
   if (rank === 2) return 0.16
