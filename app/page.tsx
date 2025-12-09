@@ -1,7 +1,22 @@
 import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 
-const socialProofIcons = ['Dentists', 'Clinics', 'Restaurants', 'Real Estate', 'Agencies']
+const socialProofStats = [
+  { value: '1,200+', label: 'Active businesses' },
+  { value: '50K+', label: 'Monthly scans' },
+  { value: '4.8★', label: 'Average rating' },
+]
+
+const socialProofBadges = [
+  { icon: '🦷', label: 'Dentists', count: '240+', active: true },
+  { icon: '🍽️', label: 'Restaurants', count: '380+' },
+  { icon: '🏥', label: 'Medical Clinics', count: '190+' },
+  { icon: '🏡', label: 'Real Estate', count: '280+' },
+  { icon: '⚖️', label: 'Law Firms', count: '110+' },
+  { icon: '💇', label: 'Salons & Spas', count: '95+' },
+  { icon: '🔧', label: 'Auto Services', count: '85+' },
+  { icon: '💪', label: 'Gyms & Fitness', count: '70+' },
+]
 
 const problemCards = [
   {
@@ -233,16 +248,36 @@ function HeroSection() {
 
 function SocialProofStrip() {
   return (
-    <section className="px-4 sm:px-6 lg:px-24 pb-16">
-      <div className="text-center text-sm text-slate-400 mb-4">
-        Trusted by dentists, clinics, restaurants, real estate teams and 1,200+ local businesses worldwide.
-      </div>
-      <div className="flex flex-wrap justify-center gap-4 text-xs uppercase tracking-[0.4em] text-slate-500">
-        {socialProofIcons.map(label => (
-          <span key={label} className="px-4 py-2 border border-white/10 rounded-full">
-            {label}
-          </span>
-        ))}
+    <section className="px-4 sm:px-6 lg:px-24 pb-20">
+      <div className="max-w-6xl mx-auto space-y-10 text-center">
+        <div className="grid sm:grid-cols-3 gap-6">
+          {socialProofStats.map(stat => (
+            <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 py-6 px-4 space-y-2">
+              <p className="text-4xl font-semibold text-white">{stat.value}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-400">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+        <div className="space-y-6">
+          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Trusted by local businesses worldwide</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {socialProofBadges.map(badge => (
+              <div
+                key={badge.label}
+                className={`rounded-2xl border px-4 py-5 flex flex-col items-center gap-2 text-sm transition ${
+                  badge.active ? 'border-[#3b82f6] bg-[#1d4ed8]/10' : 'border-white/10 bg-white/5 hover:border-white/30'
+                }`}
+              >
+                <span className="text-3xl" aria-hidden>{badge.icon}</span>
+                <p className="text-white font-semibold">{badge.label}</p>
+                <span className="text-xs text-slate-400">{badge.count}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-slate-500">
+            Phase 2 adds the interactive testimonial carousel tied to each industry.
+          </p>
+        </div>
       </div>
     </section>
   )
