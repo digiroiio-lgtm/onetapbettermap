@@ -439,7 +439,7 @@ function SocialProofSpotlight() {
       <div className="mt-10 grid md:grid-cols-2 gap-6">
         {testimonials.map(testimonial => (
           <div key={testimonial.author} className="rounded-3xl border border-white/10 bg-white/5 p-6 space-y-3">
-            <p className="text-lg text-white leading-relaxed">“{testimonial.quote}”</p>
+            <p className="text-lg text-white leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
             <p className="text-sm text-slate-400">{testimonial.author}</p>
           </div>
         ))}
