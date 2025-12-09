@@ -243,7 +243,7 @@ export default function SignUpPage() {
             <div>
               <p className="text-sm font-semibold text-gray-900 mb-1">Free Plan Includes:</p>
               <ul className="text-xs text-gray-600 space-y-1">
-                <li>• 3 free scans per month</li>
+                <li>• 100 free scans per month</li>
                 <li>• Basic visibility reports</li>
                 <li>• Top 10 competitors analysis</li>
               </ul>

@@ -78,7 +78,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-6 flex flex-col gap-4 text-sm text-gray-400 md:flex-row md:items-center md:justify-between">
           <span>© {currentYear} mapsrankchecker.com. All rights reserved.</span>
           <span className="text-xs text-gray-500">
-            No credit card required • 3 scans/month free • Upgrade anytime to Pro
+            No credit card required • 100 scans/month free • Upgrade anytime to Pro
           </span>
         </div>
         <p className="text-center text-xs text-gray-600">Stop guessing. Start ranking.</p>

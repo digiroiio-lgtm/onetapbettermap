@@ -90,7 +90,7 @@ const faqItems = [
   {
     question: 'Does the free plan expire?',
     answer:
-      'No. You get 3 free scans every month forever. Upgrade only when you’re ready for unlimited scans and automation.',
+      'No. You get 100 free scans every month forever. Upgrade only when you’re ready for unlimited scans and automation.',
   },
 ]
 
@@ -153,7 +153,7 @@ function HeroSection() {
             </Link>
           </div>
           <p className="text-sm text-slate-400">
-            3 free scans/month • No credit card required • 49-point accuracy
+            100 free scans/month • No credit card required • 49-point accuracy
           </p>
         </div>
         <div className="relative">
@@ -438,7 +438,7 @@ function SecondaryCTA() {
       >
         Run a Free Scan →
       </Link>
-      <p className="text-sm text-slate-400">No credit card • No setup • 3 scans every month</p>
+      <p className="text-sm text-slate-400">No credit card • No setup • 100 scans every month</p>
     </section>
   )
 }
@@ -461,7 +461,7 @@ function ScanFormSection() {
           </button>
         </form>
         <div className="rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm text-rose-100">
-          <p className="font-semibold">You’ve used all 3 free scans this month.</p>
+          <p className="font-semibold">You’ve used all 100 free scans this month.</p>
           <p className="text-rose-200 mt-1">Create a free account or upgrade to keep scanning.</p>
           <div className="mt-3 flex flex-col sm:flex-row gap-3">
             <Link href="/signup" className="inline-flex w-full items-center justify-center rounded-full bg-white text-black px-4 py-2 font-semibold">

@@ -8,7 +8,7 @@ const plans = [
     name: 'Free',
     price: '$0',
     description: 'Start learning your visibility',
-    bullets: ['3 scans / month', '1 business profile', '1 keyword zone', 'Basic grid depth'],
+    bullets: ['100 scans / month', '1 business profile', '1 keyword zone', 'Basic grid depth'],
     cta: 'Run Free Scan',
     badge: null,
     highlight: false,
@@ -75,7 +75,7 @@ const mobileAccordions = [
   {
     title: 'Free',
     price: '$0',
-    description: ['3 scans', '1 profile'],
+    description: ['100 scans', '1 profile'],
     cta: 'Run Free Scan',
   },
 ]
