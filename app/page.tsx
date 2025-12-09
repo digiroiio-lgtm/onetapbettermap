@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 import IndustryHero from '@/components/IndustryHero'
+import { faqItems } from './faq/faqContent'
 
 const socialProofStats = [
   { value: '1,200+', label: 'Active businesses' },
@@ -98,44 +99,6 @@ const testimonials = [
     quote:
       'Revenue Forecaster convinced finance to fund SEO. We know exactly what moving from #8 to #3 is worth.',
     author: 'Marcus Li, Urban Realty Group',
-  },
-]
-
-const faqItems = [
-  {
-    question: 'Will MapsRankChecker actually improve my Google Maps ranking?',
-    answer:
-      'Yes. We show your real ranking footprint, prioritize what’s blocking you, and provide clear fixes so you can act immediately.',
-  },
-  {
-    question: 'Do I need SEO experience to use it?',
-    answer:
-      'No. The platform translates complex local SEO signals into a simple score and guided tasks anyone can follow.',
-  },
-  {
-    question: 'Do I need access to my Google account?',
-    answer:
-      'You can start scans without connecting anything. Connect later if you want automated tracking, alerts, or reporting.',
-  },
-  {
-    question: 'How accurate are the scans?',
-    answer:
-      'Each scan checks 49 geocoordinates across your service area so you see rankings the way nearby customers do.',
-  },
-  {
-    question: 'Can I cancel anytime?',
-    answer:
-      'Yes. There are no contracts. Cancel or downgrade whenever you like from the billing page.',
-  },
-  {
-    question: 'Does the free plan expire?',
-    answer:
-      'No. You get 100 free scans every month forever. Upgrade only when you’re ready for unlimited scans and automation.',
-  },
-  {
-    question: 'How is this different from Google Search Console?',
-    answer:
-      'Search Console shows web clicks from one location. MapsRankChecker scans 49+ coordinates across your city to reveal the real local pack rankings customers see.',
   },
 ]
 
