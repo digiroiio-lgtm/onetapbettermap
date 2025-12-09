@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import BlogFooterCTA from '../../components/BlogFooterCTA'
+import BlogFooterCTA from '../components/BlogFooterCTA'
 
 const canonical = 'https://mapsrankchecker.com/blog/how-to-boost-google-maps-ranking'
 
