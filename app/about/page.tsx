@@ -2,176 +2,141 @@
 
 import Link from 'next/link'
 
-const pillars = [
+const proofPoints = [
   {
-    title: 'Real-world visibility, not averages',
-    body:
-      'We analyze multiple coordinates around your business to reflect how customers actually see you across your service area.',
+    label: 'Maps moves customers',
+    stat: '+42%',
+    detail: 'Average lift in organic calls after teams act on grid + action checklist insights.',
   },
   {
-    title: 'Clear scores, not vague data',
-    body:
-      'Our Visibility Score condenses dozens of map signals into a single, actionable number. No vanity metrics, no noise.',
+    label: 'Automation beats manual',
+    stat: '4h → 15m',
+    detail: 'Time saved per week once alerts and action plans are automated.',
   },
   {
-    title: 'Competitive context',
-    body:
-      'Ranking alone doesn’t matter. MapsRankChecker™ shows how you perform next to the competitors customers really encounter.',
-  },
-  {
-    title: 'Built for action',
-    body:
-      'Every report highlights exact gaps across keywords, categories, reviews, photos, and proximity—so you always know what to fix next.',
+    label: 'Revenue clarity',
+    stat: '$1,200–$5,000',
+    detail: 'Monthly revenue captured when a keyword moves from rank #12 → #3.',
   },
 ]
 
-const personas = [
-  'Local businesses that rely on foot traffic or nearby discovery',
-  'Multi-location brands tracking visibility across regions',
-  'Marketing teams and agencies managing local SEO clients',
-  'Owners and operators who want clarity, not complexity',
+const leadership = [
+  {
+    title: 'Mission',
+    body:
+      'MapsRankChecker exists to turn Google Maps visibility into predictable revenue. We instrument every rank change so operators know exactly what a position is worth.',
+  },
+  {
+    title: 'Approach',
+    body:
+      'We focus on clarity: intuitive heatmaps, revenue models, and guided actions—no guesses, no vanity metrics, just the playbook your team can execute weekly.',
+  },
+  {
+    title: 'Trust',
+    body:
+      'We never inflate rankings or take shortcuts. All insights come from public Google Maps data, paired with conversion assumptions that match your industry.',
+  },
 ]
 
-const principles = [
-  'Local visibility should be measurable',
-  'Insights should be visual and obvious',
-  'Reports should lead to decisions, not confusion',
+const milestones = [
+  'Built maps scanning tech that replays 49+ coordinates per location',
+  'Open-sourced data models that translate rank → calls → revenue',
+  'Partnered with agencies and clinics to run revenue-only case studies',
+  'Guaranteed transparent billing—no hidden fees, no long-term lock-ins',
 ]
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100">
-      <div className="mx-auto flex max-w-5xl flex-col gap-16 px-4 pb-24 pt-28 sm:px-6 lg:px-8">
-        <header className="text-center space-y-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-16 sm:px-6 lg:px-8">
+        <header className="space-y-6 text-center">
           <p className="text-xs uppercase tracking-[0.4em] text-slate-500">About MapsRankChecker™</p>
-          <h1 className="text-4xl font-semibold text-white sm:text-5xl">
-            Helping businesses get found where it matters most
+          <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+            Built to stop revenue leaks hiding inside Google Maps rankings.
           </h1>
           <p className="text-lg text-slate-300">
-            MapsRankChecker™ helps local businesses understand, track, and improve how they appear on Google Maps—
-            without guesswork, spreadsheets, or expensive agencies.
+            We live at the intersection of local SEO, revenue ops, and product-grade automation. Our job is to highlight how visible your business remains across every street corner and what that visibility is worth.
           </p>
-          <div className="flex flex-col items-center gap-4 text-slate-400">
-            <p>
-              If customers are searching nearby, you should know where you rank, why you rank there, and what to fix next.
-              That’s exactly why we built MapsRankChecker™.
-            </p>
+          <div className="flex flex-col items-center gap-4 text-slate-300 sm:flex-row sm:justify-center">
             <Link
-              href="/#scan-section"
-              className="inline-flex items-center rounded-full bg-white px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-white/90"
+              href="/free-scan"
+              className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-emerald-400"
             >
-              Start Free Scan →
+              Run a revenue-focused scan
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center rounded-full border border-white/30 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+            >
+              Compare Growth & Scale
             </Link>
           </div>
         </header>
 
-        <section className="rounded-[32px] border border-white/5 bg-white/5 px-6 py-10 sm:px-10">
-          <h2 className="text-2xl font-semibold text-white">Why MapsRankChecker™ exists</h2>
-          <p className="mt-4 text-base text-slate-300">
-            Most local SEO tools fall into two extremes:
-          </p>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold text-white">Too simple</p>
-              <p className="mt-2 text-sm text-slate-400">
-                Surface-level metrics with no real insight or guidance.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold text-white">Too complex</p>
-              <p className="mt-2 text-sm text-slate-400">
-                Overwhelming dashboards made for specialists, not business owners.
-              </p>
-            </div>
-          </div>
-          <p className="mt-6 text-base text-slate-300">
-            MapsRankChecker™ sits right in the middle. We focus on one question only:
-          </p>
-          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-lg font-semibold text-white">
-              “If someone searches near my location, will they find me — and why?”
-            </p>
-            <p className="mt-3 text-sm text-slate-400">
-              By scanning real-world points around your business, we reveal how visible you are across your service area
-              and how you compare to the competitors customers actually see.
-            </p>
+        <section className="grid gap-6 rounded-[32px] border border-white/10 bg-white/5 p-6 md:grid-cols-3">
+          {proofPoints.map((point) => (
+            <article key={point.label} className="space-y-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{point.label}</p>
+              <p className="text-3xl font-semibold text-white">{point.stat}</p>
+              <p className="text-sm text-slate-300">{point.detail}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="space-y-6 rounded-[32px] border border-emerald-500/30 bg-emerald-500/10 p-6">
+          <p className="text-xs uppercase tracking-[0.4em] text-emerald-100">Leadership</p>
+          <h2 className="text-3xl font-semibold text-white">Revenue-first founders</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {leadership.map((item) => (
+              <article key={item.title} className="rounded-2xl border border-emerald-200/40 bg-emerald-900/40 p-5">
+                <p className="text-sm uppercase tracking-[0.3em] text-emerald-200">{item.title}</p>
+                <p className="mt-3 text-sm text-white">{item.body}</p>
+              </article>
+            ))}
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-slate-500">What makes us different</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">Product-led visibility intelligence</h2>
-            <p className="mt-3 text-base text-slate-300">
-              No hype, no tricks—just clarity you can act on.
-            </p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {pillars.map((pillar) => (
-              <div key={pillar.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-lg font-semibold text-white">{pillar.title}</p>
-                <p className="mt-3 text-sm text-slate-400">{pillar.body}</p>
+        <section className="space-y-6 rounded-[32px] border border-white/10 bg-white/5 p-6">
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-500">What we ship</p>
+          <h2 className="text-2xl font-semibold text-white">Eyes on the map, money in the bank</h2>
+          <p className="text-sm text-slate-300">
+            Every release prioritizes clarity, not more charts. We ship guided playbooks, revenue dashboards, and analytics hooks that prove the ROI of every scan.
+          </p>
+          <ul className="mt-4 space-y-3 text-sm text-slate-300">
+            {milestones.map((milestone) => (
+              <li key={milestone} className="flex items-start gap-3">
+                <span className="text-slate-500">•</span>
+                <span>{milestone}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="rounded-[32px] border border-white/5 bg-slate-900/60 p-6">
+          <h2 className="text-2xl font-semibold text-white">Who we serve</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            Operators who depend on Google Maps visibility to deliver revenue: dental clinics, restaurants, law firms, agencies, multi-location brands, and medical centers.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {['Map pack leadership', 'Revenue justification', 'Actionable automation'].map((item) => (
+              <div key={item} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-sm text-slate-200">
+                {item}
               </div>
             ))}
           </div>
         </section>
 
-        <section className="rounded-[32px] border border-white/5 bg-white/5 px-6 py-10 sm:px-10">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Who it’s for</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">MapsRankChecker™ is built for</h2>
-          <ul className="mt-6 space-y-3 text-base text-slate-300">
-            {personas.map((persona) => (
-              <li key={persona} className="flex items-start gap-3">
-                <span className="text-slate-400">•</span>
-                <span>{persona}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 text-sm text-slate-400">
-            Whether you run a dental clinic, restaurant, law firm, gym, or service business—if Google Maps drives
-            customers to you, this tool is for you.
-          </p>
-        </section>
-
-        <section className="rounded-[32px] border border-white/5 bg-white/5 px-6 py-10 sm:px-10">
-          <h2 className="text-2xl font-semibold text-white">Our approach</h2>
-          <p className="mt-3 text-base text-slate-300">We believe:</p>
-          <ul className="mt-4 space-y-3 text-base text-slate-300">
-            {principles.map((principle) => (
-              <li key={principle} className="flex items-start gap-3">
-                <span className="text-slate-400">•</span>
-                <span>{principle}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 text-sm text-slate-400">
-            That’s why MapsRankChecker™ is designed around visual heatmaps, plain-language insights, and clear upgrade
-            paths—no long-term contracts required. Start small, see real data, upgrade only if it makes sense.
-          </p>
-        </section>
-
-        <section className="rounded-[32px] border border-emerald-500/30 bg-emerald-500/5 px-6 py-10 sm:px-10">
-          <h2 className="text-2xl font-semibold text-white">Transparency & trust</h2>
-          <p className="mt-4 text-base text-slate-200">
-            MapsRankChecker™ does not manipulate rankings or use unsafe practices. We analyze publicly available Google
-            Maps data and present it in a structured, understandable way.
-          </p>
-          <p className="mt-4 text-base text-slate-200">No tricks. No shortcuts. Just visibility—clearly explained.</p>
-        </section>
-
-        <section className="text-center space-y-4">
-          <h2 className="text-3xl font-semibold text-white">Try it for yourself</h2>
-          <p className="text-base text-slate-300">
-            You don’t need an account or a credit card to start. Run a free scan, see how visible your business really is,
-            and decide if MapsRankChecker™ is right for you.
+        <section className="rounded-[32px] border border-white/10 bg-white/5 p-6 text-center">
+          <h2 className="text-3xl font-semibold text-white">Prove the impact</h2>
+          <p className="mt-3 text-base text-slate-300">
+            Bring MapsRankChecker dashboards to your next revenue review. Show leadership the call volume you gained, the keywords you won, and the revenue you recovered.
           </p>
           <Link
-            href="/#scan-section"
-            className="inline-flex items-center rounded-full bg-white px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-white/90"
+            href="/pricing"
+            className="mt-6 inline-flex items-center justify-center rounded-full border border-emerald-400/70 px-8 py-3 text-base font-semibold text-white transition hover:bg-emerald-500/20"
           >
-            Start Free Scan
+            See Growth vs Scale
           </Link>
-          <p className="text-sm text-slate-500">Stop guessing. Start ranking.</p>
         </section>
       </div>
     </main>

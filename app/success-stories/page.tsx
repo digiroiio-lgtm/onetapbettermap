@@ -3,117 +3,153 @@ import Link from 'next/link'
 
 const stories = [
   {
-    company: 'LuxeLawn & Patio',
-    industry: 'Outdoor living installer – Phoenix, AZ',
-    challenge: 'Ranked #9-#12 for “patio builder phoenix” despite 1,200+ reviews.',
+    company: 'SmileWorks Dental',
+    industry: 'Dental clinics — Antalya, Türkiye',
+    challenge:
+      'Ranked #6 for “implant dentist near me” and invisible outside the office radius, costing an estimated $7,200 in lost implant cases each month.',
     solution:
-      'Mapped every competitor photo cadence, category, and review velocity. Within 7 days they launched new before/after galleries and triggered weekly scan alerts.',
+      'GeoGrid scans revealed 17/49 cells in the top 10 while the key implant keywords were nowhere to be found in surrounding neighborhoods; action checklist prioritized review velocity and localized photo shoots.',
     results: [
-      '+3 map pack positions in 21 days',
-      '62 inbound quote requests in one month',
-      'Agency upgraded to Pro Unlimited to replicate the playbook in 4 additional cities',
+      '+3 implant cases per month',
+      '+$8,400 in recovered revenue with no new ad budget',
+      'Growth plan unlocked unlimited keyword tracking across the city',
     ],
   },
   {
-    company: 'SwiftCare Urgent Clinic',
-    industry: 'Healthcare – Nashville metro',
-    challenge: 'Seasonal slump plus new VC-backed competitor with aggressive ad spend.',
+    company: 'Urban Table Bistro',
+    industry: 'Restaurants — Istanbul, Türkiye',
+    challenge:
+      'Strong reviews but rankings fluctuated between #10–#15 depending on time of day, yielding thirty-eight missed reservations per month (~$4,600).',
     solution:
-      'Used Success Scorecards inside One Tap to surface 6 neighborhoods with weak “open now” coverage, redeployed staff, and sent weekly ranking screenshots to the executive team.',
+      '14×14 ranking grid segmented lunch vs dinner zones, surfaced the “open now” keywords, and automated refresh alerts ahead of the weekend rush.',
     results: [
-      'Average wait time showcased in GBP posts = +18% clicks',
-      'Stripe-powered Pro plan approved within 24 hours because finance got clean invoices',
-      'Clinics hit record patient volume without extra ad budget',
+      '+38 reservations / month (+$4,600 in bookings)',
+      'Scale plan onboarded to keep every location’s grid in sync',
+      'Weekly alerts routed to operations to keep staff aligned',
     ],
   },
   {
-    company: 'Torque Autohaus',
-    industry: 'Performance mechanic – Berlin, DE',
-    challenge: 'Needed multilingual reporting to convince franchise partners to invest in SEO.',
+    company: 'Atlas Injury Law',
+    industry: 'Law firms — Miami, USA',
+    challenge:
+      'Paid spend was steady yet Maps generated only 1–2 cases a month because competitors showed up higher for accident + injury searches.',
     solution:
-      'Created German and English scans, exported PDFs, and embedded them in their sales deck. Shared Stripe billing history to prove consistent campaign investment.',
+      'Revenue Forecaster quantified what a single rank gain meant ($12,000 pipeline), competitor alerts tracked velocity, and action automation refreshed case-specific listings.',
     results: [
-      'Closed 5 new franchise locations in Q1',
-      'YoY organic service revenue up 54%',
-      'Reporting time cut from 6 hours to 35 minutes a week',
+      '+1–2 high-ticket cases / month',
+      '+$12,000/month pipeline lift validated the Growth budget',
+      'Alerts reduced reaction time to 3 days before competitors gained ground',
     ],
   },
 ]
 
 export const metadata: Metadata = {
-  title: 'Success Stories | One Tap, Better Map',
-  description: 'See how agencies and in-house teams use One Tap, Better Map to win map pack rankings, unlock revenue, and keep leadership aligned.',
+  title: 'Success Stories | MapsRankChecker',
+  description: 'Revenue-focused success stories from dentists, restaurants, and law firms using MapsRankChecker to win ranking fights and unlock clean MRR.',
 }
 
 export default function SuccessStoriesPage() {
   return (
-    <main className="bg-gray-50 min-h-screen text-gray-900">
-      <section className="bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-10">
-          <div>
-            <p className="text-emerald-300 uppercase tracking-[0.3em] text-xs mb-3">Proof of ROI</p>
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6">When the map pack moves, revenue follows.</h1>
-            <p className="text-gray-300 mb-6">
-              These teams replaced scattered screenshots with a single tap workflow. They track every competitor move, turn insights into playbooks, and pull Stripe invoices to justify budget renewals. You can copy the same blueprint today.
+    <main className="min-h-screen bg-[#020617] text-slate-100">
+      <section className="bg-slate-900">
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 md:grid-cols-2">
+          <div className="space-y-5">
+            <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">Client revenue wins</p>
+            <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
+              Magnetic proof that MapsRankChecker turns search visibility into revenue.
+            </h1>
+            <p className="text-lg text-slate-300">
+              These teams stopped guessing what customers see on Google Maps. They now point stakeholders to dashboards, not screenshots, and track the revenue unlocked every week.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/scanning" className="bg-white text-gray-900 font-semibold px-8 py-4 rounded-full text-center hover:bg-gray-100 transition">Run a live scan</Link>
-              <Link href="/upgrade" className="border border-white/40 text-white font-semibold px-8 py-4 rounded-full text-center hover:bg-white/10 transition">See pricing</Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/free-scan"
+                className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-emerald-400"
+              >
+                Run a revenue-focused scan
+              </Link>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+              >
+                Show the pricing story →
+              </Link>
             </div>
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-8 space-y-6">
-            <h2 className="text-2xl font-semibold">Playbook snapshot</h2>
-            <ul className="space-y-4 text-gray-200">
-              <li className="flex items-start gap-3"><span className="text-emerald-300">→</span> Weekly automated competitor scans with alerts at +2/-2 position swings.</li>
-              <li className="flex items-start gap-3"><span className="text-emerald-300">→</span> Revenue alignment deck that merges success metrics with Stripe receipts.</li>
-              <li className="flex items-start gap-3"><span className="text-emerald-300">→</span> Downloadable PDFs to insert directly into board or franchise updates.</li>
+          <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl">
+            <div className="space-y-1">
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Playbook highlights</p>
+              <h2 className="text-2xl font-semibold text-white">Revenue-first cadence</h2>
+            </div>
+            <ul className="space-y-3 text-sm text-slate-200">
+              <li>→ Rank moves mapped to calls, then to dollars (rank → CTR → calls → revenue).</li>
+              <li>→ Alerts flagged competitor jumps that steal ~22 calls within a week.</li>
+              <li>→ Action checklists shipped to ops, not just SEO teams.</li>
+              <li>→ Stripe-backed reporting proves the ROI for every upgrade.</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 py-16 space-y-12">
-        {stories.map(story => (
-          <article key={story.company} className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <section className="mx-auto max-w-6xl space-y-10 px-4 py-16">
+        {stories.map((story) => (
+          <article
+            key={story.company}
+            className="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-2xl"
+          >
+            <div className="flex flex-col gap-3 border-b border-slate-800 pb-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-primary font-semibold uppercase tracking-[0.2em] text-xs">{story.industry}</p>
-                <h2 className="text-3xl font-bold text-gray-900">{story.company}</h2>
+                <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">{story.industry}</p>
+                <h2 className="text-3xl font-semibold text-white">{story.company}</h2>
               </div>
-              <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold">Live on One Tap</div>
+              <span className="rounded-full border border-emerald-500/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200">
+                Revenue proof live
+              </span>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Challenge</h3>
-                <p className="text-gray-700">{story.challenge}</p>
+            <div className="mt-6 grid gap-6 md:grid-cols-3">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">Challenge</h3>
+                <p className="text-sm text-slate-300">{story.challenge}</p>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Solution</h3>
-                <p className="text-gray-700">{story.solution}</p>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">Solution</h3>
+                <p className="text-sm text-slate-300">{story.solution}</p>
               </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold mb-2">Results</h3>
-              <ul className="list-disc pl-6 space-y-1 text-gray-700">
-                {story.results.map(result => (
-                  <li key={result}>{result}</li>
-                ))}
-              </ul>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">Results</h3>
+                <ul className="space-y-1 text-sm text-emerald-100">
+                  {story.results.map((result) => (
+                    <li key={result} className="list-disc pl-4 text-slate-200">
+                      {result}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </article>
         ))}
       </section>
 
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-        <div className="max-w-5xl mx-auto px-4 py-16 text-center space-y-6">
-          <p className="uppercase tracking-[0.4em] text-xs text-white/70">Next step</p>
-          <h2 className="text-4xl font-bold">Turn your map ranking story into the easiest sales slide.</h2>
-          <p className="text-lg text-white/80 max-w-3xl mx-auto">
-            Launch a scan, invite stakeholders, and upgrade via Stripe when you are ready to scale—all within one login. The faster you show leadership a win, the faster budgets open up.
+      <section className="bg-gradient-to-r from-emerald-500/80 to-sky-500/70 px-4 py-16 text-white">
+        <div className="mx-auto flex max-w-5xl flex-col gap-6 text-center">
+          <p className="text-xs uppercase tracking-[0.4em] text-white/80">Ready to show that map wins money?</p>
+          <h2 className="text-4xl font-semibold">Turn your case study into an upgrade story.</h2>
+          <p className="text-lg text-white/90">
+            Launch a scan, invite leadership, and show them the Maps report that proves uplift before you spend another dollar.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup" className="px-10 py-4 rounded-full bg-white text-blue-700 font-semibold hover:bg-blue-50 transition">Create free account</Link>
-            <Link href="/demo" className="px-10 py-4 rounded-full border border-white/50 font-semibold hover:bg-white/10 transition">View sample report</Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/demo"
+              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              View the demo report
+            </Link>
+            <Link
+              href="/pricing?highlight=growth"
+              className="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Highlight Growth plan
+            </Link>
           </div>
         </div>
       </section>
