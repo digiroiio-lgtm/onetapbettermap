@@ -267,6 +267,39 @@ export default function DashboardPage() {
   const businessesToDisplay =
     businessQuery && placesResults.length > 0 ? placesResults : fallbackBusinesses
 
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([
+    keywordSuggestions[0],
+    keywordSuggestions[1],
+  ])
+  const [keywordInput, setKeywordInput] = useState('')
+  const customKeywords = useMemo(
+    () => selectedKeywords.filter((keyword) => !keywordSuggestions.includes(keyword)),
+    [selectedKeywords],
+  )
+  const toggleKeyword = (keyword: string) => {
+    setSelectedKeywords((prev) =>
+      prev.includes(keyword)
+        ? prev.filter((item) => item !== keyword)
+        : prev.length < 5
+          ? [...prev, keyword]
+          : prev,
+    )
+  }
+  const removeKeyword = (keyword: string) => {
+    setSelectedKeywords((prev) => prev.filter((item) => item !== keyword))
+  }
+  const addCustomKeyword = () => {
+    const trimmed = keywordInput.trim()
+    if (!trimmed) return
+    if (selectedKeywords.length >= 5) return
+    setSelectedKeywords((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]))
+    setKeywordInput('')
+  }
+
+  const [serviceArea, setServiceArea] = useState<'2km' | '5km' | 'custom'>('5km')
+  const [customRadius, setCustomRadius] = useState(7)
+  const computedRadiusKm = serviceArea === 'custom' ? customRadius : serviceArea === '2km' ? 2 : 5
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
   const mapCircleRef = useRef<google.maps.Circle | null>(null)
@@ -356,7 +389,8 @@ export default function DashboardPage() {
       return
     }
 
-    if (!selectedBusiness.placeId) {
+    const placeId = selectedBusiness.placeId
+    if (!placeId) {
       setSelectedBusinessLocation(null)
       setLocationError('Location data unavailable for this business. Try another result.')
       setLocationLoading(false)
@@ -372,7 +406,7 @@ export default function DashboardPage() {
         if (!active || !window.google?.maps?.places) return
         const service = new window.google.maps.places.PlacesService(document.createElement('div'))
         service.getDetails(
-          { placeId: selectedBusiness.placeId, fields: ['geometry'] },
+          { placeId, fields: ['geometry'] },
           (details, status) => {
             if (!active) return
             setLocationLoading(false)
@@ -474,39 +508,6 @@ export default function DashboardPage() {
       cancelled = true
     }
   }, [phase, selectedBusinessLocation, selectedKeywords, computedRadiusKm])
-
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([
-    keywordSuggestions[0],
-    keywordSuggestions[1],
-  ])
-  const [keywordInput, setKeywordInput] = useState('')
-  const customKeywords = useMemo(
-    () => selectedKeywords.filter((keyword) => !keywordSuggestions.includes(keyword)),
-    [selectedKeywords],
-  )
-  const toggleKeyword = (keyword: string) => {
-    setSelectedKeywords((prev) =>
-      prev.includes(keyword)
-        ? prev.filter((item) => item !== keyword)
-        : prev.length < 5
-          ? [...prev, keyword]
-          : prev,
-    )
-  }
-  const removeKeyword = (keyword: string) => {
-    setSelectedKeywords((prev) => prev.filter((item) => item !== keyword))
-  }
-  const addCustomKeyword = () => {
-    const trimmed = keywordInput.trim()
-    if (!trimmed) return
-    if (selectedKeywords.length >= 5) return
-    setSelectedKeywords((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]))
-    setKeywordInput('')
-  }
-
-  const [serviceArea, setServiceArea] = useState<'2km' | '5km' | 'custom'>('5km')
-  const [customRadius, setCustomRadius] = useState(7)
-  const computedRadiusKm = serviceArea === 'custom' ? customRadius : serviceArea === '2km' ? 2 : 5
 
   useEffect(() => {
     if (phase !== 'area') {
