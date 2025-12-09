@@ -35,10 +35,10 @@ export default function LoginPage() {
         businessName: 'Demo Business',
         city: 'London',
         country: 'UK',
-        plan: 'Pro',
+        plan: 'Growth',
         joinDate: '2024-11-15',
         scansUsed: 12,
-        scansLimit: 999
+        scansLimit: 500
       };
       localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('isLoggedIn', 'true');
