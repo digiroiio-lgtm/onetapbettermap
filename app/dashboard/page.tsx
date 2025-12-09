@@ -101,7 +101,8 @@ const navItems = [
   'Upgrade',
   'Settings',
   'Logout',
-]
+] as const
+type NavSection = (typeof navItems)[number]
 
 const opportunityAlerts = [
   {
@@ -166,6 +167,25 @@ const competitorRows = [
   { name: 'Elite Dent', rank: '#16', change: '+1', coverage: '24/49', locked: true },
 ]
 
+const scanHistory = [
+  { id: 'SCAN-2093', keyword: 'dentist near me', city: 'Antalya', score: 82, coverage: '31/49', status: 'Complete', date: 'Jun 11, 2024' },
+  { id: 'SCAN-2088', keyword: 'dental implants antalya', city: 'Antalya', score: 74, coverage: '28/49', status: 'Complete', date: 'Jun 9, 2024' },
+  { id: 'SCAN-2081', keyword: 'teeth whitening antalya', city: 'Antalya', score: 68, coverage: '26/49', status: 'Queued', date: 'Jun 7, 2024' },
+  { id: 'SCAN-2075', keyword: 'emergency dentist lara', city: 'Antalya', score: 70, coverage: '27/49', status: 'Complete', date: 'Jun 5, 2024' },
+]
+
+const locationProfiles = [
+  { id: 'loc-1', name: 'Downtown Antalya', status: 'Primary', scans: 128, health: 86 },
+  { id: 'loc-2', name: 'Konyaaltı Clinic', status: 'Needs attention', scans: 74, health: 63 },
+  { id: 'loc-3', name: 'Lara Satellite Office', status: 'Launching soon', scans: 12, health: 51 },
+]
+
+const reportLibrary = [
+  { id: 'rep-1', name: 'Weekly Visibility Digest', format: 'PDF', schedule: 'Mondays 09:00', status: 'Active' },
+  { id: 'rep-2', name: 'Competitor Summary', format: 'CSV', schedule: 'On demand', status: 'Ready' },
+  { id: 'rep-3', name: 'Executive KPI Deck', format: 'Slides', schedule: 'Locked', status: 'Upgrade to unlock' },
+]
+
 function HeatmapGrid({
   data,
   size = 'md',
@@ -206,6 +226,19 @@ export default function DashboardPage() {
   const [phase, setPhase] = useState<Phase>('initializing')
   const [sessionReady, setSessionReady] = useState(false)
   const [userName, setUserName] = useState('Demo User')
+  const [activeSection, setActiveSection] = useState<NavSection>('Dashboard')
+  const handleNavClick = (item: NavSection) => {
+    if (item === 'Logout') {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('currentUser')
+        localStorage.removeItem('mrcOnboardingComplete')
+      }
+      router.push('/login')
+      return
+    }
+    setActiveSection(item)
+  }
 
   const [selectedBusiness, setSelectedBusiness] = useState<BusinessSuggestion | null>(
     businessSuggestions[0],
@@ -905,7 +938,7 @@ export default function DashboardPage() {
                     <span className="text-rose-300">{competitorError}</span>
                   )}
                   {!competitorLoading && !competitorError && (
-                    <span>Showing nearby businesses matching “{selectedKeywords[0]}”.</span>
+                    <span>Showing nearby businesses matching “{selectedKeywords[0] ?? 'your keyword'}”.</span>
                   )}
                 </div>
                 {competitorOptions.length === 0 && !competitorLoading ? (
@@ -1108,21 +1141,33 @@ export default function DashboardPage() {
       <aside className="hidden w-64 flex-shrink-0 border-r border-white/5 bg-white/5/30 px-6 py-8 lg:flex lg:flex-col">
         <div className="text-xl font-semibold tracking-tight text-white">MapsRankChecker™</div>
         <nav className="mt-10 space-y-2">
-          {navItems.map((item) => (
-            <button
-              key={item}
-              className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${
-                item === 'Dashboard'
-                  ? 'bg-white text-slate-900 shadow-lg'
-                  : 'text-slate-400 hover:bg-white/10 hover:text-white'
-              } ${item === 'Upgrade' ? 'border border-white/10' : ''}`}
-            >
-              {item}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = activeSection === item && item !== 'Logout'
+            return (
+              <button
+                key={item}
+                onClick={() => handleNavClick(item)}
+                className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${
+                  isActive
+                    ? 'bg-white text-slate-900 shadow-lg'
+                    : 'text-slate-400 hover:bg-white/10 hover:text-white'
+                } ${item === 'Upgrade' ? 'border border-white/10' : ''}`}
+              >
+                {item}
+              </button>
+            )
+          })}
         </nav>
       </aside>
       <main className="flex-1 px-4 py-8 sm:px-6 lg:px-12">
+        {renderActiveSection()}
+      </main>
+    </div>
+  )
+
+  function renderDashboardSection() {
+    return (
+      <>
         <header className="flex flex-col gap-4 pb-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Dashboard</p>
@@ -1305,7 +1350,368 @@ export default function DashboardPage() {
             </button>
           </div>
         </section>
-      </main>
-    </div>
-  )
+      </>
+    )
+  }
+
+  function renderScansSection() {
+    return (
+      <div className="space-y-6">
+        <header className="flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Scans</p>
+            <h1 className="mt-2 text-3xl font-semibold text-white">All geogrid scans</h1>
+            <p className="text-sm text-slate-500">History, progress, and queued jobs.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button className="rounded-full border border-white/20 px-6 py-2 text-sm text-white">Schedule Recurring Scan</button>
+            <button className="rounded-full border border-white/20 px-6 py-2 text-sm font-semibold text-white">Run New Scan →</button>
+          </div>
+        </header>
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-wrap items-center gap-3 pb-4 text-sm text-slate-400">
+            <span>Total scans this month: 14</span>
+            <span>•</span>
+            <span>Average score: 78</span>
+            <span>•</span>
+            <span>Queue: {scanHistory.filter((scan) => scan.status === 'Queued').length}</span>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-white/10">
+            <table className="w-full text-sm">
+              <thead className="bg-white/5 text-slate-400">
+                <tr>
+                  <th className="px-4 py-3 text-left">Scan ID</th>
+                  <th className="px-4 py-3 text-left">Keyword</th>
+                  <th className="px-4 py-3 text-left">City</th>
+                  <th className="px-4 py-3 text-left">Score</th>
+                  <th className="px-4 py-3 text-left">Coverage</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left">Run Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {scanHistory.map((scan) => (
+                  <tr key={scan.id} className="text-white/90">
+                    <td className="px-4 py-4 font-mono text-xs text-slate-400">{scan.id}</td>
+                    <td className="px-4 py-4">{scan.keyword}</td>
+                    <td className="px-4 py-4 text-slate-400">{scan.city}</td>
+                    <td className="px-4 py-4 font-semibold">{scan.score}</td>
+                    <td className="px-4 py-4 text-slate-400">{scan.coverage}</td>
+                    <td className="px-4 py-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs ${
+                          scan.status === 'Complete'
+                            ? 'bg-emerald-500/10 text-emerald-300'
+                            : 'bg-amber-500/10 text-amber-200'
+                        }`}
+                      >
+                        {scan.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-slate-400">{scan.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderCompetitorsSection() {
+    return (
+      <div className="space-y-6">
+        <header className="flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Competitors</p>
+            <h1 className="mt-2 text-3xl font-semibold text-white">Live competitor intelligence</h1>
+            <p className="text-sm text-slate-500">
+              Pulled directly from Google Maps based on “{selectedKeywords[0] ?? 'your keyword'}”.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setPhase('competitors')}
+              className="rounded-full border border-white/20 px-6 py-2 text-sm text-white"
+            >
+              Adjust keyword / radius
+            </button>
+            <button
+              onClick={() => setActiveSection('Scans')}
+              className="rounded-full border border-white/20 px-6 py-2 text-sm font-semibold text-white"
+            >
+              Launch scan →
+            </button>
+          </div>
+        </header>
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+          <div className="flex items-center justify-between text-sm text-slate-400">
+            <span>
+              {competitorLoading ? 'Refreshing Google Maps data…' : `${competitorOptions.length} competitors tracked`}
+            </span>
+            {competitorError && <span className="text-rose-300">{competitorError}</span>}
+          </div>
+          <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
+            <table className="w-full text-sm">
+              <thead className="bg-white/5 text-slate-400">
+                <tr>
+                  <th className="px-4 py-3 text-left">Name</th>
+                  <th className="px-4 py-3 text-left">Rating</th>
+                  <th className="px-4 py-3 text-left">Reviews</th>
+                  <th className="px-4 py-3 text-left">Track</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {competitorOptions.map((competitor) => (
+                  <tr key={competitor.id} className="text-white/90">
+                    <td className="px-4 py-4">{competitor.name}</td>
+                    <td className="px-4 py-4">{competitor.rating.toFixed(1)} ★</td>
+                    <td className="px-4 py-4">{competitor.reviews.toLocaleString()} reviews</td>
+                    <td className="px-4 py-4">
+                      <label className="inline-flex items-center gap-2 text-xs text-slate-400">
+                        <input
+                          type="checkbox"
+                          checked={selectedCompetitors.includes(competitor.id)}
+                          onChange={() =>
+                            setSelectedCompetitors((prev) =>
+                              prev.includes(competitor.id)
+                                ? prev.filter((id) => id !== competitor.id)
+                                : [...prev, competitor.id],
+                            )
+                          }
+                        />
+                        Track
+                      </label>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderKeywordsSection() {
+    const keywordInsights = selectedKeywords.map((keyword, index) => ({
+      keyword,
+      visibility: 68 - index * 4,
+      trend: index % 2 === 0 ? '+3' : '-1',
+      searchVolume: 120 + index * 35,
+    }))
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-white/10 pb-6">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Keywords</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">Ranking inputs you monitor</h1>
+          <p className="text-sm text-slate-500">Toggle keywords in Step 2 anytime to refresh this list.</p>
+        </header>
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-wrap gap-3">
+            {keywordSuggestions.map((keyword) => (
+              <button
+                key={keyword}
+                onClick={() => toggleKeyword(keyword)}
+                className={`rounded-full px-4 py-2 text-sm ${
+                  selectedKeywords.includes(keyword)
+                    ? 'bg-white text-slate-900'
+                    : 'border border-white/20 text-white'
+                }`}
+              >
+                {keyword}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {keywordInsights.map((insight) => (
+              <div key={insight.keyword} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Keyword</p>
+                <h3 className="mt-2 text-xl font-semibold text-white">{insight.keyword}</h3>
+                <div className="mt-4 flex justify-between text-sm text-slate-400">
+                  <span>Visibility</span>
+                  <span className="text-white">{insight.visibility}%</span>
+                </div>
+                <div className="mt-2 flex justify-between text-sm text-slate-400">
+                  <span>7-day trend</span>
+                  <span className={insight.trend.startsWith('+') ? 'text-emerald-300' : 'text-rose-300'}>
+                    {insight.trend}
+                  </span>
+                </div>
+                <div className="mt-2 flex justify-between text-sm text-slate-400">
+                  <span>Monthly searches</span>
+                  <span className="text-white">{insight.searchVolume.toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderReportsSection() {
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-white/10 pb-6">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Reports</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">Shareable deliverables</h1>
+          <p className="text-sm text-slate-500">PDF exports, CSV data, and automation recipes.</p>
+        </header>
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+          <div className="grid gap-4 md:grid-cols-3">
+            {reportLibrary.map((report) => (
+              <div key={report.id} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{report.format}</p>
+                <h3 className="mt-2 text-lg font-semibold text-white">{report.name}</h3>
+                <p className="mt-2 text-sm text-slate-400">{report.schedule}</p>
+                <p className="mt-2 text-xs text-slate-500">{report.status}</p>
+                <button className="mt-4 w-full rounded-full border border-white/20 px-4 py-2 text-sm text-white">
+                  {report.status === 'Active' ? 'Send now' : 'Preview'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderLocationsSection() {
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-white/10 pb-6">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">My Locations</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">Every clinic, one login</h1>
+          <p className="text-sm text-slate-500">Connect each branch for unified insights.</p>
+        </header>
+        <div className="grid gap-6 md:grid-cols-3">
+          {locationProfiles.map((location) => (
+            <div key={location.id} className="rounded-[24px] border border-white/10 bg-white/5 p-5">
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{location.status}</p>
+              <h3 className="mt-2 text-xl font-semibold text-white">{location.name}</h3>
+              <p className="mt-3 text-sm text-slate-400">{location.scans} scans run</p>
+              <p className="text-sm text-slate-400">Health score: {location.health}%</p>
+              <button className="mt-4 w-full rounded-full border border-white/20 px-4 py-2 text-sm text-white">
+                Open location →
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  function renderUpgradeSection() {
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-white/10 pb-6">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Upgrade</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">Scale plan unlocks the whole stack</h1>
+          <p className="text-sm text-slate-500">Demo users can explore everything before paying.</p>
+        </header>
+        <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-emerald-500/10 via-indigo-500/10 to-slate-900/40 p-8">
+          <h3 className="text-3xl font-semibold text-white">Scale · $199/mo</h3>
+          <ul className="mt-6 space-y-2 text-white/80">
+            <li>✔ Unlimited scans & competitors</li>
+            <li>✔ 90-day ranking timeline + alerts</li>
+            <li>✔ White-label PDF & CSV exports</li>
+            <li>✔ Priority support and onboarding</li>
+          </ul>
+          <button className="mt-8 rounded-full border border-white/30 px-8 py-3 text-base font-semibold text-white hover:bg-white hover:text-slate-900">
+            Start upgrade flow →
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  function renderSettingsSection() {
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-white/10 pb-6">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Settings</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white">Account preferences</h1>
+          <p className="text-sm text-slate-500">Update profile, alerts, and security.</p>
+        </header>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <form className="rounded-[32px] border border-white/10 bg-white/5 p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-white">Profile</h3>
+            <label className="text-sm text-slate-400">
+              Full Name
+              <input defaultValue={userName} className="mt-1 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-white" />
+            </label>
+            <label className="text-sm text-slate-400">
+              Email
+              <input defaultValue="demo@example.com" className="mt-1 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-white" />
+            </label>
+            <label className="text-sm text-slate-400">
+              Business Name
+              <input defaultValue="Demo Dental Clinic" className="mt-1 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-white" />
+            </label>
+            <button className="rounded-full border border-white/20 px-6 py-2 text-sm font-semibold text-white">Save changes</button>
+          </form>
+          <div className="space-y-6">
+            <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
+              <h3 className="text-lg font-semibold text-white">Notifications</h3>
+              <label className="mt-4 flex items-center justify-between text-sm text-slate-300">
+                Weekly summary
+                <input type="checkbox" defaultChecked />
+              </label>
+              <label className="mt-2 flex items-center justify-between text-sm text-slate-300">
+                Competitor alerts
+                <input type="checkbox" defaultChecked />
+              </label>
+              <label className="mt-2 flex items-center justify-between text-sm text-slate-300">
+                Product updates
+                <input type="checkbox" />
+              </label>
+            </div>
+            <div className="rounded-[32px] border border-rose-500/40 bg-rose-500/10 p-6">
+              <h3 className="text-lg font-semibold text-white">Danger Zone</h3>
+              <p className="mt-2 text-sm text-rose-100">
+                Need a fresh start? Reset demo data and re-run onboarding.
+              </p>
+              <button
+                onClick={() => {
+                  setPhase('welcome')
+                  setActiveSection('Dashboard')
+                  if (typeof window !== 'undefined') {
+                    localStorage.removeItem('mrcOnboardingComplete')
+                  }
+                }}
+                className="mt-4 rounded-full border border-white/30 px-6 py-2 text-sm font-semibold text-white hover:bg-white/10"
+              >
+                Reset demo →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function renderActiveSection() {
+    switch (activeSection) {
+      case 'Dashboard':
+        return renderDashboardSection()
+      case 'Scans':
+        return renderScansSection()
+      case 'Competitors':
+        return renderCompetitorsSection()
+      case 'Keywords':
+        return renderKeywordsSection()
+      case 'Reports':
+        return renderReportsSection()
+      case 'My Locations':
+        return renderLocationsSection()
+      case 'Upgrade':
+        return renderUpgradeSection()
+      case 'Settings':
+        return renderSettingsSection()
+      default:
+        return renderDashboardSection()
+    }
+  }
 }
