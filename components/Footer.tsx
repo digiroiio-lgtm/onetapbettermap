@@ -66,16 +66,6 @@ export default function Footer() {
               <li><a href="/faq" className="hover:text-white transition">FAQ</a></li>
               <li><a href="/help" className="hover:text-white transition">Help Center</a></li>
               <li><a href="/docs" className="hover:text-white transition">Docs</a></li>
-              <li>
-                <a
-                  href="https://github.com/digiroiio-lgtm/onetapbettermap"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition"
-                >
-                  GitHub
-                </a>
-              </li>
               <li className="flex gap-3">
                 <a href="https://twitter.com" className="hover:text-white transition" aria-label="Twitter">Twitter</a>
                 <a href="https://linkedin.com" className="hover:text-white transition" aria-label="LinkedIn">LinkedIn</a>
