@@ -1,5 +1,3 @@
-'use client'
-
 import type { Metadata } from 'next'
 import type { GuideSlug } from '@/lib/seo/guidesSeo'
 import { getGuideSeoConfig, guidesSeoConfig } from '@/lib/seo/guidesSeo'
