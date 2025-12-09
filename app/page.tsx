@@ -390,20 +390,10 @@ function CoreFeaturesSection() {
       <div className="grid md:grid-cols-3 gap-8">
         {coreFeatures.map(feature => (
           <div key={feature.title} className="rounded-3xl bg-white/5 border border-white/10 p-8 space-y-4">
-            {feature.icon && <div className="text-3xl" aria-hidden>{feature.icon}</div>}
             <h3 className="text-2xl font-semibold text-white">{feature.title}</h3>
             <p className="text-slate-400">{feature.body}</p>
-            {'subtext' in feature && feature.subtext ? (
-              <p className="text-sm text-slate-500">{feature.subtext}</p>
-            ) : null}
+            {feature.subtext ? <p className="text-sm text-slate-500">{feature.subtext}</p> : null}
           </div>
-        ))}
-      </div>
-      <div className="mt-10 flex flex-wrap gap-3 text-xs text-slate-400">
-        {['Competitor Intelligence', 'Keyword Position Tracking', 'Local Pack Penetration', 'Ranking Timeline', 'Auto Reports'].map(label => (
-          <span key={label} className="px-4 py-2 rounded-full border border-white/10">
-            {label}
-          </span>
         ))}
       </div>
     </section>
@@ -431,17 +421,34 @@ function RetentionSection() {
   )
 }
 
-function SecondaryCTA() {
+function SocialProofSpotlight() {
   return (
-    <section className="px-4 sm:px-6 lg:px-24 py-20 border-t border-white/5 text-center space-y-5">
-      <h2 className="text-3xl font-semibold">Start tracking your real Google Maps performance in seconds.</h2>
-      <Link
-        href="#scan-section"
-        className="inline-flex items-center justify-center rounded-full bg-white text-black px-8 py-3 font-semibold transition hover:bg-white/90"
-      >
-        Run a Free Scan →
-      </Link>
-      <p className="text-sm text-slate-400">No credit card • No setup • 100 scans every month</p>
+    <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+      <div className="space-y-6 text-center">
+        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Social Proof</p>
+        <h2 className="text-3xl font-semibold text-white">1,200+ businesses trust MapsRankChecker.</h2>
+        <p className="text-slate-400">Dentists, medspas, real estate teams, and agencies rely on our GeoGrid engine.</p>
+      </div>
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs uppercase tracking-[0.3em] text-slate-500">
+        {socialProofLogos.map(logo => (
+          <span key={logo} className="px-4 py-2 rounded-full border border-white/10">
+            {logo}
+          </span>
+        ))}
+      </div>
+      <div className="mt-10 grid md:grid-cols-2 gap-6">
+        {testimonials.map(testimonial => (
+          <div key={testimonial.author} className="rounded-3xl border border-white/10 bg-white/5 p-6 space-y-3">
+            <p className="text-lg text-white leading-relaxed">“{testimonial.quote}”</p>
+            <p className="text-sm text-slate-400">{testimonial.author}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-8 text-center">
+        <Link href="/upgrade" className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+          Join them →
+        </Link>
+      </div>
     </section>
   )
 }
