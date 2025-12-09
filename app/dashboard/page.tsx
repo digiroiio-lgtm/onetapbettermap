@@ -84,7 +84,7 @@ const keywordSuggestions = [
   'invisible braces london',
 ]
 
-const competitorOptions: CompetitorOption[] = [
+const fallbackCompetitors: CompetitorOption[] = [
   { id: 'comp1', name: 'BellaDent Clinic', rating: 4.9, reviews: 312 },
   { id: 'comp2', name: 'WhiteSmile Antalya', rating: 4.8, reviews: 201 },
   { id: 'comp3', name: 'Elite Dental Center', rating: 4.7, reviews: 178 },
@@ -371,6 +371,77 @@ export default function DashboardPage() {
     }
   }, [selectedBusiness])
 
+  useEffect(() => {
+    if (phase !== 'competitors') return
+    if (!selectedBusinessLocation || selectedKeywords.length === 0) {
+      setCompetitorOptions(fallbackCompetitors)
+      setCompetitorError('Select a business and at least one keyword to fetch competitors.')
+      setCompetitorLoading(false)
+      return
+    }
+
+    let cancelled = false
+    setCompetitorLoading(true)
+    setCompetitorError(null)
+
+    loadGoogleMapsScript()
+      .then(() => {
+        if (cancelled || !window.google?.maps?.places) return
+        const service = new window.google.maps.places.PlacesService(document.createElement('div'))
+        const radiusMeters = Math.min(Math.max(computedRadiusKm * 1000, 2000), 20000)
+        service.nearbySearch(
+          {
+            location: selectedBusinessLocation,
+            radius: radiusMeters,
+            keyword: selectedKeywords[0],
+            type: 'establishment',
+          },
+          (results, status) => {
+            if (cancelled) return
+            setCompetitorLoading(false)
+            const placesStatus = window.google.maps.places.PlacesServiceStatus
+            if (status !== placesStatus.OK || !results?.length) {
+              if (status && status !== placesStatus.ZERO_RESULTS) {
+                setCompetitorError('Google Maps competitor search failed. Showing demo data.')
+              } else if (status === placesStatus.ZERO_RESULTS) {
+                setCompetitorError('No competitors found for that keyword nearby.')
+              }
+              setCompetitorOptions(fallbackCompetitors)
+              return
+            }
+
+            const normalized = results
+              .filter((place) => place.place_id && place.name)
+              .map((place) => ({
+                id: place.place_id!,
+                name: place.name!,
+                rating: place.rating ?? 0,
+                reviews: place.user_ratings_total ?? 0,
+              }))
+
+            if (normalized.length === 0) {
+              setCompetitorOptions(fallbackCompetitors)
+              setCompetitorError('No valid competitors returned. Showing demo data.')
+              return
+            }
+
+            setCompetitorOptions(normalized.slice(0, 10))
+            setCompetitorError(null)
+          },
+        )
+      })
+      .catch(() => {
+        if (cancelled) return
+        setCompetitorLoading(false)
+        setCompetitorError('Google Maps competitor service unavailable. Showing demo data.')
+        setCompetitorOptions(fallbackCompetitors)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [phase, selectedBusinessLocation, selectedKeywords, computedRadiusKm])
+
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([
     keywordSuggestions[0],
     keywordSuggestions[1],
@@ -489,10 +560,22 @@ export default function DashboardPage() {
     }
   }, [phase, selectedBusinessLocation, computedRadiusKm])
 
+  const [competitorOptions, setCompetitorOptions] =
+    useState<CompetitorOption[]>(fallbackCompetitors)
+  const [competitorLoading, setCompetitorLoading] = useState(false)
+  const [competitorError, setCompetitorError] = useState<string | null>(null)
   const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([
-    competitorOptions[0].id,
-    competitorOptions[1].id,
+    fallbackCompetitors[0].id,
+    fallbackCompetitors[1].id,
   ])
+  useEffect(() => {
+    if (competitorOptions.length === 0 || phase !== 'competitors') return
+    setSelectedCompetitors((prev) => {
+      const valid = prev.filter((id) => competitorOptions.some((opt) => opt.id === id))
+      if (valid.length > 0) return valid
+      return competitorOptions.slice(0, 2).map((opt) => opt.id)
+    })
+  }, [competitorOptions, phase])
 
   const [loadingStep, setLoadingStep] = useState(0)
 
@@ -816,31 +899,46 @@ export default function DashboardPage() {
             <h2 className="mt-4 text-4xl font-semibold text-white">We found your top competitors. Track them?</h2>
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
               <div className="space-y-3">
-                {competitorOptions.map((competitor) => (
-                  <label
-                    key={competitor.id}
-                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedCompetitors.includes(competitor.id)}
-                      onChange={() => {
-                        setSelectedCompetitors((prev) =>
-                          prev.includes(competitor.id)
-                            ? prev.filter((id) => id !== competitor.id)
-                            : [...prev, competitor.id],
-                        )
-                      }}
-                      className="h-5 w-5 rounded border-white/30 bg-transparent"
-                    />
-                    <div>
-                      <p className="text-lg font-semibold text-white">{competitor.name}</p>
-                      <p className="text-sm text-slate-400">
-                        ★ {competitor.rating.toFixed(1)} • {competitor.reviews} reviews
-                      </p>
-                    </div>
-                  </label>
-                ))}
+                <div className="min-h-[24px] text-sm text-slate-400">
+                  {competitorLoading && <span>Scanning Google Maps for competitors…</span>}
+                  {!competitorLoading && competitorError && (
+                    <span className="text-rose-300">{competitorError}</span>
+                  )}
+                  {!competitorLoading && !competitorError && (
+                    <span>Showing nearby businesses matching “{selectedKeywords[0]}”.</span>
+                  )}
+                </div>
+                {competitorOptions.length === 0 && !competitorLoading ? (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm text-slate-400">
+                    No competitors available. Try adjusting your keyword or radius.
+                  </div>
+                ) : (
+                  competitorOptions.map((competitor) => (
+                    <label
+                      key={competitor.id}
+                      className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCompetitors.includes(competitor.id)}
+                        onChange={() => {
+                          setSelectedCompetitors((prev) =>
+                            prev.includes(competitor.id)
+                              ? prev.filter((id) => id !== competitor.id)
+                              : [...prev, competitor.id],
+                          )
+                        }}
+                        className="h-5 w-5 rounded border-white/30 bg-transparent"
+                      />
+                      <div>
+                        <p className="text-lg font-semibold text-white">{competitor.name}</p>
+                        <p className="text-sm text-slate-400">
+                          ★ {competitor.rating.toFixed(1)} • {competitor.reviews} reviews
+                        </p>
+                      </div>
+                    </label>
+                  ))
+                )}
               </div>
               <div className="rounded-[28px] border border-white/10 bg-white/5 p-6">
                 <p className="text-sm uppercase tracking-[0.4em] text-slate-400">Preview</p>
