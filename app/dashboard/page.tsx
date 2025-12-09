@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 
 type Phase =
   | 'initializing'
@@ -743,6 +744,17 @@ export default function DashboardPage() {
             <p className="mt-3 text-4xl font-semibold text-white">{coverageSummary.coverage}</p>
             <p className="mt-2 text-sm text-emerald-300">{coverageSummary.coverageDelta}</p>
           </div>
+        </section>
+
+        <section className="mt-8">
+          <RevenueForecastPanel
+            currentRank={12}
+            targetRank={3}
+            avgOrderValue={240}
+            conversionRate={0.28}
+            ctrModel={{ 1: 0.22, 2: 0.16, 3: 0.12, 5: 0.08, 10: 0.03 }}
+            gbpInsights={{ calls: 56, directions: 21, clicks: 310 }}
+          />
         </section>
 
         <section className="mt-8 rounded-[32px] border border-white/10 bg-white/5 p-6">

@@ -16,6 +16,8 @@ import {
   getDefaultRecommendations,
   type Recommendation,
 } from '@/lib/recommendationEngine'
+import RevenueImpactCard from '@/components/RevenueImpactCard'
+import BlurredRevenuePreview from '@/components/BlurredRevenuePreview'
 
 function Heatmap({ data }: { data: HeatmapCell[][] }) {
   return (
@@ -260,6 +262,29 @@ function ResultsContent() {
             <span className="text-2xl text-slate-500">/100</span>
           </div>
           <p className="mt-4 text-base text-slate-400">{scoreCopy}</p>
+        </section>
+
+        <section className="rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 sm:px-12">
+          <div className="flex flex-col gap-2 text-left">
+            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Revenue Forecaster</p>
+            <h3 className="text-2xl font-semibold text-white">See how better ranks turn into cash flow.</h3>
+            <p className="text-sm text-slate-400">
+              We translate CTR + conversion data into calls, customers, and revenue gains.
+            </p>
+          </div>
+          <div className="mt-6">
+            <RevenueImpactCard
+              rankImprovementTo3={3}
+              callsGained={18}
+              directionsGained={7}
+              customersGained={2}
+              monthlyRevenueImpact={1240}
+              className="bg-transparent"
+            />
+          </div>
+          <div className="mt-6">
+            <BlurredRevenuePreview />
+          </div>
         </section>
 
         <section className="rounded-[32px] border border-white/10 bg-white/5 px-6 py-10 sm:px-12">

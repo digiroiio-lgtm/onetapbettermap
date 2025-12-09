@@ -200,6 +200,31 @@ export default function PricingPage() {
           ))}
         </section>
 
+        <section className="rounded-[28px] border border-white/10 bg-white/5 p-6 overflow-x-auto">
+          <table className="w-full text-left text-sm text-slate-200">
+            <thead>
+              <tr className="text-slate-400">
+                <th className="px-4 py-3 font-semibold">Feature</th>
+                <th className="px-4 py-3 font-semibold">Starter</th>
+                <th className="px-4 py-3 font-semibold">Growth</th>
+                <th className="px-4 py-3 font-semibold">Scale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-white/10">
+                <td className="px-4 py-4 font-semibold text-white">Revenue Forecasting</td>
+                <td className="px-4 py-4 text-slate-500">–</td>
+                <td className="px-4 py-4 text-white">Lite</td>
+                <td className="px-4 py-4 text-emerald-300">Full</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <p className="text-center text-sm text-slate-400">
+          <span className="font-semibold text-[#3b82f6]">NEW · Revenue Forecaster</span> — Included in Growth &amp; Scale plans
+        </p>
+
         <section className="rounded-[28px] border border-white/10 bg-white/5 p-8 space-y-4 text-center">
           <p className="text-sm text-slate-400">Need more power?</p>
           <h3 className="text-2xl font-semibold text-white">DOMINANCE — Enterprise Grade</h3>

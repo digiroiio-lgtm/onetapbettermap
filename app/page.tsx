@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import RevenueImpactCard from '@/components/RevenueImpactCard'
+import RevenueForecastPanel from '@/components/RevenueForecastPanel'
+import BlurredRevenuePreview from '@/components/BlurredRevenuePreview'
 
 const socialProofIcons = ['Dentists', 'Clinics', 'Restaurants', 'Real Estate', 'Agencies']
 
@@ -23,7 +26,14 @@ const howItWorks = [
   { label: 'Step 3', title: 'Follow your plan', body: 'Use the AI-powered checklist to close your ranking gaps.' },
 ]
 
-const coreFeatures = [
+type CoreFeature = {
+  title: string
+  body: string
+  subtext?: string
+  icon?: string
+}
+
+const coreFeatures: CoreFeature[] = [
   {
     title: 'Full Visibility Score',
     body: 'A single score that summarizes your real map exposure in every direction.',
@@ -35,6 +45,12 @@ const coreFeatures = [
   {
     title: 'AI Action Checklist',
     body: 'Personalized, prioritized steps to improve your ranking — without guesswork.',
+  },
+  {
+    title: 'Revenue Intelligence',
+    body: 'Predict how many calls, visits, and customers you gain by improving your map ranking.',
+    subtext: 'Built on real CTR + conversion benchmarks.',
+    icon: '💹',
   },
 ]
 
@@ -87,6 +103,7 @@ export default function HomePage() {
         <ProblemSolution />
         <HowItWorksSection />
         <SampleReportSection />
+        <DashboardPreviewSection />
         <CoreFeaturesSection />
         <RetentionSection />
         <SecondaryCTA />
@@ -107,6 +124,17 @@ function HeroSection() {
           <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">
             Your Map Intelligence Platform.
           </h1>
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-3 rounded-full border border-[#3b82f6]/30 bg-[#3b82f6]/10 px-4 py-1 text-xs font-semibold text-[#3b82f6]">
+              <span className="inline-flex h-5 items-center justify-center rounded-full bg-[#3b82f6] px-2 text-[10px] text-white">
+                NEW
+              </span>
+              Revenue Forecaster
+            </div>
+            <p className="text-sm text-slate-300">
+              See how ranking improvements translate into more calls, visits, and revenue.
+            </p>
+          </div>
           <p className="text-lg text-slate-300 max-w-xl">
             See your real Google Maps visibility, fix ranking gaps, and stay ahead of competitors — in one tap.
           </p>
@@ -229,6 +257,15 @@ function HowItWorksSection() {
             <p className="text-slate-400 text-sm leading-relaxed">{step.body}</p>
           </div>
         ))}
+        <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-6 text-left md:col-start-3 md:row-start-2">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#3b82f6]/30 bg-[#3b82f6]/10 px-3 py-1 text-[11px] font-semibold text-[#3b82f6]">
+            NEW · Step 4
+          </div>
+          <h3 className="text-xl font-semibold text-white">See your revenue potential</h3>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            Understand the real monetary impact of ranking improvements with the Revenue Forecaster.
+          </p>
+        </div>
       </div>
     </section>
   )
@@ -277,6 +314,14 @@ function SampleReportSection() {
                   <p className="text-white font-semibold">BellaDent climbed +3 this week</p>
                   <p className="text-slate-400">Watch NW visibility</p>
                 </div>
+                <RevenueImpactCard
+                  rankImprovementTo3={3}
+                  callsGained={18}
+                  directionsGained={7}
+                  customersGained={2}
+                  monthlyRevenueImpact={1240}
+                  className="bg-transparent"
+                />
               </div>
             </div>
           </div>
@@ -289,14 +334,65 @@ function SampleReportSection() {
   )
 }
 
+function DashboardPreviewSection() {
+  return (
+    <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+      <div className="grid gap-10 lg:grid-cols-2 items-start">
+        <div className="space-y-6">
+          <div>
+            <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Dashboard Preview</p>
+            <h2 className="text-3xl font-semibold text-white mt-2">See the visibility cockpit + revenue layer.</h2>
+            <p className="text-slate-400 mt-3">Score, timeline, competitor alerts — now boosted with the Revenue Forecaster.</p>
+          </div>
+          <div className="rounded-[36px] border border-white/10 bg-white/5 p-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Visibility Score</p>
+                <p className="text-4xl font-semibold text-white">82<span className="text-lg text-slate-500">/100</span></p>
+              </div>
+              <span className="text-emerald-300 text-sm font-semibold">+4 this week ↑</span>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+              <p className="text-sm text-slate-400">Ranking Timeline</p>
+              <div className="mt-3 h-20 rounded-2xl bg-gradient-to-r from-emerald-400/60 via-amber-300/50 to-rose-400/60" />
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 space-y-3">
+              <p className="text-sm text-slate-400">Competitor Alert</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white font-semibold">BellaDent +3</p>
+                  <p className="text-slate-400 text-sm">They now outrank you NW.</p>
+                </div>
+                <button className="text-sm text-white/80 underline-offset-4 hover:underline">See movement →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <RevenueForecastPanel
+          currentRank={12}
+          targetRank={3}
+          avgOrderValue={220}
+          conversionRate={0.3}
+          ctrModel={{ 1: 0.22, 2: 0.16, 3: 0.12, 5: 0.08 }}
+          gbpInsights={{ calls: 42, directions: 18, clicks: 260 }}
+        />
+      </div>
+    </section>
+  )
+}
+
 function CoreFeaturesSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
       <div className="grid md:grid-cols-3 gap-8">
         {coreFeatures.map(feature => (
           <div key={feature.title} className="rounded-3xl bg-white/5 border border-white/10 p-8 space-y-4">
+            {feature.icon && <div className="text-3xl" aria-hidden>{feature.icon}</div>}
             <h3 className="text-2xl font-semibold text-white">{feature.title}</h3>
             <p className="text-slate-400">{feature.body}</p>
+            {'subtext' in feature && feature.subtext ? (
+              <p className="text-sm text-slate-500">{feature.subtext}</p>
+            ) : null}
           </div>
         ))}
       </div>
@@ -376,6 +472,7 @@ function ScanFormSection() {
             </Link>
           </div>
         </div>
+        <BlurredRevenuePreview />
       </div>
     </section>
   )
