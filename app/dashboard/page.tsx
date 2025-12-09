@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
@@ -18,11 +18,18 @@ type Phase =
   | 'wow'
   | 'dashboard'
 
+type LatLngLiteral = {
+  lat: number
+  lng: number
+}
+
 type BusinessSuggestion = {
   id: string
   name: string
   address: string
   category: string
+  location?: LatLngLiteral
+  placeId?: string
 }
 
 type CompetitorOption = {
@@ -44,24 +51,28 @@ const businessSuggestions: BusinessSuggestion[] = [
     name: 'Demo Dental Clinic',
     address: '45 Regent St, London',
     category: 'Dental Clinic',
+    location: { lat: 51.5121, lng: -0.1281 },
   },
   {
     id: 'b2',
     name: 'Lara Smile Studio',
     address: 'Konyaaltı Cad. 18, Antalya',
     category: 'Dental Studio',
+    location: { lat: 36.857, lng: 30.6373 },
   },
   {
     id: 'b3',
     name: 'Marina Family Dental',
     address: 'Poyraz Sok. 12, Antalya',
     category: 'Dental Practice',
+    location: { lat: 36.8814, lng: 30.7055 },
   },
   {
     id: 'b4',
     name: 'White Pearl Clinic',
     address: 'Baker St. 102, London',
     category: 'Cosmetic Dentistry',
+    location: { lat: 51.5237, lng: -0.1585 },
   },
 ]
 
@@ -205,6 +216,11 @@ export default function DashboardPage() {
   const [placesResults, setPlacesResults] = useState<BusinessSuggestion[]>([])
   const [placesLoading, setPlacesLoading] = useState(false)
   const [placesError, setPlacesError] = useState<string | null>(null)
+  const [selectedBusinessLocation, setSelectedBusinessLocation] = useState<LatLngLiteral | null>(
+    businessSuggestions[0].location ?? null,
+  )
+  const [locationLoading, setLocationLoading] = useState(false)
+  const [locationError, setLocationError] = useState<string | null>(null)
 
   const fallbackBusinesses = useMemo(() => {
     if (!businessQuery) return businessSuggestions
@@ -217,6 +233,10 @@ export default function DashboardPage() {
 
   const businessesToDisplay =
     businessQuery && placesResults.length > 0 ? placesResults : fallbackBusinesses
+
+  const mapContainerRef = useRef<HTMLDivElement | null>(null)
+  const mapInstanceRef = useRef<google.maps.Map | null>(null)
+  const mapCircleRef = useRef<google.maps.Circle | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -281,6 +301,7 @@ export default function DashboardPage() {
           address: prediction.structured_formatting?.secondary_text ?? prediction.description,
           category:
             prediction.types?.[0]?.replace(/_/g, ' ')?.toUpperCase() ?? 'BUSINESS',
+          placeId: prediction.place_id ?? undefined,
         }))
         setPlacesResults(normalized)
       })
@@ -291,6 +312,64 @@ export default function DashboardPage() {
       window.clearTimeout(timeoutId)
     }
   }, [businessQuery, placesService])
+
+  useEffect(() => {
+    if (!selectedBusiness) return
+
+    if (selectedBusiness.location) {
+      setSelectedBusinessLocation(selectedBusiness.location)
+      setLocationError(null)
+      setLocationLoading(false)
+      return
+    }
+
+    if (!selectedBusiness.placeId) {
+      setSelectedBusinessLocation(null)
+      setLocationError('Location data unavailable for this business. Try another result.')
+      setLocationLoading(false)
+      return
+    }
+
+    let active = true
+    setLocationLoading(true)
+    setLocationError(null)
+
+    loadGoogleMapsScript()
+      .then(() => {
+        if (!active || !window.google?.maps?.places) return
+        const service = new window.google.maps.places.PlacesService(document.createElement('div'))
+        service.getDetails(
+          { placeId: selectedBusiness.placeId, fields: ['geometry'] },
+          (details, status) => {
+            if (!active) return
+            setLocationLoading(false)
+            if (
+              status === window.google.maps.places.PlacesServiceStatus.OK &&
+              details?.geometry?.location
+            ) {
+              setSelectedBusinessLocation({
+                lat: details.geometry.location.lat(),
+                lng: details.geometry.location.lng(),
+              })
+              setLocationError(null)
+            } else {
+              setLocationError('Could not fetch location from Google Maps.')
+              setSelectedBusinessLocation(null)
+            }
+          },
+        )
+      })
+      .catch(() => {
+        if (!active) return
+        setLocationLoading(false)
+        setLocationError('Google Maps location service is unavailable.')
+        setSelectedBusinessLocation(null)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [selectedBusiness])
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([
     keywordSuggestions[0],
@@ -323,6 +402,92 @@ export default function DashboardPage() {
 
   const [serviceArea, setServiceArea] = useState<'2km' | '5km' | 'custom'>('5km')
   const [customRadius, setCustomRadius] = useState(7)
+  const computedRadiusKm = serviceArea === 'custom' ? customRadius : serviceArea === '2km' ? 2 : 5
+
+  useEffect(() => {
+    if (phase !== 'area') {
+      mapCircleRef.current?.setMap(null)
+      mapCircleRef.current = null
+      mapInstanceRef.current = null
+      return
+    }
+
+    if (!selectedBusinessLocation) return
+    let cancelled = false
+
+    const initMap = async () => {
+      try {
+        await loadGoogleMapsScript()
+        if (cancelled || !window.google?.maps || !mapContainerRef.current) return
+
+        const googleMaps = window.google.maps
+        if (!mapInstanceRef.current) {
+          mapInstanceRef.current = new googleMaps.Map(mapContainerRef.current, {
+            center: selectedBusinessLocation,
+            zoom: computedRadiusKm <= 3 ? 14 : computedRadiusKm <= 8 ? 12 : 11,
+            disableDefaultUI: true,
+            gestureHandling: 'greedy',
+            styles: [
+              {
+                featureType: 'poi',
+                stylers: [{ visibility: 'off' }],
+              },
+              {
+                featureType: 'transit',
+                stylers: [{ visibility: 'off' }],
+              },
+              {
+                featureType: 'road',
+                elementType: 'labels',
+                stylers: [{ visibility: 'simplified' }],
+              },
+            ],
+          })
+        }
+
+        const map = mapInstanceRef.current!
+        map.setCenter(selectedBusinessLocation)
+
+        if (!mapCircleRef.current) {
+          mapCircleRef.current = new googleMaps.Circle({
+            map,
+            center: selectedBusinessLocation,
+            radius: computedRadiusKm * 1000,
+            strokeColor: '#38bdf8',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#0ea5e9',
+            fillOpacity: 0.15,
+            draggable: true,
+          })
+
+          mapCircleRef.current.addListener('center_changed', () => {
+            const center = mapCircleRef.current?.getCenter()
+            if (center) {
+              setSelectedBusinessLocation({ lat: center.lat(), lng: center.lng() })
+            }
+          })
+        } else {
+          mapCircleRef.current.setCenter(selectedBusinessLocation)
+        }
+
+        mapCircleRef.current!.setRadius(computedRadiusKm * 1000)
+      } catch {
+        // Map failed to initialize but autocomplete already handles logging
+      }
+    }
+
+    initMap()
+
+    return () => {
+      cancelled = true
+      if (phase !== 'area') {
+        mapCircleRef.current?.setMap(null)
+        mapCircleRef.current = null
+        mapInstanceRef.current = null
+      }
+    }
+  }, [phase, selectedBusinessLocation, computedRadiusKm])
 
   const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([
     competitorOptions[0].id,
@@ -612,8 +777,23 @@ export default function DashboardPage() {
               </div>
               <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-center">
                 <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Mini Map</p>
-                <div className="mt-4 h-[320px] rounded-2xl bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.25),_transparent_70%)]"></div>
-                <p className="mt-4 text-sm text-slate-400">Drag to define the exact zone.</p>
+                <div className="relative mt-4 h-[320px] overflow-hidden rounded-2xl border border-white/5">
+                  <div ref={mapContainerRef} className="absolute inset-0" />
+                  {!selectedBusinessLocation && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/60 p-6 text-sm text-slate-400">
+                      {locationLoading
+                        ? 'Loading location from Google Maps...'
+                        : locationError || 'Select a business to load the map.'}
+                    </div>
+                  )}
+                </div>
+                <p className="mt-4 text-sm text-slate-400">
+                  {locationLoading
+                    ? 'Locating your business on the map...'
+                    : locationError
+                      ? locationError
+                      : 'Drag the circle to fine-tune your scan zone.'}
+                </p>
               </div>
             </div>
             <div className="mt-10 flex justify-end gap-4">
