@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
+import { loadGoogleMapsScript } from '@/lib/googleMapsLoader'
 
 type Phase =
   | 'initializing'
@@ -199,7 +200,13 @@ export default function DashboardPage() {
     businessSuggestions[0],
   )
   const [businessQuery, setBusinessQuery] = useState('')
-  const filteredBusinesses = useMemo(() => {
+  const [placesService, setPlacesService] =
+    useState<google.maps.places.AutocompleteService | null>(null)
+  const [placesResults, setPlacesResults] = useState<BusinessSuggestion[]>([])
+  const [placesLoading, setPlacesLoading] = useState(false)
+  const [placesError, setPlacesError] = useState<string | null>(null)
+
+  const fallbackBusinesses = useMemo(() => {
     if (!businessQuery) return businessSuggestions
     return businessSuggestions.filter((item) =>
       `${item.name} ${item.address} ${item.category}`
@@ -208,11 +215,92 @@ export default function DashboardPage() {
     )
   }, [businessQuery])
 
+  const businessesToDisplay =
+    businessQuery && placesResults.length > 0 ? placesResults : fallbackBusinesses
+
+  useEffect(() => {
+    let isMounted = true
+
+    loadGoogleMapsScript()
+      .then(() => {
+        if (!isMounted) return
+        if (typeof window !== 'undefined' && window.google?.maps?.places) {
+          setPlacesService(new window.google.maps.places.AutocompleteService())
+          setPlacesError(null)
+        } else {
+          setPlacesError('Google Maps otomatik tamamlaması şu anda kullanılamıyor.')
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setPlacesError('Google Maps otomatik tamamlaması yüklenemedi.')
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!placesService || !businessQuery.trim()) {
+      setPlacesResults([])
+      setPlacesLoading(false)
+      return
+    }
+
+    let isActive = true
+    setPlacesLoading(true)
+
+    const timeoutId = window.setTimeout(() => {
+      const request: google.maps.places.AutocompletionRequest = {
+        input: businessQuery,
+        types: ['establishment'],
+      }
+
+      placesService.getPlacePredictions(request, (predictions, status) => {
+        if (!isActive) return
+        setPlacesLoading(false)
+
+        const placesStatus = window.google?.maps?.places?.PlacesServiceStatus
+        if (status !== placesStatus?.OK || !predictions?.length) {
+          if (status && status !== placesStatus?.ZERO_RESULTS) {
+            setPlacesError('Google Maps araması şu anda yanıt vermiyor.')
+          }
+          if (status === placesStatus?.ZERO_RESULTS) {
+            setPlacesError(null)
+          }
+          setPlacesResults([])
+          return
+        }
+
+        setPlacesError(null)
+        const normalized = predictions.map((prediction) => ({
+          id: prediction.place_id ?? `place-${prediction.description}`,
+          name: prediction.structured_formatting?.main_text ?? prediction.description,
+          address: prediction.structured_formatting?.secondary_text ?? prediction.description,
+          category:
+            prediction.types?.[0]?.replace(/_/g, ' ')?.toUpperCase() ?? 'BUSINESS',
+        }))
+        setPlacesResults(normalized)
+      })
+    }, 250)
+
+    return () => {
+      isActive = false
+      window.clearTimeout(timeoutId)
+    }
+  }, [businessQuery, placesService])
+
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([
     keywordSuggestions[0],
     keywordSuggestions[1],
   ])
   const [keywordInput, setKeywordInput] = useState('')
+  const customKeywords = useMemo(
+    () => selectedKeywords.filter((keyword) => !keywordSuggestions.includes(keyword)),
+    [selectedKeywords],
+  )
   const toggleKeyword = (keyword: string) => {
     setSelectedKeywords((prev) =>
       prev.includes(keyword)
@@ -222,11 +310,14 @@ export default function DashboardPage() {
           : prev,
     )
   }
+  const removeKeyword = (keyword: string) => {
+    setSelectedKeywords((prev) => prev.filter((item) => item !== keyword))
+  }
   const addCustomKeyword = () => {
     const trimmed = keywordInput.trim()
     if (!trimmed) return
     if (selectedKeywords.length >= 5) return
-    setSelectedKeywords((prev) => [...prev, trimmed])
+    setSelectedKeywords((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]))
     setKeywordInput('')
   }
 
@@ -347,28 +438,48 @@ export default function DashboardPage() {
                     className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/30"
                   />
                 </div>
+                <div className="min-h-[24px] mt-2 text-sm">
+                  {placesLoading && <p className="text-slate-400">Searching Google Maps…</p>}
+                  {!placesLoading && placesError && (
+                    <p className="text-rose-300">{placesError}</p>
+                  )}
+                  {!placesLoading &&
+                    !placesError &&
+                    businessQuery &&
+                    placesResults.length === 0 && (
+                      <p className="text-slate-500">
+                        Showing demo suggestions while we locate your profile.
+                      </p>
+                    )}
+                </div>
                 <p className="mt-3 text-sm text-slate-500">
                   Not listed? <button className="underline underline-offset-4">Add manually →</button>
                 </p>
               </div>
               <div className="space-y-3">
-                {filteredBusinesses.map((business) => (
-                  <button
-                    key={business.id}
-                    onClick={() => setSelectedBusiness(business)}
-                    className={`w-full rounded-2xl border px-5 py-4 text-left transition hover:border-white/40 hover:bg-white/10 ${
-                      selectedBusiness?.id === business.id
-                        ? 'border-white/60 bg-white/10'
-                        : 'border-white/10 bg-white/5'
-                    }`}
-                  >
-                    <p className="text-lg font-semibold text-white">{business.name}</p>
-                    <p className="text-sm text-slate-400">{business.address}</p>
-                    <p className="text-xs uppercase tracking-[0.4em] text-slate-500 mt-2">
-                      {business.category}
-                    </p>
-                  </button>
-                ))}
+                {businessesToDisplay.length === 0 && !placesLoading ? (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm text-slate-400">
+                    No matching businesses. Try a different name or add manually.
+                  </div>
+                ) : (
+                  businessesToDisplay.map((business) => (
+                    <button
+                      key={business.id}
+                      onClick={() => setSelectedBusiness(business)}
+                      className={`w-full rounded-2xl border px-5 py-4 text-left transition hover:border-white/40 hover:bg-white/10 ${
+                        selectedBusiness?.id === business.id
+                          ? 'border-white/60 bg-white/10'
+                          : 'border-white/10 bg-white/5'
+                      }`}
+                    >
+                      <p className="text-lg font-semibold text-white">{business.name}</p>
+                      <p className="text-sm text-slate-400">{business.address}</p>
+                      <p className="text-xs uppercase tracking-[0.4em] text-slate-500 mt-2">
+                        {business.category}
+                      </p>
+                    </button>
+                  ))
+                )}
               </div>
             </div>
             <div className="mt-10 flex justify-end">
@@ -403,6 +514,20 @@ export default function DashboardPage() {
                 </button>
               ))}
             </div>
+            {customKeywords.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-3">
+                {customKeywords.map((keyword) => (
+                  <button
+                    key={keyword}
+                    onClick={() => removeKeyword(keyword)}
+                    className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white hover:border-white/40"
+                  >
+                    <span>{keyword}</span>
+                    <span className="text-xs text-slate-400 group-hover:text-white">× Remove</span>
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="mt-6 flex flex-wrap gap-3">
               <input
                 value={keywordInput}
@@ -411,12 +536,21 @@ export default function DashboardPage() {
                 className="flex-1 min-w-[220px] rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/30"
               />
               <button
+                type="button"
                 onClick={addCustomKeyword}
-                className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-slate-900"
+                disabled={selectedKeywords.length >= 5}
+                className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Add keyword
               </button>
             </div>
+            <p className="mt-2 text-xs text-slate-500">
+              {selectedKeywords.length >= 5
+                ? 'You have selected the maximum of 5 keywords.'
+                : `You can add ${5 - selectedKeywords.length} more keyword${
+                    5 - selectedKeywords.length === 1 ? '' : 's'
+                  }.`}
+            </p>
             <div className="mt-10 flex justify-end gap-4">
               <button
                 onClick={() => setPhase('business')}
