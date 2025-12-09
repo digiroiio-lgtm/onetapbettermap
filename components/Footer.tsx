@@ -81,7 +81,7 @@ export default function Footer() {
             No credit card required • 100 scans/month free • Upgrade anytime to Pro
           </span>
         </div>
-        <p className="text-center text-xs text-gray-600">Stop guessing. Start ranking.</p>
+        <p className="text-center text-xs text-gray-600">Stop guessing rankings. Start recovering lost revenue.</p>
       </div>
     </footer>
   )

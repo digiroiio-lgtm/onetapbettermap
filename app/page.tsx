@@ -21,22 +21,22 @@ const socialProofBadges = [
 const problemCards = [
   {
     title: 'Your Real Position',
-    body: '49-grid heatmap reveals where you win and where you disappear.',
+    body: 'See exactly where revenue is strongest — and where it disappears.',
   },
   {
     title: 'Competitor Movement',
-    body: 'See rising competitors and stop losing spots without noticing.',
+    body: 'Spot rising competitors before they take your calls and customers.',
   },
   {
     title: 'Fixable Gaps',
-    body: 'We show exactly what’s blocking your local visibility.',
+    body: 'Know which visibility gaps are blocking revenue — and how to remove them.',
   },
 ]
 
 const howItWorks = [
-  { label: 'Step 1', title: 'Enter your business', body: 'Search your Google Business Profile or paste name + city.' },
-  { label: 'Step 2', title: 'Get instant heatmap', body: '49-point GeoGrid shows the exact ranks nearby customers see.' },
-  { label: 'Step 3', title: 'Follow AI checklist', body: 'Actionable tasks remove ranking blockers in priority order.' },
+  { label: 'Step 1', title: 'Enter your business', body: 'Find your Google Business Profile and service area.' },
+  { label: 'Step 2', title: 'Detect revenue leaks', body: 'GeoGrid reveals where customers see competitors instead of you.' },
+  { label: 'Step 3', title: 'Fix only what moves revenue', body: 'AI prioritizes actions tied directly to ranking and income impact.' },
 ]
 
 type CoreFeature = {
@@ -49,7 +49,7 @@ type CoreFeature = {
 const coreFeatures: CoreFeature[] = [
   {
     title: 'Visibility Score',
-    body: 'A single metric showing how dominant you are across your entire service radius.',
+    body: 'A single number that reflects how dominant — or invisible — you are across your entire market.',
   },
   {
     title: 'Multi-Area Heatmaps',
@@ -65,7 +65,7 @@ const coreFeatures: CoreFeature[] = [
   },
   {
     title: 'Revenue Forecaster',
-    body: 'Preview how many calls, visits, and customers you’ll unlock at each rank.',
+    body: 'See how many calls, visits, and customers you unlock before you climb.',
     subtext: 'Powered by CTR + conversion benchmarks.',
   },
   {
@@ -165,7 +165,9 @@ function HeroSection() {
         <div className="space-y-6">
           <p className="text-sm uppercase tracking-[0.4em] text-slate-400">MapsRankChecker™</p>
           <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">
-            Your Map Intelligence Platform.
+            Stop guessing rankings.
+            <br />
+            See what they’re costing you.
           </h1>
           <div className="space-y-2">
             <div className="inline-flex items-center gap-3 rounded-full border border-[#3b82f6]/30 bg-[#3b82f6]/10 px-4 py-1 text-xs font-semibold text-[#3b82f6]">
@@ -175,24 +177,24 @@ function HeroSection() {
               Revenue Forecaster
             </div>
             <p className="text-sm text-slate-300">
-              See how ranking improvements translate into more calls, visits, and revenue.
+              See how ranking gaps are leaking revenue — before you fix them.
             </p>
           </div>
           <p className="text-lg text-slate-300 max-w-xl">
-            See your real Google Maps visibility, fix ranking gaps, and stay ahead of competitors — in one tap.
+            MapsRankChecker shows how much revenue you’re losing on Google Maps — and exactly what to do to get it back.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="#scan-now"
               className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-8 py-3 text-base font-semibold transition hover:bg-[#1d4ed8]"
             >
-              See Your Map Visibility →
+              Start Free Scan
             </Link>
             <Link
               href="#demo-experience"
               className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
             >
-              View Sample Report →
+              See revenue potential →
             </Link>
           </div>
           <p className="text-sm text-slate-400">
@@ -259,7 +261,9 @@ function SocialProofStrip() {
           ))}
         </div>
         <div className="space-y-6">
-          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Trusted by local businesses worldwide</p>
+          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">
+            1,200+ businesses actively recovering lost revenue with MapsRankChecker
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {socialProofBadges.map(badge => (
               <div
@@ -290,10 +294,14 @@ function ProblemSolution() {
         <div className="space-y-4">
           <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Problem → Solution</p>
           <h2 className="text-3xl font-semibold">
-            Your customers are choosing competitors you don’t even see.
+            Your customers are choosing competitors —
+            <br />
+            and you’re losing revenue without realizing it.
           </h2>
           <p className="text-slate-400 leading-relaxed">
-            Google Maps rankings shift every few blocks. Most businesses only see one version of the search results. MapsRankChecker shows you the full visibility picture so you can act fast.
+            Google Maps rankings change every few blocks.
+            Most businesses only see one version of the results — and miss where customers are actually finding competitors instead.
+            MapsRankChecker reveals the full picture so you can stop revenue leaks early.
           </p>
         </div>
         <div className="grid gap-6">
@@ -303,6 +311,14 @@ function ProblemSolution() {
               <p className="text-slate-400">{card.body}</p>
             </div>
           ))}
+        </div>
+        <div className="flex justify-start">
+          <Link
+            href="#scan-now"
+            className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Scan Now
+          </Link>
         </div>
       </div>
     </section>
@@ -329,13 +345,13 @@ function HowItWorksSection() {
 function DemoExperienceSection() {
   return (
     <section id="demo-experience" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
-      <div className="space-y-6 text-center max-w-3xl mx-auto">
-        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Interactive Demo</p>
-        <h2 className="text-3xl font-semibold text-white">See the entire Maps intelligence loop in one view.</h2>
-        <p className="text-slate-400">
-          Visibility score, GeoGrid heatmap, competitor movement, and revenue forecasting — all in one login.
-        </p>
-      </div>
+        <div className="space-y-6 text-center max-w-3xl mx-auto">
+          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Interactive Demo</p>
+          <h2 className="text-3xl font-semibold text-white">See the entire revenue recovery loop in one dashboard</h2>
+          <p className="text-slate-400">
+            Visibility scores, GeoGrid coverage, competitor movement, and revenue forecasting — all working together.
+          </p>
+        </div>
       <div className="mt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
         <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-8 space-y-6">
           <div className="flex items-center justify-between">
@@ -384,7 +400,9 @@ function DemoExperienceSection() {
         </div>
         <div className="space-y-6">
           <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Revenue Forecaster (preview)</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Revenue Forecast preview</p>
+            <h3 className="text-xl font-semibold text-white">See what every rank position is worth</h3>
+            <p className="text-sm text-slate-400">This is why rankings matter — because each position has a dollar value.</p>
             <RevenueForecastPanel
               currentRank={12}
               targetRank={3}
@@ -395,11 +413,23 @@ function DemoExperienceSection() {
             />
           </div>
           <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 space-y-4">
-            <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">What you unlock</p>
+            <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">How you recover lost revenue</p>
             <ul className="space-y-3 text-sm text-slate-300 text-left">
-              <li>• Instant heatmap + coverage score</li>
-              <li>• Competitor movement + smart alerts</li>
-              <li>• Revenue projections at each rank</li>
+              <li>
+                <span className="font-semibold">Instant heatmap & coverage score</span>
+                <br />
+                <span className="text-xs text-slate-400">Know which zones generate calls — and which don’t.</span>
+              </li>
+              <li>
+                <span className="font-semibold">Competitor movement & smart alerts</span>
+                <br />
+                <span className="text-xs text-slate-400">Catch revenue threats the moment rankings shift.</span>
+              </li>
+              <li>
+                <span className="font-semibold">Revenue projections at every rank</span>
+                <br />
+                <span className="text-xs text-slate-400">Decide actions based on money, not vanity metrics.</span>
+              </li>
             </ul>
             <Link
               href="#scan-now"
@@ -412,7 +442,7 @@ function DemoExperienceSection() {
       </div>
       <div className="mt-10 text-center">
         <Link href="/results?businessName=Demo%20Business&city=London&keyword=dentist%20near%20me" className="text-sm text-white/70 hover:text-white underline underline-offset-4">
-          Explore the full sample report →
+          See full forecast →
         </Link>
       </div>
     </section>
@@ -441,7 +471,10 @@ function RetentionSection() {
       <div className="space-y-8">
         <div className="space-y-3 text-center max-w-3xl mx-auto">
           <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Retention</p>
-          <h2 className="text-3xl font-semibold text-white">Designed to keep you ahead — every day.</h2>
+          <h2 className="text-3xl font-semibold text-white">Designed to stop revenue leaks — every day</h2>
+          <p className="text-sm text-slate-400">
+            Automatic monitoring, alerts, and benchmarks ensure ranking drops never turn into silent revenue loss.
+          </p>
         </div>
         <div className="grid sm:grid-cols-2 gap-6">
           {retentionHighlights.map(item => (
@@ -463,6 +496,7 @@ function SocialProofSpotlight() {
         <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Social Proof</p>
         <h2 className="text-3xl font-semibold text-white">1,200+ businesses trust MapsRankChecker.</h2>
         <p className="text-slate-400">Dentists, medspas, real estate teams, and agencies rely on our GeoGrid engine.</p>
+        <p className="text-xs text-slate-500">Real businesses. Real visibility. Real recovered revenue.</p>
       </div>
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs uppercase tracking-[0.3em] text-slate-500">
         {socialProofLogos.map(logo => (
@@ -493,8 +527,10 @@ function ScanFormSection() {
     <section id="scan-now" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
       <div className="max-w-4xl mx-auto rounded-[32px] bg-white/5 border border-white/10 p-8 space-y-6">
         <div className="space-y-3 text-center">
-          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Scan Now</p>
-          <h2 className="text-3xl font-semibold text-white">Check Your Real Map Ranking in 30 Seconds</h2>
+          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Quick Scan</p>
+          <h2 className="text-3xl font-semibold text-white">
+            Check where customers find competitors instead of you — in 30 seconds
+          </h2>
           <p className="text-slate-400">Enter your business details to see what nearby customers see.</p>
         </div>
         <div className="rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm text-rose-100">
@@ -569,7 +605,7 @@ function LandingFAQ() {
 function FinalCTA() {
   return (
     <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5 text-center space-y-5">
-      <h2 className="text-3xl font-semibold text-white">Ready to uncover your true map visibility?</h2>
+      <h2 className="text-3xl font-semibold text-white">Ready to see how much money your rankings are costing you?</h2>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
           href="#scan-now"
