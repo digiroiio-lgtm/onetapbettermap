@@ -537,8 +537,8 @@ function FinalCTA() {
       <h2 className="text-3xl font-semibold text-white">Ready to uncover your true map visibility?</h2>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
-          href="#scan-section"
-          className="inline-flex items-center justify-center rounded-full bg-white text-black px-8 py-3 font-semibold hover:bg-white/90 transition"
+          href="#scan-now"
+          className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-8 py-3 font-semibold hover:bg-[#1d4ed8] transition"
         >
           Start Free Scan →
         </Link>
@@ -546,6 +546,7 @@ function FinalCTA() {
           See pricing →
         </Link>
       </div>
+      <p className="text-sm text-slate-400">✓ 100 free scans/month • No credit card • Cancel anytime</p>
     </section>
   )
 }
