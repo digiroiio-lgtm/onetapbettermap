@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
+import IndustryHero from '@/components/IndustryHero'
 
 const socialProofStats = [
   { value: '1,200+', label: 'Active businesses' },
@@ -142,7 +143,7 @@ export default function HomePage() {
   return (
     <div className="bg-[#020617] text-slate-100 font-sans">
       <main>
-        <HeroSection />
+        <IndustryHero />
         <SocialProofStrip />
         <ProblemSolution />
         <ScanFormSection />
@@ -158,95 +159,6 @@ export default function HomePage() {
   )
 }
 
-function HeroSection() {
-  return (
-    <section className="px-4 sm:px-6 lg:px-24 pt-32 pb-24">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
-        <div className="space-y-6">
-          <p className="text-sm uppercase tracking-[0.4em] text-slate-400">MapsRankChecker™</p>
-          <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">
-            Stop guessing rankings.
-            <br />
-            See what they’re costing you.
-          </h1>
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#3b82f6]/30 bg-[#3b82f6]/10 px-4 py-1 text-xs font-semibold text-[#3b82f6]">
-              <span className="inline-flex h-5 items-center justify-center rounded-full bg-[#3b82f6] px-2 text-[10px] text-white">
-                NEW
-              </span>
-              Revenue Forecaster
-            </div>
-            <p className="text-sm text-slate-300">
-              See how ranking gaps are leaking revenue — before you fix them.
-            </p>
-          </div>
-          <p className="text-lg text-slate-300 max-w-xl">
-            MapsRankChecker shows how much revenue you’re losing on Google Maps — and exactly what to do to get it back.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="#scan-now"
-              className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-8 py-3 text-base font-semibold transition hover:bg-[#1d4ed8]"
-            >
-              Start Free Scan
-            </Link>
-            <Link
-              href="#demo-experience"
-              className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3 text-base font-semibold text-white transition hover:bg-white/10"
-            >
-              See revenue potential →
-            </Link>
-          </div>
-          <p className="text-sm text-slate-400">
-            ✓ 100 free scans/month • No credit card • Setup in 2 minutes
-          </p>
-        </div>
-        <div className="relative">
-          <div className="absolute -inset-4 bg-white/5 blur-3xl rounded-full" aria-hidden />
-          <div className="relative bg-white/10 border border-white/10 rounded-[28px] p-8 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-300">Visibility Score</p>
-                <p className="text-4xl font-semibold">82/100</p>
-              </div>
-              <div className="text-emerald-300 text-sm font-semibold">+4 this week ↑</div>
-            </div>
-            <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 49 }).map((_, idx) => (
-                <span
-                  key={idx}
-                  className="aspect-square rounded-lg"
-                  style={{
-                    background:
-                      idx % 7 === 0
-                        ? 'rgba(74,222,128,0.7)'
-                        : idx % 5 === 0
-                        ? 'rgba(251,191,36,0.7)'
-                        : 'rgba(248,113,113,0.5)',
-                  }}
-                />
-              ))}
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-slate-400">Ranking Timeline</p>
-                <span className="text-sm text-emerald-300">Upward trend</span>
-              </div>
-              <div className="h-12 rounded-2xl bg-gradient-to-r from-emerald-400 via-amber-300 to-rose-400 opacity-80" />
-            </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
-              <div>
-                <p className="font-semibold text-white">BellaDent climbed +3</p>
-                <p className="text-slate-400">They now outrank you in NW grid.</p>
-              </div>
-              <span className="text-xs text-rose-300">Action Needed</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
 
 function SocialProofStrip() {
   return (

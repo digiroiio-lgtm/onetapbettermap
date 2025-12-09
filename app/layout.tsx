@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Script from 'next/script'
+import IndustryProvider from '@/components/IndustryProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -45,9 +46,11 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Navigation />
-        {children}
-        <Footer />
+        <IndustryProvider>
+          <Navigation />
+          {children}
+          <Footer />
+        </IndustryProvider>
       </body>
     </html>
   )
