@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 import IndustryHero from '@/components/IndustryHero'
+import ProductHeroVisual from '@/components/ProductHeroVisual'
 import FreeScanForm from '@/components/FreeScanForm'
 import { faqItems } from './faq/faqContent'
 
@@ -127,6 +128,9 @@ export default function HomePage() {
     <div className="bg-[#020617] text-slate-100 font-sans">
       <main>
         <IndustryHero />
+        <section className="px-4 sm:px-6 lg:px-24 pb-16">
+          <ProductHeroVisual />
+        </section>
         <SocialProofStrip />
         <ProblemSolution />
         <FreeScanForm />
