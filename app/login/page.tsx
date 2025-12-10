@@ -5,6 +5,41 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 
+const demoAccounts = [
+  {
+    email: 'demo@example.com',
+    password: 'demo123',
+    user: {
+      id: 'USR001',
+      name: 'Demo Starter',
+      email: 'demo@example.com',
+      businessName: 'Starter HQ',
+      city: 'London',
+      country: 'UK',
+      plan: 'Starter',
+      joinDate: '2024-11-15',
+      scansUsed: 8,
+      scansLimit: 100
+    }
+  },
+  {
+    email: 'growth-demo@example.com',
+    password: 'growth123',
+    user: {
+      id: 'USR002',
+      name: 'Growth Explorer',
+      email: 'growth-demo@example.com',
+      businessName: 'Growth Practice',
+      city: 'London',
+      country: 'UK',
+      plan: 'Growth',
+      joinDate: '2024-10-01',
+      scansUsed: 24,
+      scansLimit: 500
+    }
+  }
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -26,24 +61,20 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
 
-    // Demo account shortcut
-    if (formData.email === 'demo@example.com' && formData.password === 'demo123') {
-      const user = {
-        id: 'USR001',
-        name: 'Demo User',
-        email: 'demo@example.com',
-        businessName: 'Demo Business',
-        city: 'London',
-        country: 'UK',
-        plan: 'Growth',
-        joinDate: '2024-11-15',
-        scansUsed: 12,
-        scansLimit: 500
-      };
-      localStorage.setItem('currentUser', JSON.stringify(user));
+    const matchedDemoAccount = demoAccounts.find(
+      (account) => account.email === formData.email && account.password === formData.password
+    );
+
+    if (matchedDemoAccount) {
+      localStorage.setItem('currentUser', JSON.stringify(matchedDemoAccount.user));
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('premiumUser', 'true');
-      router.push('/dashboard');
+      localStorage.setItem('premiumUser', matchedDemoAccount.user.plan !== 'Starter' ? 'true' : 'false');
+      const demoScanParams = new URLSearchParams({
+        businessName: matchedDemoAccount.user.businessName,
+        city: matchedDemoAccount.user.city,
+        keyword: 'dental clinic',
+      });
+      router.push(`/scanning?${demoScanParams.toString()}`);
       return;
     }
 
@@ -194,11 +225,16 @@ export default function LoginPage() {
             )}
 
             {/* Demo Account Info */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <p className="text-sm font-semibold text-amber-900 mb-2">Demo Account:</p>
-              <p className="text-xs text-amber-800 font-mono">
-                demo@example.com / demo123
-              </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
+              <p className="text-sm font-semibold text-amber-900">Demo Accounts:</p>
+              {demoAccounts.map((account) => (
+                <p key={account.email} className="text-xs text-amber-800 font-mono">
+                  {account.email} / {account.password}
+                  {account.user.plan === 'Growth' && (
+                    <span className="ml-1 text-emerald-600 font-normal">Growth plan preview</span>
+                  )}
+                </p>
+              ))}
             </div>
 
             {/* Submit Button */}
