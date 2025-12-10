@@ -11,6 +11,7 @@ export interface DemoUser {
   resetToken: string | null
   resetTokenExpires: number | null
   sessionToken: string | null
+  plan: string
   businessName: string | null
   teamName: string | null
   role: 'owner' | 'member'
@@ -56,7 +57,8 @@ export function createDemoUser(params: { name: string; email: string; password: 
     resetToken: null,
     resetTokenExpires: null,
     sessionToken: null,
-     businessName: null,
+    plan: 'free',
+    businessName: null,
      teamName: null,
      role: 'owner',
      deletedAt: null,
@@ -112,6 +114,7 @@ export function getPublicProfile(user: DemoUser) {
     role: user.role,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    plan: user.plan,
     lastLoginAt: user.lastLoginAt,
   }
 }

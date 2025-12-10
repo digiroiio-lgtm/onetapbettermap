@@ -16,7 +16,7 @@ const demoAccounts = [
       businessName: 'Starter HQ',
       city: 'London',
       country: 'UK',
-      plan: 'Starter',
+      plan: 'starter',
       joinDate: '2024-11-15',
       scansUsed: 8,
       scansLimit: 100
@@ -32,13 +32,31 @@ const demoAccounts = [
       businessName: 'Growth Practice',
       city: 'London',
       country: 'UK',
-      plan: 'Growth',
+      plan: 'growth',
       joinDate: '2024-10-01',
       scansUsed: 24,
       scansLimit: 500
     }
   }
 ];
+
+const paidPlans = new Set(['growth', 'pro', 'agency', 'enterprise']);
+const freePlans = new Set(['starter', 'free', 'trial']);
+
+const normalizePlan = (plan?: string) => (plan ? plan.toLowerCase().trim() : '')
+
+const getPostLoginRoute = (plan?: string) => {
+  const normalized = normalizePlan(plan)
+  if (paidPlans.has(normalized)) {
+    return '/dashboard'
+  }
+  if (freePlans.has(normalized)) {
+    return '/results'
+  }
+  return '/dashboard'
+}
+
+const isPaidPlan = (plan?: string) => paidPlans.has(normalizePlan(plan))
 
 export default function LoginPage() {
   const router = useRouter();
@@ -66,15 +84,12 @@ export default function LoginPage() {
     );
 
     if (matchedDemoAccount) {
-      localStorage.setItem('currentUser', JSON.stringify(matchedDemoAccount.user));
+      const matchedUser = { ...matchedDemoAccount.user }
+      localStorage.setItem('currentUser', JSON.stringify(matchedUser));
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('premiumUser', matchedDemoAccount.user.plan !== 'Starter' ? 'true' : 'false');
-      const demoScanParams = new URLSearchParams({
-        businessName: matchedDemoAccount.user.businessName,
-        city: matchedDemoAccount.user.city,
-        keyword: 'dental clinic',
-      });
-      router.push(`/scanning?${demoScanParams.toString()}`);
+      localStorage.setItem('premiumUser', isPaidPlan(matchedUser.plan) ? 'true' : 'false');
+      setIsLoading(false);
+      router.push(getPostLoginRoute(matchedUser.plan));
       return;
     }
 
@@ -93,11 +108,16 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-      // Store session token (for demo, just localStorage)
+      // Store session token + profile
       localStorage.setItem('sessionToken', data.sessionToken);
       localStorage.setItem('isLoggedIn', 'true');
-      // Optionally fetch user profile here
-      router.push('/dashboard');
+      if (data.user) {
+        localStorage.setItem('currentUser', JSON.stringify(data.user));
+        localStorage.setItem('premiumUser', isPaidPlan(data.user.plan) ? 'true' : 'false');
+      }
+      setIsLoading(false);
+      router.push(getPostLoginRoute(data.user?.plan));
+      return;
     } catch (err) {
       setError('Network error');
     }

@@ -1,5 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { findUserByEmail, generateToken, updateUser } from '@/lib/userStore'
+import {
+  findUserByEmail,
+  generateToken,
+  getPublicProfile,
+  updateUser,
+} from '@/lib/userStore'
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -23,5 +28,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const sessionToken = generateToken(16)
   updateUser(user, { sessionToken, lastLoginAt: new Date().toISOString() })
 
-  return res.status(200).json({ message: 'Login successful', sessionToken })
+  return res.status(200).json({
+    message: 'Login successful',
+    sessionToken,
+    user: getPublicProfile(user),
+  })
 }

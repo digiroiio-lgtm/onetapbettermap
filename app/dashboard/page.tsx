@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import ActionRevenueChecklist from './components/ActionRevenueChecklist'
 import HabitHeaderStrip from './components/HabitHeaderStrip'
 import HeatmapWithZones from './components/HeatmapWithZones'
@@ -21,6 +21,32 @@ export default function DashboardPage() {
   const actionSectionRef = useRef<HTMLDivElement | null>(null)
   const forecastRef = useRef<HTMLDivElement | null>(null)
   const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+
+  useEffect(() => {
+    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('currentUser') : null
+    if (!storedUser) {
+      router.replace('/login')
+      return
+    }
+
+    try {
+      const parsedUser = JSON.parse(storedUser)
+      const plan = (parsedUser?.plan ?? 'free').toString().toLowerCase()
+      const freePlans = new Set(['free', 'starter', 'trial'])
+      if (freePlans.has(plan)) {
+        router.replace('/pricing')
+        return
+      }
+      setIsAuthorized(true)
+    } catch (error) {
+      router.replace('/login')
+    }
+  }, [router])
+
+  if (!isAuthorized) {
+    return null
+  }
 
   const sortedPlans = useMemo(() => [...plans].sort((a, b) => a.pricePerMonth - b.pricePerMonth), [plans])
   const nextPlan = useMemo(() => {
