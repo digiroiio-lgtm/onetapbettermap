@@ -25,21 +25,6 @@ const problemCards = [
   {
     title: 'Your Real Position',
     body: 'See exactly where revenue is strongest — and where it disappears.',
-  },
-  {
-    title: 'Competitor Movement',
-    body: 'Spot rising competitors before they take your calls and customers.',
-  },
-  {
-    title: 'Fixable Gaps',
-    body: 'Know which visibility gaps are blocking revenue — and how to remove them.',
-  },
-]
-
-const problemCards = [
-  {
-    title: 'Your Real Position',
-    body: 'See exactly where revenue is strongest — and where it disappears.',
     icon: (
       <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#eff6ff" />
