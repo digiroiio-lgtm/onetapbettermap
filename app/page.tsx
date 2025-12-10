@@ -2,6 +2,7 @@ import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 import IndustryHero from '@/components/IndustryHero'
 import ProductHeroVisual from '@/components/ProductHeroVisual'
+import DashboardDemoVisual from '@/components/DashboardDemoVisual'
 import FreeScanForm from '@/components/FreeScanForm'
 import { faqItems } from './faq/faqContent'
 
@@ -255,50 +256,8 @@ function DemoExperienceSection() {
           </p>
         </div>
       <div className="mt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
-        <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-400">Visibility Score</p>
-              <p className="text-4xl font-semibold text-white">74/100</p>
-            </div>
-            <span className="text-xs text-emerald-300">+5 this week</span>
-          </div>
-          <div>
-            <p className="text-sm text-slate-400 mb-3">Heatmap Preview</p>
-            <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 49 }).map((_, idx) => (
-                <span
-                  key={idx}
-                  className="aspect-square rounded-lg"
-                  style={{
-                    background:
-                      idx % 6 === 0
-                        ? 'rgba(74,222,128,0.85)'
-                        : idx % 4 === 0
-                        ? 'rgba(251,191,36,0.8)'
-                        : 'rgba(248,113,113,0.7)',
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-3">
-            <p className="text-sm text-slate-400">Competitor Timeline</p>
-            <div className="space-y-3">
-              {demoTimeline.map(item => (
-                <div key={item.name} className="flex items-center justify-between text-sm">
-                  <div>
-                    <p className="text-white font-semibold">{item.name}</p>
-                    <p className="text-slate-400 text-xs">{item.coverage}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-white font-semibold">{item.rank}</p>
-                    <p className="text-emerald-300 text-xs">{item.change}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-4">
+          <DashboardDemoVisual />
         </div>
         <div className="space-y-6">
           <div className="rounded-[32px] border border-white/10 bg-white/5 p-6">
