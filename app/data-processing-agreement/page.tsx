@@ -141,7 +141,7 @@ export default function DataProcessingAgreementPage() {
           <div className="text-gray-700 space-y-1">
             <p>{COMPANY_NAME}</p>
             <p>{COMPANY_ADDRESS}</p>
-            <p>legal@onetapbettermap.com</p>
+            <p>legal@mapsrankchecker.com</p>
           </div>
         </section>
       </div>

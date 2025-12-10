@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ExtensionPage() {
   return (
     <GuidePageLayout
-      url="https://onetapbettermap.com/google-maps-seo/extension/"
+      url="https://mapsrankchecker.com/google-maps-seo/extension/"
       breadcrumbTitle="Google Maps SEO Extension"
       headline="Google Maps SEO Extension — One-Tap Rank Checker"
       description="Preview the upcoming Google Maps SEO Chrome extension for instant rank checks, competitor analysis, category audits, and visibility scoring."

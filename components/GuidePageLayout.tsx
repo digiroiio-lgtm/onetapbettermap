@@ -31,13 +31,13 @@ export default function GuidePageLayout({
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://onetapbettermap.com/"
+            "item": "https://mapsrankchecker.com/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Google Maps SEO",
-            "item": "https://onetapbettermap.com/google-maps-seo/"
+            "item": "https://mapsrankchecker.com/google-maps-seo/"
           },
           {
             "@type": "ListItem",
@@ -65,7 +65,7 @@ export default function GuidePageLayout({
           "name": "One Tap, Better Map",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://onetapbettermap.com/logo.png"
+            "url": "https://mapsrankchecker.com/logo.png"
           }
         },
         "datePublished": datePublished,

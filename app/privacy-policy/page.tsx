@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-3">9. Your rights</h2>
           <p className="text-gray-700 mb-3">
-            Depending on your jurisdiction, you may have the right to access, correct, delete, or export your personal data as well as object to or restrict processing. Submit requests by emailing <a href="mailto:legal@onetapbettermap.com" className="text-primary hover:underline">legal@onetapbettermap.com</a> and we will respond within 30 days.
+            Depending on your jurisdiction, you may have the right to access, correct, delete, or export your personal data as well as object to or restrict processing. Submit requests by emailing <a href="mailto:legal@mapsrankchecker.com" className="text-primary hover:underline">legal@mapsrankchecker.com</a> and we will respond within 30 days.
           </p>
           <p className="text-gray-700">
             If you are an EU/UK data subject, you also have the right to lodge a complaint with your local supervisory authority. California residents may designate an authorized agent to submit requests under the CCPA.
@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
           <div className="text-gray-700 space-y-1">
             <p>{COMPANY_NAME}</p>
             <p>{COMPANY_ADDRESS}</p>
-            <p>legal@onetapbettermap.com</p>
+            <p>legal@mapsrankchecker.com</p>
           </div>
         </section>
       </div>

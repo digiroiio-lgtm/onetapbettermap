@@ -13,64 +13,64 @@ export default function GoogleMapsSeoHubPage() {
     "@graph": [
       {
         "@type": "BreadcrumbList",
-        "@id": "https://onetapbettermap.com/google-maps-seo/#breadcrumb",
+        "@id": "https://mapsrankchecker.com/google-maps-seo/#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://onetapbettermap.com/"
+            "item": "https://mapsrankchecker.com/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Google Maps SEO",
-            "item": "https://onetapbettermap.com/google-maps-seo/"
+            "item": "https://mapsrankchecker.com/google-maps-seo/"
           }
         ]
       },
       {
         "@type": "CollectionPage",
-        "@id": "https://onetapbettermap.com/google-maps-seo/",
-        "url": "https://onetapbettermap.com/google-maps-seo/",
+        "@id": "https://mapsrankchecker.com/google-maps-seo/",
+        "url": "https://mapsrankchecker.com/google-maps-seo/",
         "name": "Google Maps SEO Guides & Tools",
         "description": "A complete hub of Google Maps SEO guides, including checker, optimization, algorithm, how-to, and Chrome extension for local rankings.",
         "breadcrumb": {
-          "@id": "https://onetapbettermap.com/google-maps-seo/#breadcrumb"
+          "@id": "https://mapsrankchecker.com/google-maps-seo/#breadcrumb"
         },
         "isPartOf": {
           "@type": "WebSite",
-          "@id": "https://onetapbettermap.com/#website"
+          "@id": "https://mapsrankchecker.com/#website"
         },
         "mainEntity": {
           "@type": "ItemList",
-          "@id": "https://onetapbettermap.com/google-maps-seo/#guides",
+          "@id": "https://mapsrankchecker.com/google-maps-seo/#guides",
           "name": "Google Maps SEO Guides",
           "itemListElement": [
             {
               "@type": "ListItem",
               "position": 1,
-              "url": "https://onetapbettermap.com/google-maps-seo/checker/"
+              "url": "https://mapsrankchecker.com/google-maps-seo/checker/"
             },
             {
               "@type": "ListItem",
               "position": 2,
-              "url": "https://onetapbettermap.com/google-maps-seo/optimization/"
+              "url": "https://mapsrankchecker.com/google-maps-seo/optimization/"
             },
             {
               "@type": "ListItem",
               "position": 3,
-              "url": "https://onetapbettermap.com/google-maps-seo/how-it-works/"
+              "url": "https://mapsrankchecker.com/google-maps-seo/how-it-works/"
             },
             {
               "@type": "ListItem",
               "position": 4,
-              "url": "https://onetapbettermap.com/google-maps-seo/how-to/"
+              "url": "https://mapsrankchecker.com/google-maps-seo/how-to/"
             },
             {
               "@type": "ListItem",
               "position": 5,
-              "url": "https://onetapbettermap.com/google-maps-seo/extension/"
+              "url": "https://mapsrankchecker.com/google-maps-seo/extension/"
             }
           ]
         }

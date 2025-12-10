@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function OptimizationGuidePage() {
   return (
     <GuidePageLayout
-      url="https://onetapbettermap.com/google-maps-seo/optimization/"
+      url="https://mapsrankchecker.com/google-maps-seo/optimization/"
       breadcrumbTitle="Google Maps SEO Optimization"
       headline="Google Maps SEO Optimization Guide (2025 Update)"
       description="Learn how to optimize your Google Business Profile for higher map rankings. Categories, reviews, prominence, citations, and full optimization steps."

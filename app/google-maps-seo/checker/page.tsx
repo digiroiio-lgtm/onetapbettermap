@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default function CheckerGuidePage() {
-  const url = 'https://onetapbettermap.com/google-maps-seo/checker/'
+  const url = 'https://mapsrankchecker.com/google-maps-seo/checker/'
 
   return (
     <GuidePageLayout

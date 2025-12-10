@@ -22,8 +22,8 @@ const contactChannels = [
     copy:
       'For live chat, project help, or billing support, email the help desk and we will reply within a business day.',
     cta: {
-      text: 'Email support@onetapbettermap.com',
-      href: 'mailto:support@onetapbettermap.com',
+      text: 'Email support@mapsrankchecker.com',
+      href: 'mailto:support@mapsrankchecker.com',
     },
   },
   {
@@ -110,7 +110,7 @@ export default function ContactPage() {
             </div>
             <div className="rounded-2xl border border-slate-700 bg-slate-900/60 p-4 text-sm">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Support</p>
-              <p className="mt-1 text-emerald-200">support@onetapbettermap.com</p>
+              <p className="mt-1 text-emerald-200">support@mapsrankchecker.com</p>
             </div>
             <div className="rounded-2xl border border-slate-700 bg-slate-900/60 p-4 text-sm">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Social</p>

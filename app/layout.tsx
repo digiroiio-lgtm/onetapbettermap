@@ -21,8 +21,8 @@ export default function RootLayout({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://onetapbettermap.com/#website",
-    "url": "https://onetapbettermap.com/",
+    "@id": "https://mapsrankchecker.com/#website",
+    "url": "https://mapsrankchecker.com/",
     "name": "One Tap, Better Map",
     "description": "One Tap, Better Map is a simple Google Maps SEO checker and optimization tool that shows where you rank on the map and what to fix.",
     "publisher": {
@@ -30,7 +30,7 @@ export default function RootLayout({
       "name": "One Tap, Better Map",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://onetapbettermap.com/logo.png"
+        "url": "https://mapsrankchecker.com/logo.png"
       }
     }
   }

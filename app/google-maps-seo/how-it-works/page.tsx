@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   return (
     <GuidePageLayout
-      url="https://onetapbettermap.com/google-maps-seo/how-it-works/"
+      url="https://mapsrankchecker.com/google-maps-seo/how-it-works/"
       breadcrumbTitle="How Does Google Maps SEO Work?"
       headline="How Google Maps SEO Works — Algorithm Explained"
       description="Understand the Google Maps ranking algorithm: relevance, distance, prominence, and hidden signals that determine your local search visibility."

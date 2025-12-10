@@ -58,9 +58,39 @@ const problemCards = [
 ]
 
 const howItWorks = [
-  { label: 'Step 1', title: 'Enter your business', body: 'Find your Google Business Profile and service area.' },
-  { label: 'Step 2', title: 'Detect revenue leaks', body: 'GeoGrid reveals where customers see competitors instead of you.' },
-  { label: 'Step 3', title: 'Fix only what moves revenue', body: 'AI prioritizes actions tied directly to ranking and income impact.' },
+  {
+    label: 'Step 1',
+    title: 'Enter your business',
+    body: 'Find your Google Business Profile and service area.',
+    icon: (
+      <svg className="w-10 h-10 mx-auto text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <rect x="4" y="4" width="16" height="16" rx="4" fill="#e0e7ff" />
+        <path d="M8 12h8M12 8v8" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Step 2',
+    title: 'Detect revenue leaks',
+    body: 'GeoGrid reveals where customers see competitors instead of you.',
+    icon: (
+      <svg className="w-10 h-10 mx-auto text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" fill="#fef3c7" />
+        <path d="M8 12l2 2 4-4" stroke="#f59e42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Step 3',
+    title: 'Fix only what moves revenue',
+    body: 'AI prioritizes actions tied directly to ranking and income impact.',
+    icon: (
+      <svg className="w-10 h-10 mx-auto text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <rect x="4" y="4" width="16" height="16" rx="4" fill="#d1fae5" />
+        <path d="M8 12h8" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
 ]
 
 type CoreFeature = {
@@ -228,20 +258,43 @@ function ProblemSolution() {
   )
 }
 
+import React, { useState, useEffect } from 'react';
+
 function HowItWorksSection() {
+  const [active, setActive] = useState(0);
+  // Otomatik ilerleyen adım vurgusu
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % howItWorks.length);
+    }, 2600);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className="px-4 sm:px-6 lg:px-24 py-20 border-t border-white/5">
       <div className="grid md:grid-cols-3 gap-10 text-center">
-        {howItWorks.map(step => (
-          <div key={step.title} className="space-y-3">
+        {howItWorks.map((step, i) => (
+          <div
+            key={step.title}
+            className={`relative space-y-3 transition-all duration-500 cursor-pointer group ${
+              active === i
+                ? 'scale-105 shadow-2xl z-10 bg-slate-900/80 border border-blue-500/30'
+                : 'opacity-70 hover:scale-102 hover:z-10 hover:bg-slate-900/60 hover:border hover:border-blue-500/10'
+            } rounded-2xl p-8`}
+            onMouseEnter={() => setActive(i)}
+          >
+            <div className="flex justify-center mb-2">{step.icon}</div>
             <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{step.label}</p>
             <h3 className="text-2xl font-semibold text-white">{step.title}</h3>
             <p className="text-slate-400 text-sm leading-relaxed">{step.body}</p>
+            {active === i && (
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-2 bg-gradient-to-r from-blue-400/60 via-emerald-400/60 to-amber-400/60 rounded-full blur-sm animate-pulse" />
+            )}
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 

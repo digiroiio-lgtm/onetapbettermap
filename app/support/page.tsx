@@ -12,7 +12,7 @@ export default function SupportPage() {
       label: 'Priority',
       copy:
         'Email, chat, or tap “Get help” inside the app—our engineers jump in to debug crawls, CSV exports, or billing questions within minutes.',
-      cta: { text: 'Email support@onetapbettermap.com', href: 'mailto:support@onetapbettermap.com' },
+      cta: { text: 'Email support@mapsrankchecker.com', href: 'mailto:support@mapsrankchecker.com' },
     },
     {
       title: 'Strategy Community',
@@ -99,10 +99,10 @@ export default function SupportPage() {
           <p className="mt-2 text-sm text-emerald-100">We respond to live chat requests within minutes and email tickets within 2 business hours.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <a
-              href="mailto:support@onetapbettermap.com"
+              href="mailto:support@mapsrankchecker.com"
               className="inline-flex items-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
             >
-              Email support@onetapbettermap.com
+              Email support@mapsrankchecker.com
             </a>
             <a
               href="/dashboard"
