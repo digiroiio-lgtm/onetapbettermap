@@ -36,6 +36,40 @@ const problemCards = [
   },
 ]
 
+const problemCards = [
+  {
+    title: 'Your Real Position',
+    body: 'See exactly where revenue is strongest — and where it disappears.',
+    icon: (
+      <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="#eff6ff" />
+        <path d="M12 6v6l4 2" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Competitor Movement',
+    body: 'Spot rising competitors before they take your calls and customers.',
+    icon: (
+      <svg className="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <rect x="3" y="12" width="6" height="8" fill="#d1fae5" />
+        <rect x="9" y="8" width="6" height="12" fill="#34d399" />
+        <rect x="15" y="4" width="6" height="16" fill="#10b981" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Fixable Gaps',
+    body: 'Know which visibility gaps are blocking revenue — and how to remove them.',
+    icon: (
+      <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="16" height="16" rx="4" fill="#fef3c7" />
+        <path d="M8 12l2 2 4-4" stroke="#f59e42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+]
+
 const howItWorks = [
   { label: 'Step 1', title: 'Enter your business', body: 'Find your Google Business Profile and service area.' },
   { label: 'Step 2', title: 'Detect revenue leaks', body: 'GeoGrid reveals where customers see competitors instead of you.' },
@@ -182,9 +216,12 @@ function ProblemSolution() {
         </div>
         <div className="grid gap-6">
           {problemCards.map(card => (
-            <div key={card.title} className="rounded-2xl bg-white/5 border border-white/10 p-6">
-              <h3 className="text-xl font-semibold text-white mb-2">{card.title}</h3>
-              <p className="text-slate-400">{card.body}</p>
+            <div key={card.title} className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl transition">
+              <div className="mb-4">
+                {card.icon}
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">{card.title}</h3>
+              <p className="text-slate-300">{card.body}</p>
             </div>
           ))}
         </div>
