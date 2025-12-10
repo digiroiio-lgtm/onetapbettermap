@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import FreeScanForm from '@/components/FreeScanForm'
 
+export const revalidate = 86400 // 24 saat
+
 const highlightStats = [
   { label: 'Instant insight', value: '30 seconds' },
   { label: 'GeoGrid coverage', value: '49 data points' },

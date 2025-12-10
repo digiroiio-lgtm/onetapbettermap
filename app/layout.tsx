@@ -38,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" />
         <Script
           id="website-schema"
           type="application/ld+json"
