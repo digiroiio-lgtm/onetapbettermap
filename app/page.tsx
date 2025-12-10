@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 import IndustryHero from '@/components/IndustryHero'
+import FreeScanForm from '@/components/FreeScanForm'
 import { faqItems } from './faq/faqContent'
 
 const socialProofStats = [
@@ -109,7 +110,7 @@ export default function HomePage() {
         <IndustryHero />
         <SocialProofStrip />
         <ProblemSolution />
-        <ScanFormSection />
+        <FreeScanForm />
         <DemoExperienceSection />
         <HowItWorksSection />
         <CoreFeaturesSection />
@@ -394,62 +395,6 @@ function SocialProofSpotlight() {
         </Link>
       </div>
     </section>
-  )
-}
-
-function ScanFormSection() {
-  return (
-    <section id="scan-now" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
-      <div className="max-w-4xl mx-auto rounded-[32px] bg-white/5 border border-white/10 p-8 space-y-6">
-        <div className="space-y-3 text-center">
-          <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Quick Scan</p>
-          <h2 className="text-3xl font-semibold text-white">
-            Check where customers find competitors instead of you — in 30 seconds
-          </h2>
-          <p className="text-slate-400">Enter your business details to see what nearby customers see.</p>
-        </div>
-        <div className="rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-sm text-rose-100">
-          <p className="font-semibold">⚠️ You’ve used all 100 free scans today.</p>
-          <p className="text-rose-200 mt-1">
-            <Link href="/signup" className="underline">Sign up</Link> for 100/month or{' '}
-            <Link href="/upgrade" className="underline">upgrade</Link> for unlimited scans.
-          </p>
-        </div>
-        <form className="space-y-4">
-          <InputField label="Business Name" placeholder="e.g., SmileBright Dental" icon="🏢" />
-          <InputField label="City" placeholder="Antalya" icon="📍" />
-          <InputField label="Search Keyword (optional)" placeholder='e.g., "dentist near me"' icon="🔍" />
-          <button className="w-full rounded-full bg-[#2563eb] text-white py-3 font-semibold hover:bg-[#1d4ed8] transition">
-            Scan My Visibility →
-          </button>
-        </form>
-        <p className="text-center text-sm text-slate-400">
-          ✓ 100 free scans/month • No credit card required • Takes under 2 minutes
-        </p>
-      </div>
-    </section>
-  )
-}
-
-type InputFieldProps = {
-  label: string
-  placeholder: string
-  icon: string
-}
-
-function InputField({ label, placeholder, icon }: InputFieldProps) {
-  return (
-    <div>
-      <label className="block text-sm text-slate-300 mb-2">{label}</label>
-      <div className="relative">
-        <input
-          type="text"
-          placeholder={placeholder}
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-12 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/40 transition"
-        />
-        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-lg">{icon}</span>
-      </div>
-    </div>
   )
 }
 
