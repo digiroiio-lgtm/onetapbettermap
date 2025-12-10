@@ -12,6 +12,7 @@ import ZoneDetailPanel from './components/ZoneDetailPanel'
 import { mockRetentionData } from './mockRetentionData'
 import { useMockDashboardData } from './mockData'
 import type { HeatmapCell } from './types'
+import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
   const { actions, currentPlan, heatmap, plans, revenueMetrics } = useMockDashboardData()
@@ -19,6 +20,7 @@ export default function DashboardPage() {
   const [selectedCell, setSelectedCell] = useState<HeatmapCell | null>(null)
   const actionSectionRef = useRef<HTMLDivElement | null>(null)
   const forecastRef = useRef<HTMLDivElement | null>(null)
+  const router = useRouter()
 
   const sortedPlans = useMemo(() => [...plans].sort((a, b) => a.pricePerMonth - b.pricePerMonth), [plans])
   const nextPlan = useMemo(() => {
@@ -49,6 +51,14 @@ export default function DashboardPage() {
             </div>
             <button
               type="button"
+              onClick={() => {
+                const params = new URLSearchParams({
+                  businessName: 'Demo Business',
+                  city: 'London',
+                  keyword: 'dental clinic',
+                })
+                router.push(`/scanning?${params.toString()}`)
+              }}
               className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
             >
               Run new scan
