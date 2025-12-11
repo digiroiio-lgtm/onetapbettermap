@@ -413,31 +413,37 @@ function RetentionSection() {
 
 function SocialProofSpotlight() {
   return (
-    <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
-      <div className="space-y-6 text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Social Proof</p>
-        <h2 className="text-3xl font-semibold text-white">1,200+ businesses trust MapsRankChecker.</h2>
-        <p className="text-slate-400">Dentists, medspas, real estate teams, and agencies rely on our GeoGrid engine.</p>
-        <p className="text-xs text-slate-500">Real businesses. Real visibility. Real recovered revenue.</p>
-      </div>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs uppercase tracking-[0.3em] text-slate-500">
-        {socialProofLogos.map(logo => (
-          <span key={logo} className="px-4 py-2 rounded-full border border-white/10">
-            {logo}
+    <section className="max-w-4xl mx-auto my-20 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl p-10 text-center border border-white/10">
+      <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+        Social Proof
+      </h2>
+      <p className="text-emerald-300 text-lg font-semibold mb-2">
+        1,200+ businesses trust MapsRankChecker.
+      </p>
+      <p className="text-slate-300 mb-6">
+        Dentists, medspas, real estate teams, and agencies rely on our GeoGrid engine.<br />
+        <span className="text-emerald-400 font-medium">Real businesses. Real visibility. Real recovered revenue.</span>
+      </p>
+      <div className="flex flex-wrap justify-center gap-3 mb-8">
+        {socialProofLogos.map((name) => (
+          <span key={name} className="rounded-full bg-slate-800/80 border border-emerald-500/10 px-5 py-2 text-sm text-white font-medium shadow">
+            {name}
           </span>
         ))}
       </div>
-      <div className="mt-10 grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 text-left">
         {testimonials.map(testimonial => (
-          <div key={testimonial.author} className="rounded-3xl border border-white/10 bg-white/5 p-6 space-y-3">
-            <p className="text-lg text-white leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
-            <p className="text-sm text-slate-400">{testimonial.author}</p>
+          <div key={testimonial.author} className="rounded-2xl bg-slate-900/80 border border-white/10 p-6 shadow">
+            <p className="text-slate-200 text-base mb-3 italic">
+              “{testimonial.quote}”
+            </p>
+            <p className="text-emerald-300 font-semibold">{testimonial.author}</p>
           </div>
         ))}
       </div>
       <div className="mt-8 text-center">
-        <Link href="/upgrade" className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
-          Join them →
+        <Link href="/upgrade" className="inline-flex items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-3 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/20 transition">
+          Highlight Growth plan
         </Link>
       </div>
     </section>
