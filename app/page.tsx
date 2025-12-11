@@ -385,20 +385,24 @@ function CoreFeaturesSection() {
 
 function RetentionSection() {
   return (
-    <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+    <section className="max-w-3xl mx-auto my-16 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl p-10 text-center border border-white/10">
       <div className="space-y-8">
-        <div className="space-y-3 text-center max-w-3xl mx-auto">
+        <div className="space-y-3">
           <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Retention</p>
           <h2 className="text-3xl font-semibold text-white">Designed to stop revenue leaks — every day</h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-slate-300 text-base">
             Automatic monitoring, alerts, and benchmarks ensure ranking drops never turn into silent revenue loss.
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-6">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center">
           {retentionHighlights.map(item => (
-            <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-2">
-              <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">{item.label}</p>
-              <p className="text-white text-lg font-semibold">{item.body}</p>
+            <div key={item.label} className="flex-1 min-w-[220px] rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900/80 shadow-lg p-7 border border-emerald-500/10 flex flex-col items-center justify-center">
+              <span className="mb-2 inline-block rounded-full bg-emerald-500/10 px-4 py-1 text-xs font-semibold text-emerald-300 tracking-wider uppercase">
+                {item.label}
+              </span>
+              <span className="text-white text-lg font-semibold leading-snug">
+                {item.body}
+              </span>
             </div>
           ))}
         </div>
