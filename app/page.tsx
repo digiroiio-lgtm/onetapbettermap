@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import AbstractProcessCard from '@/components/AbstractProcessCard'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
 import IndustryHero from '@/components/IndustryHero'
 import ProductHeroVisual from '@/components/ProductHeroVisual'
@@ -294,6 +295,9 @@ function HowItWorksSection() {
         ))}
       </div>
     </section>
+    <div className="flex justify-center py-12">
+      <AbstractProcessCard />
+    </div>
   );
 }
 
