@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import AbstractProcessCard from '@/components/AbstractProcessCard'
 import RevenueForecastPanel from '@/components/RevenueForecastPanel'
@@ -258,8 +261,6 @@ function ProblemSolution() {
     </section>
   )
 }
-
-import React, { useState, useEffect } from 'react';
 
 function HowItWorksSection() {
   const [active, setActive] = useState(0);
