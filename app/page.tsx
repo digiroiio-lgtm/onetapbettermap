@@ -272,32 +272,34 @@ function HowItWorksSection() {
   }, []);
 
   return (
-    <section className="px-4 sm:px-6 lg:px-24 py-20 border-t border-white/5">
-      <div className="grid md:grid-cols-3 gap-10 text-center">
-        {howItWorks.map((step, i) => (
-          <div
-            key={step.title}
-            className={`relative space-y-3 transition-all duration-500 cursor-pointer group ${
-              active === i
-                ? 'scale-105 shadow-2xl z-10 bg-slate-900/80 border border-blue-500/30'
-                : 'opacity-70 hover:scale-102 hover:z-10 hover:bg-slate-900/60 hover:border hover:border-blue-500/10'
-            } rounded-2xl p-8`}
-            onMouseEnter={() => setActive(i)}
-          >
-            <div className="flex justify-center mb-2">{step.icon}</div>
-            <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{step.label}</p>
-            <h3 className="text-2xl font-semibold text-white">{step.title}</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">{step.body}</p>
-            {active === i && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-2 bg-gradient-to-r from-blue-400/60 via-emerald-400/60 to-amber-400/60 rounded-full blur-sm animate-pulse" />
-            )}
-          </div>
-        ))}
+    <>
+      <section className="px-4 sm:px-6 lg:px-24 py-20 border-t border-white/5">
+        <div className="grid md:grid-cols-3 gap-10 text-center">
+          {howItWorks.map((step, i) => (
+            <div
+              key={step.title}
+              className={`relative space-y-3 transition-all duration-500 cursor-pointer group ${
+                active === i
+                  ? 'scale-105 shadow-2xl z-10 bg-slate-900/80 border border-blue-500/30'
+                  : 'opacity-70 hover:scale-102 hover:z-10 hover:bg-slate-900/60 hover:border hover:border-blue-500/10'
+              } rounded-2xl p-8`}
+              onMouseEnter={() => setActive(i)}
+            >
+              <div className="flex justify-center mb-2">{step.icon}</div>
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">{step.label}</p>
+              <h3 className="text-2xl font-semibold text-white">{step.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{step.body}</p>
+              {active === i && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-2 bg-gradient-to-r from-blue-400/60 via-emerald-400/60 to-amber-400/60 rounded-full blur-sm animate-pulse" />
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+      <div className="flex justify-center py-12">
+        <AbstractProcessCard />
       </div>
-    </section>
-    <div className="flex justify-center py-12">
-      <AbstractProcessCard />
-    </div>
+    </>
   );
 }
 
