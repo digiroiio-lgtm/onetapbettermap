@@ -126,10 +126,10 @@ export default function ActionRevenueChecklist({ actions, revenueMetrics, onActi
           <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Revenue translation</p>
           <h3 className="mt-2 text-lg font-semibold text-white">{selectedAction?.label}</h3>
           <p className="mt-3">
-            Completing this step helps you climb from rank #{revenueMetrics.currentRank} → #{explanationRank}, which
-            adds ~{estimatedCallsGain} calls and ≈{' '}
+            Completing this step helps you climb from rank #{revenueMetrics.currentRank} → #{explanationRank}, which adds
+            ~{estimatedCallsGain} calls and ≈{' '}
             <span className="text-emerald-300 font-semibold">
-              ${selectedAction?.estRevenueImpact.toLocaleString()}
+              ${(selectedAction?.estRevenueImpact ?? 0).toLocaleString()}
             </span>{' '}
             / month.
           </p>
