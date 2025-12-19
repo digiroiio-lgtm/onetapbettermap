@@ -44,15 +44,15 @@ export default function DashboardPage() {
     }
   }, [router])
 
-  if (!isAuthorized) {
-    return null
-  }
-
   const sortedPlans = useMemo(() => [...plans].sort((a, b) => a.pricePerMonth - b.pricePerMonth), [plans])
   const nextPlan = useMemo(() => {
     const index = sortedPlans.findIndex((plan) => plan.name === currentPlan.name)
     return sortedPlans[index + 1] ?? null
   }, [currentPlan.name, sortedPlans])
+
+  if (!isAuthorized) {
+    return null
+  }
 
   const handleViewActions = () => {
     actionSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })

@@ -60,6 +60,7 @@ export default function PlaceAutocomplete({
   useEffect(() => {
   if (!isLoaded || !inputRef.current || !window.google?.maps?.places) return
 
+    // Use the Autocomplete API directly rather than the DOM Element helper so `getPlace` is available.
     const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
       types,
       fields: ['name', 'formatted_address', 'place_id', 'geometry', 'address_components', 'business_status'],
