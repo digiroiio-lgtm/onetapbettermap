@@ -13,10 +13,31 @@ import { mockRetentionData } from './mockRetentionData'
 import { useMockDashboardData } from './mockData'
 import type { HeatmapCell } from './types'
 import { useRouter } from 'next/navigation'
+// ...existing code...
 
 export default function DashboardPage() {
-  const { actions, currentPlan, heatmap, plans, revenueMetrics } = useMockDashboardData()
-  const { habitHeader } = mockRetentionData
+  // Mock/Gerçek data geçişi için state
+  const [useMock, setUseMock] = useState(true)
+  // Mock data
+  const mockData = useMockDashboardData()
+  const { habitHeader: mockHabitHeader } = mockRetentionData
+  // Gerçek data (örnek: API'den çekilecek, burada placeholder)
+  const realData = {
+    actions: [],
+    currentPlan: {},
+    heatmap: [],
+    plans: [],
+    revenueMetrics: {},
+  }
+  // Gerçek retention data (örnek: API'den çekilecek, burada placeholder)
+  const realHabitHeader = []
+  // Seçilen data
+  const actions = useMock ? mockData.actions : realData.actions
+  const currentPlan = useMock ? mockData.currentPlan : realData.currentPlan
+  const heatmap = useMock ? mockData.heatmap : realData.heatmap
+  const plans = useMock ? mockData.plans : realData.plans
+  const revenueMetrics = useMock ? mockData.revenueMetrics : realData.revenueMetrics
+  const habitHeader = useMock ? mockHabitHeader : realHabitHeader
   const [selectedCell, setSelectedCell] = useState<HeatmapCell | null>(null)
   const actionSectionRef = useRef<HTMLDivElement | null>(null)
   const forecastRef = useRef<HTMLDivElement | null>(null)
@@ -68,6 +89,15 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex justify-end mb-2">
+          <button
+            type="button"
+            className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold transition mr-2 ${useMock ? 'bg-gray-700 text-white' : 'bg-emerald-500 text-white'}`}
+            onClick={() => setUseMock(!useMock)}
+          >
+            {useMock ? 'Gerçek Data ile Çalış' : 'Mock Data ile Çalış'}
+          </button>
+        </div>
         <header className="flex flex-col gap-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
