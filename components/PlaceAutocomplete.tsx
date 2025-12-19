@@ -60,28 +60,25 @@ export default function PlaceAutocomplete({
   useEffect(() => {
   if (!isLoaded || !inputRef.current || !window.google?.maps?.places) return
 
-  const elementOptions = {
-    input: inputRef.current,
-    types,
-    fields: ['name', 'formatted_address', 'place_id', 'geometry', 'address_components', 'business_status'],
-  }
+    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
+      types,
+      fields: ['name', 'formatted_address', 'place_id', 'geometry', 'address_components', 'business_status'],
+    })
 
-  const autocompleteElement = new google.maps.places.PlaceAutocompleteElement(elementOptions)
-
-  const onPlaceChanged = () => {
-    const place = autocompleteElement.getPlace()
-    if (!place) return
-    if (place.name) {
-      onInputChange?.(place.name)
+    const onPlaceChanged = () => {
+      const place = autocomplete.getPlace()
+      if (!place) return
+      if (place.name) {
+        onInputChange?.(place.name)
+      }
+      onPlaceSelect(place)
     }
-    onPlaceSelect(place)
-  }
 
-  const listener = autocompleteElement.addListener('place_changed', onPlaceChanged)
+    const listener = autocomplete.addListener('place_changed', onPlaceChanged)
 
-  return () => {
-    listener?.remove()
-  }
+    return () => {
+      listener?.remove()
+    }
   }, [isLoaded, onPlaceSelect, onInputChange, types])
 
   return (
