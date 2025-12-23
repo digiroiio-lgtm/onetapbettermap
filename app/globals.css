@@ -240,8 +240,8 @@ body {
   inset: 0;
   left: -5px;
   margin: auto;
-  width: calc(var(--card-width, 190px) + 10px);
-  height: calc(var(--card-height, 254px) + 10px);
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
   border-radius: 10px;
   background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
   z-index: -10;

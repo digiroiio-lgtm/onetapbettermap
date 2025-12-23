@@ -112,7 +112,7 @@ export default function RevenueForecastPanel({
   const deltaToRankOne = rankOneProjection.revenue - currentProjection.revenue
 
   return (
-    <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-white/10 via-[#0f172a]/40 to-transparent p-6 text-white shadow-[0_25px_60px_rgba(2,6,23,0.45)]">
+    <div className="card card-wide card-top card-lg">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Revenue Forecast</p>

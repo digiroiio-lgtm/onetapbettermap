@@ -12,7 +12,7 @@ export default function BlurredRevenuePreview({
   ctaHref = '/upgrade',
 }: BlurredRevenuePreviewProps) {
   return (
-    <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6">
+    <div className="card card-wide card-top card-lg">
       <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0f172a]/70 p-8 text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-800/70 to-slate-900/60 backdrop-blur-[6px]" aria-hidden />
         <div className="relative space-y-4">
