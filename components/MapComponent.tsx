@@ -245,7 +245,11 @@ export default function MapComponent({
       {isLoading && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center z-10">
           <div className="text-center">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+            <div className="mx-auto mb-2">
+              <div className="loader loader-sm">
+                <span></span>
+              </div>
+            </div>
             <p className="text-sm text-gray-600">Loading map...</p>
           </div>
         </div>

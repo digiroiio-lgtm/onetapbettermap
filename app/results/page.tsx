@@ -495,7 +495,11 @@ export default function ResultsPage() {
         <div className="min-h-screen bg-[#020617] text-slate-100">
           <div className="flex min-h-screen items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-white"></div>
+              <div className="mx-auto mb-4">
+                <div className="loader loader-md">
+                  <span></span>
+                </div>
+              </div>
               <p className="text-sm text-slate-400">Loading report…</p>
             </div>
           </div>

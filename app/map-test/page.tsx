@@ -9,7 +9,11 @@ const MapComponent = dynamic(() => import('@/components/MapComponent'), {
   loading: () => (
     <div className="w-full h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
       <div className="text-center">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+        <div className="mx-auto mb-2">
+          <div className="loader loader-sm">
+            <span></span>
+          </div>
+        </div>
         <p className="text-gray-600">Loading map...</p>
       </div>
     </div>

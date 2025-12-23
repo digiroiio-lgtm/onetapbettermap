@@ -302,6 +302,102 @@ body {
   --card-gap: 16px;
 }
 
+/* From Uiverse.io by mrhyddenn */
+.loader {
+  --loader-size: 150px;
+  --loader-inset: calc(var(--loader-size) * 0.1333);
+  --loader-core: calc(var(--loader-size) * 0.3333);
+  --loader-shadow: calc(var(--loader-size) * 0.1667);
+  --loader-shadow-blur: calc(var(--loader-size) * 0.5);
+  --loader-inner-offset: calc(var(--loader-size) * 0.0333);
+  --loader-inner-blur-sm: calc(var(--loader-size) * 0.1667);
+  --loader-inner-blur-lg: calc(var(--loader-size) * 0.2333);
+  --loader-glow-blur: calc(var(--loader-size) * 0.2);
+  --loader-glow-offset: calc(var(--loader-size) * 0.1333);
+  --loader-glow-shadow: calc(var(--loader-size) * 0.1333);
+  position: relative;
+  width: var(--loader-size);
+  height: var(--loader-size);
+  background: transparent;
+  border-radius: 50%;
+  box-shadow: var(--loader-shadow) var(--loader-shadow) var(--loader-shadow-blur) rgba(0, 0, 0, 0.55);
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.loader::before {
+  content: '';
+  position: absolute;
+  inset: var(--loader-inset);
+  background: transparent;
+  border: 1px dashed #444;
+  border-radius: 50%;
+  box-shadow:
+    inset calc(var(--loader-inner-offset) * -1) calc(var(--loader-inner-offset) * -1) var(--loader-inner-blur-sm) rgba(0, 0, 0, 0.25),
+    inset var(--loader-inner-offset) var(--loader-inner-offset) var(--loader-inner-blur-lg) rgba(0, 0, 0, 0.25);
+}
+
+.loader::after {
+  content: '';
+  position: absolute;
+  width: var(--loader-core);
+  height: var(--loader-core);
+  border-radius: 50%;
+  border: 1px dashed #444;
+  box-shadow:
+    inset calc(var(--loader-inner-offset) * -1) calc(var(--loader-inner-offset) * -1) var(--loader-inner-blur-sm) rgba(0, 0, 0, 0.25),
+    inset var(--loader-inner-offset) var(--loader-inner-offset) var(--loader-inner-blur-lg) rgba(0, 0, 0, 0.25);
+}
+
+.loader span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  background: transparent;
+  transform-origin: top left;
+  animation: radar81 2s linear infinite;
+  border-top: 1px dashed #fff;
+}
+
+.loader span::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: seagreen;
+  transform-origin: top left;
+  transform: rotate(-55deg);
+  filter: blur(var(--loader-glow-blur)) drop-shadow(var(--loader-glow-offset) var(--loader-glow-offset) var(--loader-glow-shadow) seagreen);
+}
+
+.loader-xs {
+  --loader-size: 28px;
+}
+
+.loader-sm {
+  --loader-size: 44px;
+}
+
+.loader-md {
+  --loader-size: 80px;
+}
+
+@keyframes radar81 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Smooth hover effects for cards */
 .card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

@@ -71,8 +71,10 @@ function ScanningContent() {
               <span className="text-gray-700 font-medium">Checking competitor rankings...</span>
             </div>
             <div className="flex items-center gap-3 transform transition-all duration-300 hover:translate-x-1">
-              <div className="w-8 h-8 bg-primary rounded-full animate-pulse flex items-center justify-center shadow-md">
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 flex items-center justify-center">
+                <span className="loader loader-xs" aria-hidden>
+                  <span></span>
+                </span>
               </div>
               <span className="text-gray-700 font-medium">Generating visibility map...</span>
             </div>
@@ -101,7 +103,11 @@ export default function ScanningPage() {
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="mx-auto mb-4">
+            <div className="loader loader-md">
+              <span></span>
+            </div>
+          </div>
           <p className="text-gray-600">Preparing scan...</p>
         </div>
       </div>

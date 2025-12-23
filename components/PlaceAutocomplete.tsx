@@ -101,7 +101,9 @@ export default function PlaceAutocomplete({
       )}
       {!isLoaded && !error && (
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <span className="loader loader-xs" aria-hidden>
+            <span></span>
+          </span>
         </div>
       )}
       {error && (
