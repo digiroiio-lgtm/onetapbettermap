@@ -5,7 +5,7 @@ export default function SupportPage() {
       label: 'Program',
       copy:
         'Start with a 1:1 kickoff, guided checklist, and tailored playbook so every location knows which zones to prioritize.',
-      cta: { text: 'Review onboarding checklist', href: '/dashboard' },
+      cta: { text: 'Review onboarding checklist', href: '/app/dashboard' },
     },
     {
       title: 'Help Desk & Live Chat',
@@ -105,7 +105,7 @@ export default function SupportPage() {
               Email support@mapsrankchecker.com
             </a>
             <a
-              href="/dashboard"
+              href="/app/dashboard"
               className="inline-flex items-center rounded-full border border-white/30 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
             >
               Open in-app chat

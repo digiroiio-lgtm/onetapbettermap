@@ -139,7 +139,7 @@ export default function DashboardPage() {
                   city: 'London',
                   keyword: 'dental clinic',
                 })
-                router.push(`/scanning?${params.toString()}`)
+                router.push(`/app/new?${params.toString()}`)
               }}
               className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400"
             >

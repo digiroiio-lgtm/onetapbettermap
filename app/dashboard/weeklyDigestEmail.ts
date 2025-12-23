@@ -64,7 +64,7 @@ export function renderWeeklyDigestEmail(payload: WeeklyDigestPayload) {
           <ul style="margin:0; padding-left:16px; color:#475569;">${recommendedList}</ul>
         </div>
         <a
-          href="${plan === 'demo' ? '/pricing' : '/dashboard'}"
+          href="${plan === 'demo' ? '/pricing' : '/app/dashboard'}"
           style="display:inline-flex; margin-top:24px; padding:12px 20px; border-radius:999px; background:#16a34a; color:#fff; text-decoration:none; font-weight:600;"
         >
           View full report

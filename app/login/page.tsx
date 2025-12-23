@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 
@@ -10,21 +10,26 @@ const freePlans = new Set(['starter', 'free', 'trial']);
 
 const normalizePlan = (plan?: string) => (plan ? plan.toLowerCase().trim() : '')
 
-const getPostLoginRoute = (plan?: string) => {
+const getPostLoginRoute = (plan?: string, nextPath?: string | null) => {
+  if (nextPath) {
+    return nextPath
+  }
   const normalized = normalizePlan(plan)
   if (paidPlans.has(normalized)) {
-    return '/dashboard'
+    return '/app/dashboard'
   }
   if (freePlans.has(normalized)) {
-    return '/results'
+    return '/app/dashboard'
   }
-  return '/dashboard'
+  return '/app/dashboard'
 }
 
 const isPaidPlan = (plan?: string) => paidPlans.has(normalizePlan(plan))
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams?.get('next')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -67,7 +72,7 @@ export default function LoginPage() {
         localStorage.setItem('premiumUser', isPaidPlan(data.user.plan) ? 'true' : 'false');
       }
       setIsLoading(false);
-      router.push(getPostLoginRoute(data.user?.plan));
+      router.push(getPostLoginRoute(data.user?.plan, nextPath));
       return;
     } catch (err) {
       setError('Network error');
@@ -97,7 +102,7 @@ export default function LoginPage() {
             <button
               onClick={() => {
                 setOauthProvider('google');
-                signIn('google', { callbackUrl: '/dashboard' });
+                signIn('google', { callbackUrl: nextPath || '/app/dashboard' });
               }}
               className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 text-gray-800 font-semibold hover:bg-gray-50 transition"
             >
@@ -121,7 +126,7 @@ export default function LoginPage() {
               onClick={() => {
                 if (!appleEnabled) return;
                 setOauthProvider('apple');
-                signIn('apple', { callbackUrl: '/dashboard' });
+                signIn('apple', { callbackUrl: nextPath || '/app/dashboard' });
               }}
               className={`w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 font-semibold transition ${
                 appleEnabled
