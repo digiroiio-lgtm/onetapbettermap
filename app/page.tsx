@@ -141,31 +141,67 @@ const featureCards = [
     title: 'Visibility Score',
     body: 'A single KPI that grades your coverage across every neighborhood grid point.',
     accent: 'from-indigo-500/20 to-indigo-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="2" />
+        <path d="M12 8v4l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
   },
   {
     title: 'Multi-Area Heatmaps',
     body: 'Drag the grid, compare zones, and reveal blind spots instantly.',
     accent: 'from-cyan-500/20 to-cyan-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+        <rect x="13" y="4" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+        <rect x="4" y="13" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+        <rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
   },
   {
     title: 'Keyword Position Tracking',
     body: 'Track top search intents and see exactly where you rank by keyword.',
     accent: 'from-amber-500/20 to-amber-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+        <path d="M20 20l-3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
   },
   {
     title: 'AI Action Checklist',
     body: 'Actions prioritized by revenue impact, not vanity metrics.',
     accent: 'from-emerald-500/20 to-emerald-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <path d="M9 11l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    ),
   },
   {
     title: 'Revenue Forecaster',
     body: 'Forecast calls and revenue before you invest in SEO or ads.',
     accent: 'from-rose-500/20 to-rose-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <path d="M4 20h16M6 16l4-4 4 3 4-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
   },
   {
     title: 'Competitor Alerts',
     body: 'Real-time alerts when rivals climb above you in key zones.',
     accent: 'from-slate-500/20 to-slate-500/5',
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
   },
 ]
 
@@ -237,7 +273,9 @@ function StatCounter({ value, suffix, label, helper, icon, decimals = 0 }: { val
         <span className="text-xs uppercase tracking-[0.4em] text-slate-400">Live</span>
       </div>
       <p className="mt-4 text-3xl font-semibold text-white">
-        {decimals ? (display / Math.pow(10, decimals)).toFixed(decimals) : display.toLocaleString()} {suffix}
+        {decimals ? (display / Math.pow(10, decimals)).toFixed(decimals) : display.toLocaleString()}
+        {suffix.startsWith('+') || suffix.startsWith('/') ? '' : ' '}
+        {suffix}
       </p>
       <p className="text-sm text-slate-200 font-semibold">{label}</p>
       <p className="text-xs text-slate-400 uppercase tracking-[0.3em]">{helper}</p>
@@ -493,6 +531,16 @@ function GeoGridSection() {
                     cell.tone === 'weak' ? 'animate-pulse' : ''
                   } shadow-[0_12px_30px_rgba(2,6,23,0.45)]`}
                 />
+                {index === 0 && (
+                  <div className="absolute left-2 top-2 rounded-full bg-slate-950/80 px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-emerald-200">
+                    You
+                  </div>
+                )}
+                {cell.tone === 'weak' && (
+                  <div className="absolute right-2 bottom-2 rounded-full bg-slate-950/80 px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-rose-200">
+                    Rival
+                  </div>
+                )}
                 <div className="pointer-events-none absolute left-1/2 top-1/2 w-36 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/10 bg-slate-950/90 px-3 py-2 text-xs text-white opacity-0 transition group-hover:opacity-100">
                   <p className="uppercase tracking-[0.3em] text-slate-400">Rank #{cell.rank}</p>
                   <p className="text-emerald-300">Revenue {cell.revenue}</p>
@@ -664,9 +712,7 @@ function CoreFeaturesSection() {
           {featureCards.map((feature) => (
             <div key={feature.title} className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(2,6,23,0.4)]">
               <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${feature.accent} flex items-center justify-center text-white`}>
-                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M12 5v14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
+                {feature.icon}
               </div>
               <h3 className="mt-4 text-xl font-semibold text-white">{feature.title}</h3>
               <p className="mt-2 text-sm text-slate-300">{feature.body}</p>

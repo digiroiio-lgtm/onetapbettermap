@@ -9,7 +9,7 @@ import RevenueForecastStrip from './components/RevenueForecastStrip'
 import RevenueImpactBanner from './components/RevenueImpactBanner'
 import UpgradeDynamicCard from './components/UpgradeDynamicCard'
 import ZoneDetailPanel from './components/ZoneDetailPanel'
-import { mockRetentionData } from './mockRetentionData'
+import { mockRetentionData, type HabitHeaderData } from './mockRetentionData'
 import { useMockDashboardData } from './mockData'
 import type { HeatmapCell } from './types'
 import { useRouter } from 'next/navigation'
@@ -30,7 +30,12 @@ export default function DashboardPage() {
     revenueMetrics: {},
   }
   // Gerçek retention data (örnek: API'den çekilecek, burada placeholder)
-  const realHabitHeader = []
+  const realHabitHeader: HabitHeaderData = {
+    streakWeeks: 0,
+    visibilityPoints: 0,
+    nextMilestonePoints: 0,
+    weeklyGainPercent: 0,
+  }
   // Seçilen data
   const actions = useMock ? mockData.actions : realData.actions
   const currentPlan = useMock ? mockData.currentPlan : realData.currentPlan
