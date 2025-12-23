@@ -52,9 +52,9 @@ export default function Navigation() {
           </Link>
           <Link
             href="/#scan-section"
-            className="inline-flex items-center rounded-full border border-white/20 px-5 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
+            className="btn"
           >
-            Start Free Scan
+            <span>Start Free Scan</span>
           </Link>
         </div>
 
@@ -96,10 +96,10 @@ export default function Navigation() {
           </Link>
           <Link
             href="/#scan-section"
-            className="block text-center rounded-full bg-white text-black text-sm font-semibold px-4 py-2"
+            className="btn block text-center"
             onClick={() => setMenuOpen(false)}
           >
-            Start Free Scan
+            <span>Start Free Scan</span>
           </Link>
         </div>
       )}

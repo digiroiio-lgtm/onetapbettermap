@@ -30,7 +30,7 @@ export default function RevenueImpactCard({
 }: RevenueImpactCardProps) {
   return (
     <div
-      className={`rounded-[24px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${className ?? ''}`}
+      className={`card card-wide card-top card-lg ${className ?? ''}`}
     >
       <div className="flex items-center justify-between">
         <div>

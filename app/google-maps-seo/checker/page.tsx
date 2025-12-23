@@ -81,9 +81,9 @@ export default function CheckerGuidePage() {
               </h3>
               <Link
                 href="/#scan-section"
-                className="inline-block bg-white text-primary font-semibold px-8 py-4 rounded-full text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="btn inline-block"
               >
-                Start Free Scan
+                <span>Start Free Scan</span>
               </Link>
             </div>
 

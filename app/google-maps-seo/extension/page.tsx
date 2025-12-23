@@ -115,9 +115,9 @@ export default function ExtensionPage() {
               </p>
               <Link
                 href="/#scan-section"
-                className="inline-block bg-white text-primary font-semibold px-8 py-4 rounded-full text-lg hover:scale-105 transition-transform"
+                className="btn inline-block"
               >
-                Start Free Scan
+                <span>Start Free Scan</span>
               </Link>
             </div>
           </div>

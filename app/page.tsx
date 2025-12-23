@@ -267,7 +267,7 @@ function StatCounter({ value, suffix, label, helper, icon, decimals = 0 }: { val
   }, [value])
 
   return (
-    <div ref={ref} className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5 shadow-[0_18px_40px_rgba(2,6,23,0.35)]">
+    <div ref={ref} className="card card-wide card-top card-compact">
       <div className="flex items-center justify-between">
         {icon}
         <span className="text-xs uppercase tracking-[0.4em] text-slate-400">Live</span>
@@ -363,7 +363,7 @@ function ProblemSolution() {
   return (
     <section className="px-4 sm:px-6 lg:px-24 py-20 border-t border-white/5">
       <div className="mx-auto max-w-6xl grid gap-10 lg:grid-cols-2">
-        <div className="group rounded-3xl border border-white/10 bg-gradient-to-br from-rose-500/10 via-slate-900/60 to-slate-950 p-8">
+        <div className="card card-wide card-top card-lg group">
           <div className="flex items-center gap-3">
             <div className="rounded-full bg-rose-500/20 p-3">
               <svg className="h-6 w-6 text-rose-300" viewBox="0 0 24 24" fill="none">
@@ -390,7 +390,7 @@ function ProblemSolution() {
           </div>
         </div>
 
-        <div className="group rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/10 via-slate-900/60 to-slate-950 p-8">
+        <div className="card card-wide card-top card-lg group">
           <div className="flex items-center gap-3">
             <div className="rounded-full bg-emerald-500/20 p-3">
               <svg className="h-6 w-6 text-emerald-300" viewBox="0 0 24 24" fill="none">
@@ -432,7 +432,7 @@ function IndustryShowcase() {
         </div>
         <div className="grid gap-6 lg:grid-cols-2">
           {industryShowcase.map((industry) => (
-            <div key={industry.name} className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_18px_40px_rgba(2,6,23,0.35)]">
+            <div key={industry.name} className="card card-wide card-top card-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-slate-900/70">
@@ -514,7 +514,7 @@ function GeoGridSection() {
           </p>
           <div className="mt-8 grid grid-cols-3 gap-4 text-xs text-slate-300">
             {geoGridCells.map((cell) => (
-              <div key={cell.area} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={cell.area} className="card card-wide card-top card-compact">
                 <p className="text-slate-400 uppercase tracking-[0.3em]">{cell.area}</p>
                 <p className="mt-2 text-lg font-semibold text-white">#{cell.rank}</p>
                 <p className="text-emerald-300">{cell.revenue}</p>
@@ -522,7 +522,7 @@ function GeoGridSection() {
             ))}
           </div>
         </div>
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_25px_60px_rgba(2,6,23,0.4)]">
+        <div className="card card-wide card-top card-lg">
           <div className="grid grid-cols-3 gap-3" style={{ transform: 'perspective(900px) rotateX(10deg) rotateY(-6deg)' }}>
             {geoGridCells.map((cell, index) => (
               <div key={index} className="group relative">
@@ -567,7 +567,7 @@ function RevenueForecasterSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
       <div className="mx-auto max-w-6xl grid gap-10 lg:grid-cols-[1fr_1fr]">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <div className="card card-wide card-top card-lg">
           <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Revenue forecaster</p>
           <h2 className="mt-3 text-3xl font-semibold text-white">Move the slider. Watch revenue respond.</h2>
           <p className="mt-3 text-slate-400">Drag to simulate rank changes and real-time revenue lift.</p>
@@ -595,21 +595,21 @@ function RevenueForecasterSection() {
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
+            <div className="card card-wide card-top card-compact">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Calls</p>
               <p className="text-2xl font-semibold text-white">
                 <AnimatedNumber value={calls} suffix="/mo" />
               </p>
               <p className="text-xs text-slate-400">Inbound intent</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
+            <div className="card card-wide card-top card-compact">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Customers</p>
               <p className="text-2xl font-semibold text-white">
                 <AnimatedNumber value={customers} suffix="/mo" />
               </p>
               <p className="text-xs text-slate-400">Projected wins</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 sm:col-span-2">
+            <div className="card card-wide card-top card-compact sm:col-span-2">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Monthly revenue</p>
               <p className="text-3xl font-semibold text-emerald-300">
                 $<AnimatedNumber value={revenue} />
@@ -618,7 +618,7 @@ function RevenueForecasterSection() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="card card-wide card-top card-compact mt-6">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Revenue trajectory</p>
             <div className="mt-3 flex items-end gap-2">
               {chartPoints.map((point, index) => (
@@ -637,7 +637,7 @@ function RevenueForecasterSection() {
             ctrModel={{ 1: 0.25, 2: 0.17, 3: 0.12, 5: 0.08, 10: 0.03 }}
             gbpInsights={{ calls: 62, directions: 25, clicks: 340 }}
           />
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-6">
+          <div className="card card-wide card-top card-lg">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">ROI highlights</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-200">
               <li className="flex items-center justify-between">
@@ -671,7 +671,7 @@ function CompetitorTrackerSection() {
             Leaderboard updates show coverage, trend, and who is about to overtake you.
           </p>
         </div>
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 overflow-x-auto">
+        <div className="card card-wide card-top card-lg overflow-x-auto">
           <div className="grid grid-cols-4 text-xs uppercase tracking-[0.3em] text-slate-400 min-w-[360px]">
             <span>Rank</span>
             <span>Business</span>
@@ -710,7 +710,7 @@ function CoreFeaturesSection() {
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featureCards.map((feature) => (
-            <div key={feature.title} className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(2,6,23,0.4)]">
+            <div key={feature.title} className="card card-wide card-top card-lg group transition hover:-translate-y-1">
               <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${feature.accent} flex items-center justify-center text-white`}>
                 {feature.icon}
               </div>
@@ -739,7 +739,7 @@ function TestimonialsSection() {
         </div>
         <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory">
           {testimonialCards.map((card) => (
-            <div key={card.name} className="min-w-[280px] sm:min-w-[340px] snap-center rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_18px_40px_rgba(2,6,23,0.35)]">
+            <div key={card.name} className="card card-wide card-top card-lg min-w-[280px] sm:min-w-[340px] snap-center">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400" />
                 <div>
@@ -804,18 +804,18 @@ function FinalCTA() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="#scan-section"
-            className="inline-flex items-center justify-center rounded-full bg-[#2563eb] text-white px-8 py-3 font-semibold hover:bg-[#1d4ed8] transition"
+            className="btn"
           >
-            Start Free Scan
+            <span>Start Free Scan</span>
           </Link>
           <Link href="/upgrade" className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3 font-semibold text-white hover:bg-white/10">
             See pricing
           </Link>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-3 text-sm text-slate-300">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">100 free scans per month</div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">No credit card required</div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">Instant demo report</div>
+          <div className="card card-wide card-top card-compact">100 free scans per month</div>
+          <div className="card card-wide card-top card-compact">No credit card required</div>
+          <div className="card card-wide card-top card-compact">Instant demo report</div>
         </div>
         <div className="relative mx-auto h-24 max-w-md rounded-2xl border border-white/10 bg-white/5">
           <div className="absolute inset-0 bg-grid-animate opacity-30" />
