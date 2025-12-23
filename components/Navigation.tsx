@@ -2,56 +2,18 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const navLinks = [
   { label: 'Features', href: '/#features' },
   { label: 'Pricing', href: '/upgrade' },
-  { label: 'Guides', href: '/guide' },
+  { label: 'Guides', href: '/guides' },
   { label: 'Blog', href: '/blog' },
 ]
 
 export default function Navigation() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  useEffect(() => {
-    const checkAuth = () => {
-      if (typeof window === 'undefined') return
-      setIsLoggedIn(window.localStorage.getItem('isLoggedIn') === 'true')
-    }
-    checkAuth()
-    window.addEventListener('storage', checkAuth)
-    return () => window.removeEventListener('storage', checkAuth)
-  }, [])
-
-  const renderPrimaryCTAs = () => {
-    if (isLoggedIn) {
-      return (
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center rounded-full bg-white text-black text-sm font-semibold px-5 py-2 transition hover:bg-white/90"
-        >
-          Go to Dashboard
-        </Link>
-      )
-    }
-
-    return (
-      <>
-        <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white">
-          Login
-        </Link>
-        <Link
-          href="/signup"
-          className="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
-        >
-          Sign Up Free
-        </Link>
-      </>
-    )
-  }
 
   const isUpgradeActive = pathname === '/upgrade'
 
@@ -79,7 +41,15 @@ export default function Navigation() {
               </Link>
             )
           })}
-          {renderPrimaryCTAs()}
+          <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white">
+            Login
+          </Link>
+          <Link
+            href="/signup"
+            className="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Sign Up Free
+          </Link>
           <Link
             href="/#scan-section"
             className="inline-flex items-center rounded-full border border-white/20 px-5 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
@@ -110,32 +80,20 @@ export default function Navigation() {
               {link.label}
             </Link>
           ))}
-          {isLoggedIn ? (
-            <Link
-              href="/dashboard"
-              className="block text-center rounded-full bg-white text-black text-sm font-semibold px-4 py-2"
-              onClick={() => setMenuOpen(false)}
-            >
-              Go to Dashboard
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="block text-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="block text-center rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Sign Up Free
-              </Link>
-            </>
-          )}
+          <Link
+            href="/login"
+            className="block text-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white"
+            onClick={() => setMenuOpen(false)}
+          >
+            Login
+          </Link>
+          <Link
+            href="/signup"
+            className="block text-center rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white"
+            onClick={() => setMenuOpen(false)}
+          >
+            Sign Up Free
+          </Link>
           <Link
             href="/#scan-section"
             className="block text-center rounded-full bg-white text-black text-sm font-semibold px-4 py-2"
