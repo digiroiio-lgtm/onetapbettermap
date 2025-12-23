@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   generateMockHeatmap,
@@ -44,6 +44,7 @@ function Heatmap({ data }: { data: HeatmapCell[][] }) {
 
 function ResultsContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   const businessName = searchParams?.get('businessName') ?? 'Demo Dental Clinic'
   const city = searchParams?.get('city') ?? 'London'
@@ -52,6 +53,7 @@ function ResultsContent() {
   const isDemo = businessName === 'Demo Business'
   const scanType = isDemo ? 'Demo' : 'Live'
 
+  const [isAuthorized, setIsAuthorized] = useState(false)
   const [realCompetitors, setRealCompetitors] = useState<PlaceResult[]>([])
   const [isLoadingCompetitors, setIsLoadingCompetitors] = useState(false)
   const [useRealData, setUseRealData] = useState(false)
@@ -76,6 +78,19 @@ function ResultsContent() {
   )
 
   useEffect(() => {
+    const loggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true'
+    if (!loggedIn && !isDemo) {
+      router.replace('/login')
+      return
+    }
+    setIsAuthorized(true)
+  }, [router, isDemo])
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      return
+    }
+
     async function fetchCompetitors() {
       try {
         setIsLoadingCompetitors(true)
@@ -123,7 +138,7 @@ function ResultsContent() {
     if (!isDemo && businessName && city && keyword) {
       fetchCompetitors()
     }
-  }, [businessName, city, keyword, isDemo])
+  }, [businessName, city, keyword, isDemo, isAuthorized])
 
   useEffect(() => {
     if (filteredRealCompetitors.length > 0) {
@@ -191,6 +206,10 @@ function ResultsContent() {
   const hiddenGapCount = Math.max(0, totalGapUniverse - gapList.length)
 
   const actionItems = recommendations.slice(0, 4)
+
+  if (!isAuthorized) {
+    return null
+  }
 
   return (
     <main className="min-h-screen bg-[#020617] text-slate-100">

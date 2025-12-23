@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import PlaceAutocomplete from '@/components/PlaceAutocomplete'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function FreeScanForm() {
@@ -22,6 +21,11 @@ export default function FreeScanForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true'
+    if (!isLoggedIn) {
+      router.push('/login')
+      return
+    }
     if (!businessName) {
       alert('Please select a business from the suggestions')
       return
