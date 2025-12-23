@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 const navLinks = [
   { label: 'Features', href: '/#features' },
-  { label: 'Pricing', href: '/upgrade' },
+  { label: 'Pricing', href: '/pricing' },
   { label: 'Guides', href: '/guides' },
   { label: 'Blog', href: '/blog' },
 ]
@@ -15,7 +15,7 @@ export default function Navigation() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const isUpgradeActive = pathname === '/upgrade'
+  const isUpgradeActive = pathname === '/pricing'
 
   return (
     <header className="sticky top-0 z-50 bg-[#020617]/90 backdrop-blur border-b border-white/5 text-white">

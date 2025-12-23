@@ -9,8 +9,11 @@ import IndustryProvider from '@/components/IndustryProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'One Tap, Better Map',
-  description: 'Boost your Google Maps visibility with a single tap',
+  title: {
+    default: 'MapsRankChecker — Google Maps Visibility & Local Ranking Tracker',
+    template: '%s | MapsRankChecker',
+  },
+  description: 'Track Google Maps visibility, uncover ranking gaps, and recover local revenue with GeoGrid scans and competitor insights.',
 }
 
 export default function RootLayout({
@@ -39,6 +42,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <Script
           id="website-schema"
           type="application/ld+json"
