@@ -11,7 +11,7 @@ import UpgradeDynamicCard from './components/UpgradeDynamicCard'
 import ZoneDetailPanel from './components/ZoneDetailPanel'
 import { mockRetentionData, type HabitHeaderData } from './mockRetentionData'
 import { useMockDashboardData } from './mockData'
-import type { HeatmapCell } from './types'
+import type { ActionItem, HeatmapCell, PlanInfo, RevenueMetrics } from './types'
 import { useRouter } from 'next/navigation'
 // ...existing code...
 
@@ -22,12 +22,33 @@ export default function DashboardPage() {
   const mockData = useMockDashboardData()
   const { habitHeader: mockHabitHeader } = mockRetentionData
   // Gerçek data (örnek: API'den çekilecek, burada placeholder)
-  const realData = {
+  const realData: {
+    actions: ActionItem[]
+    currentPlan: PlanInfo
+    heatmap: HeatmapCell[]
+    plans: PlanInfo[]
+    revenueMetrics: RevenueMetrics
+  } = {
     actions: [],
-    currentPlan: {},
+    currentPlan: {
+      name: 'Free',
+      pricePerMonth: 0,
+      lockedFeatures: [],
+      unlockedFeatures: [],
+      estExtraRevenueIfUpgraded: 0,
+    },
     heatmap: [],
     plans: [],
-    revenueMetrics: {},
+    revenueMetrics: {
+      currency: 'USD',
+      currentRank: 0,
+      currentMonthlyRevenue: 0,
+      targetRank3Revenue: 0,
+      targetRank1Revenue: 0,
+      estCallsAtCurrent: 0,
+      estCallsAtRank3: 0,
+      estCallsAtRank1: 0,
+    },
   }
   // Gerçek retention data (örnek: API'den çekilecek, burada placeholder)
   const realHabitHeader: HabitHeaderData = {

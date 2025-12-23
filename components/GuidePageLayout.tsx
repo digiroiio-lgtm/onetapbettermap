@@ -83,7 +83,7 @@ export default function GuidePageLayout({
         id={`schema-${url.split('/').filter(Boolean).pop()}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
       />
       
       {/* Breadcrumb */}

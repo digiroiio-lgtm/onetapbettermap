@@ -483,45 +483,6 @@ function ResultsContent() {
           </div>
         </section>
 
-        <section className="rounded-[32px] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 px-6 py-12 text-center sm:px-12">
-          <p className="text-xs uppercase tracking-[0.35em] text-slate-300">
-            Upgrade CTA
-          </p>
-          <h3 className="mt-4 text-3xl font-semibold text-white">
-            Unlock your full visibility report
-          </h3>
-          <p className="mt-3 text-base text-slate-300">
-            See exact rankings, competitor metrics, and the fixes that close every gap.
-          </p>
-          <div className="mt-8 grid gap-3 text-left text-sm text-slate-200 sm:grid-cols-2">
-            {[
-              'Full keyword & category gaps',
-              'Competitor visibility scores',
-              'Weekly ranking timeline & alerts',
-              'Step-by-step action plan',
-            ].map((bullet) => (
-              <div key={bullet} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                <span className="text-lg">✔</span>
-                <span>{bullet}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10 flex flex-col items-center gap-4">
-            <div className="text-4xl font-semibold text-white">
-              $9 <span className="text-base text-slate-400">/ month</span>
-            </div>
-            <p className="text-sm text-slate-400">Cancel anytime</p>
-            <Link
-              href="/upgrade"
-              className="inline-flex items-center rounded-full bg-white px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-white/90"
-            >
-              Unlock Full Report →
-            </Link>
-            <p className="text-xs text-slate-500">
-              1,247+ businesses already improving their Google Maps rankings
-            </p>
-          </div>
-        </section>
       </div>
     </main>
   )

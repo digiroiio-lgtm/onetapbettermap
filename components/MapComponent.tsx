@@ -16,7 +16,7 @@ interface MapComponentProps {
 }
 
 const DEFAULT_CENTER = { lat: 37.7749, lng: -122.4194 }
-const EMPTY_MARKERS: MapComponentProps['markers'] = []
+const EMPTY_MARKERS: NonNullable<MapComponentProps['markers']> = []
 
 export default function MapComponent({
   businessName,
@@ -26,7 +26,7 @@ export default function MapComponent({
   markers,
 }: MapComponentProps) {
   const resolvedCenter = center ?? DEFAULT_CENTER
-  const resolvedMarkers = markers ?? EMPTY_MARKERS
+  const resolvedMarkers: NonNullable<MapComponentProps['markers']> = markers ?? EMPTY_MARKERS
 
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
