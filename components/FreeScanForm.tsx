@@ -39,7 +39,7 @@ export default function FreeScanForm() {
   }
 
   return (
-    <section id="scan-now" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
+    <section id="scan-section" className="px-4 sm:px-6 lg:px-24 py-24 border-t border-white/5">
       <div className="max-w-4xl mx-auto rounded-[32px] bg-white/5 border border-white/10 p-8 space-y-6">
         <div className="space-y-3 text-center">
           <p className="text-sm text-slate-400 uppercase tracking-[0.3em]">Quick Scan</p>
