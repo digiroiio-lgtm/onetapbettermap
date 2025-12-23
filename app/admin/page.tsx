@@ -88,14 +88,6 @@ export default function AdminLogin() {
             </button>
           </form>
 
-          {/* Login Info (for demo) */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              Demo Credentials:<br />
-              <span className="font-mono">Username: admin</span><br />
-              <span className="font-mono">Password: Oy12qwaszx!!</span>
-            </p>
-          </div>
         </div>
 
         {/* Back to Home */}
