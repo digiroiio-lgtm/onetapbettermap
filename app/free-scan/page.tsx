@@ -45,7 +45,7 @@ export default function FreeScanPage() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
             {highlightStats.map(stat => (
-              <div key={stat.label} className="card card-wide card-top card-compact space-y-2">
+              <div key={stat.label} className="card card-wide card-top card-compact">
                 <p className="text-2xl font-semibold text-white">{stat.value}</p>
                 <p className="text-sm uppercase tracking-[0.3em] text-slate-400">{stat.label}</p>
               </div>
@@ -70,7 +70,7 @@ export default function FreeScanPage() {
           </div>
           <div className="space-y-4">
             {pillarCards.map(card => (
-              <div key={card.title} className="card card-wide card-top card-lg space-y-3">
+              <div key={card.title} className="card card-wide card-top card-lg">
                 <h3 className="text-xl font-semibold text-white">{card.title}</h3>
                 <p className="text-slate-300">{card.body}</p>
               </div>
